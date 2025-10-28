@@ -1,16 +1,22 @@
 services:
-  # Servicio Web: Tu aplicación Laravel
+  # 1. Servicio Web (Tu aplicación Laravel)
   - type: web
-    name: mi-portfolio # El nombre de tu app
-    env: php # ¡Corregido! Se usa 'env: php' para indicar el entorno de PHP
-    plan: free # Especifica el plan gratuito para el servicio web
+    name: mi-portfolio  # Puedes cambiar esto si quieres
+    env: php            # Especifica el entorno de ejecución de PHP
+    plan: free          # Usa el plan gratuito para el servicio web
+    
+    # Configuración de la compilación
     buildCommand: |
       composer install --optimize-autoloader --no-dev
       npm install
       npm run build
       php artisan key:generate --force
       php artisan migrate --force
+    
+    # Comando para iniciar la aplicación
     startCommand: "php artisan serve --host 0.0.0.0 --port $PORT"
+    
+    # Variables de entorno para Laravel
     envVars:
       - key: APP_ENV
         value: production
@@ -19,15 +25,15 @@ services:
       - key: APP_KEY
         generateValue: true # Render generará una clave segura
       - key: APP_URL
-        value: ${RENDER_EXTERNAL_URL} # URL de tu app (automático)
+        value: ${RENDER_EXTERNAL_URL} # Render asigna esto automáticamente
       
-      # --- Configuración de la Base de Datos ---
+      # --- Conexión a la Base de Datos (PostgreSQL) ---
       - key: DB_CONNECTION
-        value: pgsql # Cambiamos de 'sqlite' a 'pgsql'
+        value: pgsql  # Indica a Laravel que use PostgreSQL
       - key: DB_HOST
         fromService:
           type: pserv
-          name: mi-base-de-datos # Debe coincidir con el nombre del servicio de DB
+          name: mi-base-de-datos  # Debe coincidir con el nombre del servicio de DB (abajo)
           property: host
       - key: DB_PORT
         fromService:
@@ -50,10 +56,8 @@ services:
           name: mi-base-de-datos
           property: password
 
-  # Servicio de Base de Datos: PostgreSQL
+  # 2. Servicio de Base de Datos (PostgreSQL)
   - type: pserv
-    name: mi-base-de-datos # Nombre para tu base de datos
+    name: mi-base-de-datos  # Este nombre debe coincidir con el usado arriba en 'fromService'
     env: postgres
-    plan: free # Especifica el plan gratuito para la base de datos
-    # Opcional: Especifica la versión de PostgreSQL si es necesario
-    # postgresMajorVersion: 14
+    plan: free # Usa el plan gratuito para la base de datos
