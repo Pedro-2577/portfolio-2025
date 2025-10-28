@@ -2,7 +2,7 @@ services:
   # Un servicio web de PHP para tu aplicación Laravel
   - type: web
     name: mi-portfolio-laravel  # Puedes cambiar 'mi-portfolio-laravel' al nombre que prefieras
-    env: php
+    env: php81 # O la versión que necesites, como php82
     plan: free # Usa el plan gratuito
     buildCommand: |
       composer install --optimize-autoloader --no-dev
