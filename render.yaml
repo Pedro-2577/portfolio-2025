@@ -1,40 +1,35 @@
 services:
-  # Un servicio web de PHP para tu aplicación Laravel
   - type: web
     name: mi-portfolio
-    env: php  # <-- ¡Corregido! Ahora dice 'php'
-    plan: free # Usa el plan gratuito
-    
-    # Monta un disco persistente en /var/data/database
-    # para que tu base de datos SQLite no se borre en cada despliegue.
-    disks:
-      - name: sqlite-data
-        mountPath: /var/www/html/storage/app # O donde quieras guardar tu DB
-        sizeGB: 1
-
+    env: php:8.1  # Asegúrate que esta es la versión correcta, o usa php:8.2
+    plan: free 
     buildCommand: |
       composer install --optimize-autoloader --no-dev
       npm install
       npm run build
       php artisan key:generate --force
       php artisan storage:link
-      php artisan migrate --force # Esto creará el .sqlite en el disco persistente
-      
+      php artisan migrate --force
     startCommand: "php artisan serve --host 0.0.0.0 --port $PORT"
     
+    # Esta sección debe estar al mismo nivel que 'type', 'name', 'env', etc.
+    disks:
+      - name: sqlite-data
+        mountPath: /var/www/html/storage/app 
+        sizeGB: 1
+
+    # La sección envVars también debe estar al mismo nivel
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
-      - key: APP_KEY # Render generará esto automáticamente
+      - key: APP_KEY
         generateValue: true 
       - key: APP_URL
         value: ${RENDER_EXTERNAL_URL}
-        
-      # Configura Laravel para usar el disco persistente para SQLite
       - key: DB_CONNECTION
         value: sqlite
       - key: DB_DATABASE
-        # Esta ruta apunta al disco persistente que definimos arriba
+        # Esta ruta DEBE coincidir con el mountPath de arriba + el nombre del archivo
         value: /var/www/html/storage/app/database.sqlite
