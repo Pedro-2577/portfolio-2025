@@ -1,0 +1,29 @@
+services:
+  # Un servicio web de PHP para tu aplicación Laravel
+  - type: web
+    name: mi-portfolio-laravel  # Puedes cambiar 'mi-portfolio-laravel' al nombre que prefieras
+    env: php
+    plan: free # Usa el plan gratuito
+    buildCommand: |
+      composer install --optimize-autoloader --no-dev
+      npm install
+      npm run build
+      php artisan key:generate --force
+      php artisan migrate --force
+    startCommand: "php artisan serve --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: APP_KEY # Asegúrate de generar una clave y pegarla aquí
+        generateValue: true # O mejor, deja que Render genere una por ti
+      - key: APP_URL
+        value: ${RENDER_EXTERNAL_URL}
+      - key: DB_CONNECTION
+        value: sqlite # O 'pgsql'/'mysql' si configuras una base de datos
+      - key: DB_DATABASE
+        value: database/database.sqlite # O la ruta a tu archivo SQLite
+
+  # Si necesitas una base de datos (ej. PostgreSQL)
+  # - type: pserv
+  #   name: mi-basedatos
+  #   env: postgres
+  #   plan: free
+  #   # Añade más configuraciones de base de datos si es necesario

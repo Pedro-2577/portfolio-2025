@@ -10,9 +10,6 @@ class Project extends Model
 {
     use HasFactory;
 
-    // Para desarrollo sin base de datos
-    public $timestamps = false;
-
     protected $fillable = [
         'title',
         'slug',

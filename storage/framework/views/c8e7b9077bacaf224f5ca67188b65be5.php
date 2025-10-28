@@ -12,17 +12,19 @@
 } ?>
 <?php unset($__defined_vars); ?>
 
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col h-full min-h-[400px]">
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col h-full">
     <?php if($project['image_url']): ?>
-        <div class="aspect-w-16 aspect-h-9">
+        <div class="aspect-w-16 aspect-h-9 flex-shrink-0">
             <img src="<?php echo e($project['image_url']); ?>" 
                  alt="<?php echo e($project['title']); ?>" 
                  class="w-full h-48 object-cover">
         </div>
     <?php endif; ?>
     
-    <div class="p-6 flex flex-col h-full">
-        <div class="flex-1 flex flex-col">
+    <!-- Card Body - Flex container que permite que el contenido se estire -->
+    <div class="p-6 flex flex-col flex-grow">
+        <!-- Contenido flexible que se expande -->
+        <div class="flex-grow">
             <div class="flex items-center justify-between mb-2">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                     <?php echo e($project['title']); ?>
@@ -36,13 +38,13 @@
                 <?php endif; ?>
             </div>
             
-            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow">
+            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; max-height: 60px;">
                 <?php echo e($project['short_description']); ?>
 
             </p>
             
             <?php if($project['technologies'] && count($project['technologies']) > 0): ?>
-                <div class="flex flex-wrap gap-2 mb-4">
+                <div class="flex flex-wrap gap-2" style="max-height: 80px; overflow: hidden;">
                     <?php $__currentLoopData = $project['technologies']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $technology): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                             <?php echo e($technology); ?>
@@ -53,7 +55,8 @@
             <?php endif; ?>
         </div>
         
-        <div class="flex space-x-4 mt-4">
+        <!-- Botones fijos al fondo - mt-auto los empuja hacia abajo -->
+        <div class="flex space-x-4 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <a href="<?php echo e(route('projects.show', $project['slug'])); ?>" 
                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
                 <span x-show="language === 'es'">Ver Detalles</span>

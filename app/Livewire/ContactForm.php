@@ -14,6 +14,8 @@ class ContactForm extends Component
     public $message = '';
     public $isSubmitted = false;
 
+    protected $rateLimiting = 5; // 5 requests per minute
+
     protected $rules = [
         'name' => 'required|min:2|max:255',
         'email' => 'required|email|max:255',
@@ -45,10 +47,22 @@ class ContactForm extends Component
     {
         $this->validate();
 
+        // Rate limiting check
+        $key = 'contact_form_' . request()->ip();
+        $attempts = cache()->get($key, 0);
+        
+        if ($attempts >= $this->rateLimiting) {
+            session()->flash('error', 'Has enviado demasiados mensajes. Por favor, espera un momento antes de intentar de nuevo.');
+            return;
+        }
+
         try {
             // Send email
             Mail::to(config('mail.from.address'))
                 ->send(new ContactMail($this->name, $this->email, $this->subject, $this->message));
+
+            // Increment rate limit counter
+            cache()->put($key, $attempts + 1, now()->addMinutes(1));
 
             $this->isSubmitted = true;
             $this->reset(['name', 'email', 'subject', 'message']);

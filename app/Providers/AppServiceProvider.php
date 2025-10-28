@@ -21,11 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Deshabilitar la base de datos para desarrollo
-        if (app()->environment('local')) {
-            DB::purge('default');
-        }
-        
-        Schema::defaultStringLength(191);
+        // Schema::defaultStringLength(191); // Commented out to avoid DB connection issues
     }
 }
