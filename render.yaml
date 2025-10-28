@@ -1,8 +1,8 @@
 services:
   - type: web
     name: mi-portfolio
-    env: php:8.1  # Asegúrate que esta es la versión correcta, o usa php:8.2
-    plan: free 
+    env: php:8.1
+    plan: free
     buildCommand: |
       composer install --optimize-autoloader --no-dev
       npm install
@@ -12,13 +12,13 @@ services:
       php artisan migrate --force
     startCommand: "php artisan serve --host 0.0.0.0 --port $PORT"
     
-    # Esta sección debe estar al mismo nivel que 'type', 'name', 'env', etc.
+    # Esta sección (disks) debe estar al mismo nivel que 'type', 'name', 'env'.
     disks:
       - name: sqlite-data
-        mountPath: /var/www/html/storage/app 
+        mountPath: /var/www/html/storage/app
         sizeGB: 1
-
-    # La sección envVars también debe estar al mismo nivel
+    
+    # Esta sección (envVars) también debe estar al mismo nivel que 'type', 'name', 'env'.
     envVars:
       - key: APP_ENV
         value: production
