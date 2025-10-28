@@ -1,32 +1,59 @@
 services:
+  # Servicio Web: Tu aplicación Laravel
   - type: web
-    name: mi-portfolio
-    env: php:8.1
-    plan: free
+    name: mi-portfolio # El nombre de tu app
+    env: php # ¡Corregido! Se usa 'env: php' para indicar el entorno de PHP
+    plan: free # Especifica el plan gratuito para el servicio web
     buildCommand: |
       composer install --optimize-autoloader --no-dev
       npm install
       npm run build
       php artisan key:generate --force
-      php artisan storage:link
       php artisan migrate --force
     startCommand: "php artisan serve --host 0.0.0.0 --port $PORT"
-
-    disks:
-      - name: sqlite-data
-        mountPath: /var/www/html/storage/app
-        sizeGB: 1
-
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
       - key: APP_KEY
-        generateValue: true
+        generateValue: true # Render generará una clave segura
       - key: APP_URL
-        value: ${RENDER_EXTERNAL_URL}
+        value: ${RENDER_EXTERNAL_URL} # URL de tu app (automático)
+      
+      # --- Configuración de la Base de Datos ---
       - key: DB_CONNECTION
-        value: sqlite
+        value: pgsql # Cambiamos de 'sqlite' a 'pgsql'
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: mi-base-de-datos # Debe coincidir con el nombre del servicio de DB
+          property: host
+      - key: DB_PORT
+        fromService:
+          type: pserv
+          name: mi-base-de-datos
+          property: port
       - key: DB_DATABASE
-        value: /var/www/html/storage/app/database.sqlite
+        fromService:
+          type: pserv
+          name: mi-base-de-datos
+          property: database
+      - key: DB_USERNAME
+        fromService:
+          type: pserv
+          name: mi-base-de-datos
+          property: user
+      - key: DB_PASSWORD
+        fromService:
+          type: pserv
+          name: mi-base-de-datos
+          property: password
+
+  # Servicio de Base de Datos: PostgreSQL
+  - type: pserv
+    name: mi-base-de-datos # Nombre para tu base de datos
+    env: postgres
+    plan: free # Especifica el plan gratuito para la base de datos
+    # Opcional: Especifica la versión de PostgreSQL si es necesario
+    # postgresMajorVersion: 14
