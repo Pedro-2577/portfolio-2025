@@ -1,29 +1,40 @@
 services:
   # Un servicio web de PHP para tu aplicación Laravel
   - type: web
-    name: mi-portfolio-laravel  # Puedes cambiar 'mi-portfolio-laravel' al nombre que prefieras
-    env: php:8.1 # O la versión que necesites, como php82
+    name: mi-portfolio
+    env: php  # <-- ¡Corregido! Ahora dice 'php'
     plan: free # Usa el plan gratuito
+    
+    # Monta un disco persistente en /var/data/database
+    # para que tu base de datos SQLite no se borre en cada despliegue.
+    disks:
+      - name: sqlite-data
+        mountPath: /var/www/html/storage/app # O donde quieras guardar tu DB
+        sizeGB: 1
+
     buildCommand: |
       composer install --optimize-autoloader --no-dev
       npm install
       npm run build
       php artisan key:generate --force
-      php artisan migrate --force
+      php artisan storage:link
+      php artisan migrate --force # Esto creará el .sqlite en el disco persistente
+      
     startCommand: "php artisan serve --host 0.0.0.0 --port $PORT"
+    
     envVars:
-      - key: APP_KEY # Asegúrate de generar una clave y pegarla aquí
-        generateValue: true # O mejor, deja que Render genere una por ti
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY # Render generará esto automáticamente
+        generateValue: true 
       - key: APP_URL
         value: ${RENDER_EXTERNAL_URL}
+        
+      # Configura Laravel para usar el disco persistente para SQLite
       - key: DB_CONNECTION
-        value: sqlite # O 'pgsql'/'mysql' si configuras una base de datos
+        value: sqlite
       - key: DB_DATABASE
-        value: database/database.sqlite # O la ruta a tu archivo SQLite
-
-  # Si necesitas una base de datos (ej. PostgreSQL)
-  # - type: pserv
-  #   name: mi-basedatos
-  #   env: postgres
-  #   plan: free
-  #   # Añade más configuraciones de base de datos si es necesario
+        # Esta ruta apunta al disco persistente que definimos arriba
+        value: /var/www/html/storage/app/database.sqlite
