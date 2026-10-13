@@ -1,67 +1,40 @@
-# Portfolio 2025 - Vue + Vite
+# Portfolio de Pedro Mendez Caraban
 
-La versión pública del portfolio es una aplicación estática construida con Vue 3 y Vite. Se publica automáticamente en GitHub Pages, por lo que no requiere PHP, Composer, base de datos ni un servidor que pueda suspenderse por inactividad.
+Portfolio publico construido con Vue 3 y Vite. Presenta proyectos profesionales, demos publicas y trabajos academicos con enlaces al codigo cuando esta disponible.
 
-La implementación Laravel/TALL Stack original permanece en el historial del repositorio como referencia técnica.
+## Que demuestra
 
-## Características
-
-- Vue 3 + Vite, sin backend obligatorio.
-- Deploy automático y gratuito con GitHub Actions y GitHub Pages.
-- Diseño responsive para móvil, tablet y escritorio.
-- Modo oscuro e idioma español/inglés persistidos en `localStorage`.
-- Catálogo con búsqueda, filtro por tecnología y filtro de destacados.
-- Proyectos privados visibles como experiencia sin exponer código ni enlaces internos.
+- SPA estatica con navegacion por hash.
+- Diseno responsive y modo oscuro.
+- Internacionalizacion espanol/ingles.
+- Catalogo filtrable por tecnologia y proyectos destacados.
+- Fichas individuales con stack, alcance, codigo y demo.
+- Deploy automatico con GitHub Actions y GitHub Pages.
 - Contacto directo por email, WhatsApp, LinkedIn y GitHub.
-- Formulario `mailto:` que funciona sin servidor propio.
-- Rutas con hash para que los detalles funcionen correctamente en GitHub Pages.
 
-## Tecnologías
+## Stack
 
 - Vue 3
 - Vite
 - JavaScript
 - CSS
-- GitHub Actions
+- GitHub Pages
 
-## Instalación local
-
-### Requisitos
-
-- Node.js 20 o superior
-- NPM
-- Git
+## Uso local
 
 ```bash
-git clone https://github.com/Pedro-2577/portfolio-2025.git
-cd portfolio-2025
 npm install
 npm run dev
 ```
 
-La aplicación estará disponible en la URL que indique Vite, normalmente `http://localhost:5173`.
-
-Para generar la versión de producción:
+Para validar el build de produccion:
 
 ```bash
 npm run build
 ```
 
-## Publicación
+## Demo
 
-Cada push a `main` ejecuta `.github/workflows/deploy-pages.yml`, compila la aplicación y la publica en GitHub Pages. En la configuración del repositorio hay que seleccionar **Settings → Pages → GitHub Actions** como fuente de publicación.
+https://pedro-2577.github.io/portfolio-2025/
 
-La URL esperada es:
-
-`https://pedro-2577.github.io/portfolio-2025/`
-
-## Estructura pública
-
-- `index.html`: entrada de Vite.
-- `src/App.vue`: navegación, vistas y estado de la aplicación.
-- `src/data.js`: proyectos y datos de contacto.
-- `src/style.css`: estilos responsive y tema oscuro.
-- `public/favicon.svg`: favicon.
-- `.github/workflows/deploy-pages.yml`: build y deploy.
-
-Los archivos Laravel, Blade, Livewire y PHP se conservan como referencia histórica de la versión anterior, pero no son necesarios para publicar la versión estática.
+La implementacion Laravel/TALL Stack original se conserva en el historial del repositorio como referencia tecnica; la version publicada no requiere PHP, Composer ni base de datos.
