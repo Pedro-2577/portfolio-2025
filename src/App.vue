@@ -1,0 +1,194 @@
+<script setup>
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { contact, projects } from './data';
+
+const language = ref(localStorage.getItem('language') || 'es');
+const darkMode = ref(localStorage.getItem('darkMode') === 'true');
+const currentRoute = ref(window.location.hash.slice(1) || 'home');
+const search = ref('');
+const technology = ref('');
+const featuredOnly = ref(false);
+const mobileMenuOpen = ref(false);
+const form = ref({ name: '', email: '', subject: '', message: '' });
+const formError = ref('');
+
+const text = {
+  es: {
+    home: 'Inicio', projects: 'Proyectos', about: 'Acerca de', contact: 'Contacto',
+    greeting: 'Hola, soy', role: 'Desarrollador Full-Stack',
+    hero: 'Construyo experiencias web completas, claras y útiles para personas y negocios.',
+    viewProjects: 'Ver proyectos', talk: 'Hablemos', featured: 'Proyectos destacados',
+    featuredIntro: 'Una selección de trabajos reales, proyectos privados y desarrollos académicos.',
+    allProjects: 'Ver todos los proyectos', skills: 'Tecnologías con las que trabajo',
+    skillsIntro: 'Frontend, backend, datos y herramientas para llevar una idea a producción.',
+    availability: 'Disponible para nuevos desafíos',
+    availabilityText: 'Trabajo remoto desde Buenos Aires y me interesa colaborar en productos web con impacto.',
+    myProjects: 'Mis proyectos', projectsIntro: 'Una colección de proyectos reales que muestra mi experiencia con distintas tecnologías.',
+    search: 'Buscar por nombre o descripción', allTechnologies: 'Todas las tecnologías', onlyFeatured: 'Solo destacados',
+    clear: 'Limpiar filtros', results: 'proyecto(s)', noResults: 'No se encontraron proyectos',
+    adjust: 'Probá ajustar los filtros para ver más resultados.', details: 'Ver detalles',
+    privateProject: 'Proyecto privado', featuredTag: 'Destacado', github: 'GitHub', demo: 'Ver demo',
+    projectDescription: 'Descripción del proyecto', projectDetails: 'Detalles del proyecto',
+    technologies: 'Tecnologías utilizadas', back: 'Volver a proyectos', aboutTitle: 'Sobre mí',
+    aboutIntro: 'Desarrollador Full-Stack enfocado en crear soluciones web mantenibles, accesibles y orientadas a resultados.',
+    story: 'Mi recorrido', storyOne: 'Soy Pedro Méndez Carabán, desarrollador Full-Stack con experiencia en proyectos propios, trabajo freelance y productos digitales para distintos sectores.',
+    storyTwo: 'Me gusta entender el problema antes de programar, trabajar cerca de las personas usuarias y convertir necesidades concretas en experiencias simples y confiables.',
+    education: 'Formación', educationText: 'Técnico Superior en Diseño y Programación Web — Escuela Da Vinci, Buenos Aires.',
+    contactTitle: 'Hablemos', contactIntro: '¿Tenés una idea, una oportunidad o querés conocer más sobre un proyecto? Elegí el canal que te resulte más cómodo.',
+    sendMessage: 'Preparar un mensaje', response: 'Normalmente respondo dentro de las 24 horas.',
+    name: 'Nombre', email: 'Email', subject: 'Asunto', message: 'Mensaje', send: 'Abrir correo',
+    required: 'Completá todos los campos para preparar el mensaje.', emailLabel: 'Email directo',
+    whatsappLabel: 'WhatsApp', linkedinLabel: 'Perfil profesional', locationLabel: 'Ubicación',
+    remote: 'Disponible para trabajo remoto', faq: 'Preguntas frecuentes',
+    faqOne: '¿Trabajás con equipos remotos?', faqOneAnswer: 'Sí. Estoy acostumbrado a colaborar con herramientas digitales, Git y comunicación asincrónica.',
+    faqTwo: '¿Qué tipo de proyectos te interesan?', faqTwoAnswer: 'Productos web, sitios institucionales, plataformas de contenido y herramientas internas que resuelvan problemas reales.',
+    footer: 'Portfolio de Pedro Méndez Carabán',
+  },
+  en: {
+    home: 'Home', projects: 'Projects', about: 'About', contact: 'Contact',
+    greeting: "Hi, I'm", role: 'Full-Stack Developer',
+    hero: 'I build complete, clear and useful web experiences for people and businesses.',
+    viewProjects: 'View projects', talk: "Let's talk", featured: 'Featured projects',
+    featuredIntro: 'A selection of real work, private projects and academic developments.',
+    allProjects: 'View all projects', skills: 'Technologies I work with',
+    skillsIntro: 'Frontend, backend, data and tools to take an idea to production.',
+    availability: 'Available for new challenges',
+    availabilityText: 'I work remotely from Buenos Aires and enjoy collaborating on impactful web products.',
+    myProjects: 'My projects', projectsIntro: 'A collection of real projects showing my experience with different technologies.',
+    search: 'Search by name or description', allTechnologies: 'All technologies', onlyFeatured: 'Featured only',
+    clear: 'Clear filters', results: 'project(s)', noResults: 'No projects found',
+    adjust: 'Try adjusting the filters to see more results.', details: 'View details',
+    privateProject: 'Private project', featuredTag: 'Featured', github: 'GitHub', demo: 'View demo',
+    projectDescription: 'Project description', projectDetails: 'Project details',
+    technologies: 'Technologies used', back: 'Back to projects', aboutTitle: 'About me',
+    aboutIntro: 'Full-Stack developer focused on building maintainable, accessible and results-oriented web solutions.',
+    story: 'My journey', storyOne: 'I am Pedro Méndez Carabán, a Full-Stack developer with experience in personal projects, freelance work and digital products for different industries.',
+    storyTwo: 'I like understanding the problem before coding, working close to users and turning concrete needs into simple, reliable experiences.',
+    education: 'Education', educationText: 'Higher Technician in Web Design and Programming — Da Vinci School, Buenos Aires.',
+    contactTitle: "Let's talk", contactIntro: 'Have an idea, an opportunity or want to learn more about a project? Choose the channel that works best for you.',
+    sendMessage: 'Prepare a message', response: 'I usually reply within 24 hours.',
+    name: 'Name', email: 'Email', subject: 'Subject', message: 'Message', send: 'Open email',
+    required: 'Complete every field to prepare the message.', emailLabel: 'Direct email',
+    whatsappLabel: 'WhatsApp', linkedinLabel: 'Professional profile', locationLabel: 'Location',
+    remote: 'Available for remote work', faq: 'Frequently asked questions',
+    faqOne: 'Do you work with remote teams?', faqOneAnswer: 'Yes. I am used to collaborating with digital tools, Git and asynchronous communication.',
+    faqTwo: 'What kind of projects interest you?', faqTwoAnswer: 'Web products, institutional sites, content platforms and internal tools that solve real problems.',
+    footer: "Pedro Méndez Carabán's portfolio",
+  },
+};
+
+const t = computed(() => text[language.value]);
+const routeParts = computed(() => currentRoute.value.split('/').filter(Boolean));
+const selectedProject = computed(() => projects.find((project) => project.slug === routeParts.value[1]));
+const technologies = computed(() => [...new Set(projects.flatMap((project) => project.technologies))].sort());
+const filteredProjects = computed(() => projects.filter((project) => {
+  const query = search.value.toLowerCase().trim();
+  const matchesSearch = !query || `${project.title} ${project.description}`.toLowerCase().includes(query);
+  const matchesTechnology = !technology.value || project.technologies.includes(technology.value);
+  return matchesSearch && matchesTechnology && (!featuredOnly.value || project.featured);
+}));
+const featuredProjects = computed(() => projects.filter((project) => project.featured));
+
+function navigate(route) {
+  window.location.hash = route;
+  currentRoute.value = route;
+  mobileMenuOpen.value = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleLanguage() {
+  language.value = language.value === 'es' ? 'en' : 'es';
+}
+
+function toggleTheme() {
+  darkMode.value = !darkMode.value;
+}
+
+function submitContact() {
+  formError.value = '';
+  if (!form.value.name || !form.value.email || !form.value.subject || !form.value.message) {
+    formError.value = t.value.required;
+    return;
+  }
+  const body = `${t.value.name}: ${form.value.name}\n${t.value.email}: ${form.value.email}\n\n${form.value.message}`;
+  window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(form.value.subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function onHashChange() {
+  currentRoute.value = window.location.hash.slice(1) || 'home';
+}
+
+watch(language, (value) => localStorage.setItem('language', value));
+watch(darkMode, (value) => {
+  localStorage.setItem('darkMode', String(value));
+  document.documentElement.classList.toggle('dark', value);
+});
+
+onMounted(() => {
+  document.documentElement.classList.toggle('dark', darkMode.value);
+  window.addEventListener('hashchange', onHashChange);
+});
+onUnmounted(() => window.removeEventListener('hashchange', onHashChange));
+</script>
+
+<template>
+  <div class="app-shell">
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="#home" @click.prevent="navigate('home')">Pedro Méndez Carabán</a>
+        <button class="menu-button" type="button" :aria-expanded="mobileMenuOpen" @click="mobileMenuOpen = !mobileMenuOpen">☰</button>
+        <nav :class="{ 'is-open': mobileMenuOpen }" class="site-nav">
+          <a :class="{ active: currentRoute === 'home' }" href="#home" @click.prevent="navigate('home')">{{ t.home }}</a>
+          <a :class="{ active: currentRoute === 'projects' || currentRoute.startsWith('project/') }" href="#projects" @click.prevent="navigate('projects')">{{ t.projects }}</a>
+          <a :class="{ active: currentRoute === 'about' }" href="#about" @click.prevent="navigate('about')">{{ t.about }}</a>
+          <a :class="{ active: currentRoute === 'contact' }" href="#contact" @click.prevent="navigate('contact')">{{ t.contact }}</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="icon-button" type="button" :title="language === 'es' ? 'Switch to English' : 'Cambiar a español'" @click="toggleLanguage">{{ language === 'es' ? 'EN' : 'ES' }}</button>
+          <button class="icon-button" type="button" :title="darkMode ? 'Light mode' : 'Dark mode'" @click="toggleTheme">{{ darkMode ? '☀' : '☾' }}</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section v-if="currentRoute === 'home'" class="hero">
+        <div class="container hero-content">
+          <p class="eyebrow">{{ t.role }}</p>
+          <h1>{{ t.greeting }} <span>Pedro.</span></h1>
+          <p class="hero-copy">{{ t.hero }}</p>
+          <div class="button-row">
+            <a class="button button-light" href="#projects" @click.prevent="navigate('projects')">{{ t.viewProjects }}</a>
+            <a class="button button-outline" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a>
+          </div>
+        </div>
+      </section>
+
+      <template v-if="currentRoute === 'home'">
+        <section class="section">
+          <div class="container">
+            <div class="section-heading"><p class="eyebrow">{{ t.role }}</p><h2>{{ t.skills }}</h2><p>{{ t.skillsIntro }}</p></div>
+            <div class="skill-grid">
+              <div v-for="skill in ['Vue.js', 'Node.js', 'PHP / MySQL', 'UX / UI']" :key="skill" class="skill-card"><strong>{{ skill }}</strong><span>{{ skill === 'Vue.js' ? 'Frontend' : skill === 'Node.js' ? 'Backend' : skill === 'PHP / MySQL' ? 'Data & APIs' : 'Interfaces' }}</span></div>
+            </div>
+          </div>
+        </section>
+        <section class="section section-muted">
+          <div class="container"><div class="section-heading"><p class="eyebrow">{{ t.featured }}</p><h2>{{ t.featured }}</h2><p>{{ t.featuredIntro }}</p></div><div class="project-grid"><article v-for="project in featuredProjects" :key="project.id" class="project-card"><img :src="project.image" :alt="project.title"><div class="card-body"><div class="tag-row"><span v-if="project.featured" class="tag tag-featured">{{ t.featuredTag }}</span><span v-if="project.private" class="tag">{{ t.privateProject }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag">{{ item }}</span></div><div class="card-actions"><a class="button button-small" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="project.live" class="text-link" :href="project.live" target="_blank" rel="noopener noreferrer">{{ t.demo }} ↗</a></div></div></article></div><div class="center"><a class="button button-primary" href="#projects" @click.prevent="navigate('projects')">{{ t.allProjects }}</a></div></div>
+        </section>
+        <section class="availability"><div class="container availability-inner"><div><p class="eyebrow">{{ t.availability }}</p><h2>{{ t.availability }}</h2><p>{{ t.availabilityText }}</p></div><a class="button button-light" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a></div></section>
+      </template>
+
+      <section v-else-if="currentRoute === 'projects'" class="section page-section">
+        <div class="container"><div class="section-heading"><p class="eyebrow">{{ t.projects }}</p><h1>{{ t.myProjects }}</h1><p>{{ t.projectsIntro }}</p></div><div class="filters"><input v-model="search" type="search" :placeholder="t.search"><select v-model="technology"><option value="">{{ t.allTechnologies }}</option><option v-for="item in technologies" :key="item" :value="item">{{ item }}</option></select><label><input v-model="featuredOnly" type="checkbox"> {{ t.onlyFeatured }}</label><button v-if="search || technology || featuredOnly" class="text-button" type="button" @click="search = ''; technology = ''; featuredOnly = false">{{ t.clear }}</button></div><p class="result-count">{{ filteredProjects.length }} {{ t.results }}</p><div v-if="filteredProjects.length" class="project-grid"><article v-for="project in filteredProjects" :key="project.id" class="project-card"><img :src="project.image" :alt="project.title"><div class="card-body"><div class="tag-row"><span v-if="project.featured" class="tag tag-featured">{{ t.featuredTag }}</span><span v-if="project.private" class="tag">{{ t.privateProject }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag">{{ item }}</span></div><div class="card-actions"><a class="button button-small" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="project.github" class="text-link" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div><div v-else class="empty-state"><h2>{{ t.noResults }}</h2><p>{{ t.adjust }}</p></div></div>
+      </section>
+
+      <section v-else-if="currentRoute === 'about'" class="section page-section"><div class="container two-columns"><div class="prose"><p class="eyebrow">{{ t.about }}</p><h1>{{ t.aboutTitle }}</h1><p class="lead">{{ t.aboutIntro }}</p><h2>{{ t.story }}</h2><p>{{ t.storyOne }}</p><p>{{ t.storyTwo }}</p><h2>{{ t.education }}</h2><p>{{ t.educationText }}</p></div><div class="info-panel"><h2>{{ t.skills }}</h2><div class="tag-row large-tags"><span v-for="item in ['Vue.js', 'Nuxt', 'JavaScript', 'Node.js', 'PHP', 'MySQL', 'Laravel', 'Git & GitHub', 'Responsive Design', 'UX']" :key="item" class="tag">{{ item }}</span></div><div class="quote-box"><strong>{{ t.availability }}</strong><p>{{ t.availabilityText }}</p></div></div></div></section>
+
+      <section v-else-if="currentRoute === 'contact'" class="section page-section"><div class="container"><div class="section-heading"><p class="eyebrow">{{ t.contact }}</p><h1>{{ t.contactTitle }}</h1><p>{{ t.contactIntro }}</p></div><div class="two-columns contact-layout"><div class="contact-form-panel"><h2>{{ t.sendMessage }}</h2><p class="muted">{{ t.response }}</p><form @submit.prevent="submitContact"><label>{{ t.name }}<input v-model="form.name" type="text" required></label><label>{{ t.email }}<input v-model="form.email" type="email" required></label><label>{{ t.subject }}<input v-model="form.subject" type="text" required></label><label>{{ t.message }}<textarea v-model="form.message" rows="5" required></textarea></label><p v-if="formError" class="form-error">{{ formError }}</p><button class="button button-primary" type="submit">{{ t.send }} ↗</button></form></div><div class="contact-info"><a class="contact-card" :href="`mailto:${contact.email}`"><strong>{{ t.emailLabel }}</strong><span>{{ contact.email }}</span></a><a class="contact-card" :href="`https://wa.me/${contact.whatsapp}`" target="_blank" rel="noopener noreferrer"><strong>{{ t.whatsappLabel }}</strong><span>{{ contact.phone }}</span></a><a class="contact-card" :href="contact.linkedin" target="_blank" rel="noopener noreferrer"><strong>{{ t.linkedinLabel }}</strong><span>LinkedIn ↗</span></a><div class="contact-card"><strong>{{ t.locationLabel }}</strong><span>{{ contact.location }} · {{ t.remote }}</span></div><div class="faq"><h2>{{ t.faq }}</h2><details><summary>{{ t.faqOne }}</summary><p>{{ t.faqOneAnswer }}</p></details><details><summary>{{ t.faqTwo }}</summary><p>{{ t.faqTwoAnswer }}</p></details></div></div></div></div></section>
+
+      <section v-else-if="routeParts[0] === 'project' && selectedProject" class="section page-section"><div class="container project-detail"><div class="detail-main"><p class="eyebrow">{{ t.projects }}</p><h1>{{ selectedProject.title }}</h1><p class="lead">{{ selectedProject.shortDescription }}</p><img :src="selectedProject.image" :alt="selectedProject.title"><h2>{{ t.projectDescription }}</h2><p>{{ selectedProject.description }}</p></div><aside class="info-panel"><h2>{{ t.projectDetails }}</h2><div class="tag-row large-tags"><span v-for="item in selectedProject.technologies" :key="item" class="tag">{{ item }}</span></div><a v-if="selectedProject.github" class="button button-secondary full-width" :href="selectedProject.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a><a v-if="selectedProject.live" class="button button-primary full-width" :href="selectedProject.live" target="_blank" rel="noopener noreferrer">{{ t.demo }} ↗</a><a class="text-link back-link" href="#projects" @click.prevent="navigate('projects')">← {{ t.back }}</a></aside></div></section>
+    </main>
+
+    <footer class="site-footer"><div class="container footer-inner"><div><strong>{{ t.footer }}</strong><p>Vue · Vite · GitHub Pages</p></div><div class="footer-links"><a :href="contact.github" target="_blank" rel="noopener noreferrer">GitHub</a><a :href="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a><a :href="`mailto:${contact.email}`">Email</a></div></div></footer>
+  </div>
+</template>
