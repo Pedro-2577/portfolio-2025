@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
+  <rect width="1200" height="760" fill="#dfe9d8"/>
+  <path d="M0 530C180 410 310 470 490 390s350-80 710 90v280H0Z" fill="#78956f"/>
+  <path d="M0 615c250-100 440-40 630-125s370-45 570 60v210H0Z" fill="#42634e"/>
+  <rect x="92" y="84" width="1016" height="150" rx="18" fill="#18352a" opacity=".95"/>
+  <text x="150" y="160" fill="#dce9c3" font-family="Arial,sans-serif" font-size="26" letter-spacing="6">WE CAN</text>
+  <text x="150" y="205" fill="#fff" font-family="Arial,sans-serif" font-size="44" font-weight="700">AGRO</text>
+  <text x="92" y="680" fill="#fff" font-family="Arial,sans-serif" font-size="22" letter-spacing="4">STRATEGY · REGULATION · OPPORTUNITIES</text>
+</svg>
