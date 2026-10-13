@@ -196,6 +196,10 @@ input, select, textarea { width: 100%; border: 1px solid var(--line); border-rad
 .large-tags .tag { font-size: .82rem; padding: .4rem .65rem; }
 .quote-box { margin-top: 2rem; padding: 1.2rem; border-left: 3px solid var(--accent); }
 .quote-box p { color: var(--muted); line-height: 1.6; }
+.project-notice { display: grid; gap: .35rem; margin-top: 1rem; padding: .85rem; border-left: 3px solid var(--line); color: var(--muted); font-size: .82rem; line-height: 1.5; }
+.project-notice span { color: var(--ink); font-weight: 600; }
+.project-notice-warning { border-color: #d8a72e; background: #fff8df; color: #725600; }
+.dark .project-notice-warning { background: #453914; color: #ffe68a; }
 .contact-layout { align-items: start; }
 .contact-form-panel form { display: grid; gap: 1rem; margin-top: 1.5rem; }
 .contact-form-panel label { display: grid; gap: .4rem; font-size: .9rem; font-weight: 600; }

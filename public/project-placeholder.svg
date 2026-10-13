@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675">
+  <rect width="1200" height="675" fill="#172033"/>
+  <path d="M0 540h1200v135H0z" fill="#d7f43b"/>
+  <circle cx="1010" cy="130" r="190" fill="#2c3d55" opacity=".7"/>
+  <circle cx="180" cy="570" r="250" fill="#26354b" opacity=".8"/>
+  <text x="70" y="350" fill="#fff" font-family="Arial,sans-serif" font-size="72" font-weight="700">Portfolio</text>
+  <text x="75" y="405" fill="#d7f43b" font-family="Arial,sans-serif" font-size="26" letter-spacing="6">PEDRO MÉNDEZ CARABÁN</text>
+</svg>
