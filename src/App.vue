@@ -43,6 +43,7 @@ const text = {
     faqOne: '¿Trabajás con equipos remotos?', faqOneAnswer: 'Sí. Estoy acostumbrado a colaborar con herramientas digitales, Git y comunicación asincrónica.',
     faqTwo: '¿Qué tipo de proyectos te interesan?', faqTwoAnswer: 'Productos web, sitios institucionales, plataformas de contenido y herramientas internas que resuelvan problemas reales.',
     footer: 'Portfolio de Pedro Méndez Carabán',
+    projectCount: 'proyectos seleccionados', stackLabel: 'Stack principal', openToWork: 'Abierto a oportunidades',
   },
   en: {
     home: 'Home', projects: 'Projects', about: 'About', contact: 'Contact',
@@ -74,6 +75,7 @@ const text = {
     faqOne: 'Do you work with remote teams?', faqOneAnswer: 'Yes. I am used to collaborating with digital tools, Git and asynchronous communication.',
     faqTwo: 'What kind of projects interest you?', faqTwoAnswer: 'Web products, institutional sites, content platforms and internal tools that solve real problems.',
     footer: "Pedro Méndez Carabán's portfolio",
+    projectCount: 'selected projects', stackLabel: 'Core stack', openToWork: 'Open to opportunities',
   },
 };
 
@@ -88,6 +90,20 @@ const filteredProjects = computed(() => projects.filter((project) => {
   return matchesSearch && matchesTechnology && (!featuredOnly.value || project.featured);
 }));
 const featuredProjects = computed(() => projects.filter((project) => project.featured));
+
+function techClass(technologyName) {
+  const normalized = technologyName.toLowerCase();
+  if (normalized.includes('vue') || normalized.includes('nuxt')) return 'tech-vue';
+  if (normalized.includes('javascript')) return 'tech-javascript';
+  if (normalized.includes('typescript')) return 'tech-typescript';
+  if (normalized.includes('html')) return 'tech-html';
+  if (normalized.includes('css')) return 'tech-css';
+  if (normalized.includes('php')) return 'tech-php';
+  if (normalized.includes('laravel') || normalized.includes('blade')) return 'tech-laravel';
+  if (normalized.includes('mysql') || normalized.includes('firebase')) return 'tech-data';
+  if (normalized.includes('wordpress')) return 'tech-wordpress';
+  return 'tech-neutral';
+}
 
 function navigate(route) {
   window.location.hash = route;
@@ -153,36 +169,37 @@ onUnmounted(() => window.removeEventListener('hashchange', onHashChange));
     <main>
       <section v-if="currentRoute === 'home'" class="hero">
         <div class="container hero-content">
-          <p class="eyebrow">{{ t.role }}</p>
-          <h1>{{ t.greeting }} <span>Pedro.</span></h1>
+          <p class="eyebrow">{{ t.role }} <span class="eyebrow-dot"></span> Buenos Aires</p>
+          <h1>{{ t.greeting }} <span>Pedro.</span><br><em>Creo cosas que funcionan.</em></h1>
           <p class="hero-copy">{{ t.hero }}</p>
           <div class="button-row">
             <a class="button button-light" href="#projects" @click.prevent="navigate('projects')">{{ t.viewProjects }}</a>
             <a class="button button-outline" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a>
           </div>
+          <div class="hero-meta"><span>{{ projects.length }} {{ t.projectCount }}</span><span>{{ t.stackLabel }}: Vue · PHP · JS</span><span>{{ t.openToWork }}</span></div>
         </div>
       </section>
 
       <template v-if="currentRoute === 'home'">
         <section class="section">
           <div class="container">
-            <div class="section-heading"><p class="eyebrow">{{ t.role }}</p><h2>{{ t.skills }}</h2><p>{{ t.skillsIntro }}</p></div>
+            <div class="section-heading section-heading-left"><p class="eyebrow">01 / {{ t.skills }}</p><h2>{{ t.skills }}</h2><p>{{ t.skillsIntro }}</p></div>
             <div class="skill-grid">
               <div v-for="skill in ['Vue.js', 'Node.js', 'PHP / MySQL', 'UX / UI']" :key="skill" class="skill-card"><strong>{{ skill }}</strong><span>{{ skill === 'Vue.js' ? 'Frontend' : skill === 'Node.js' ? 'Backend' : skill === 'PHP / MySQL' ? 'Data & APIs' : 'Interfaces' }}</span></div>
             </div>
           </div>
         </section>
         <section class="section section-muted">
-          <div class="container"><div class="section-heading"><p class="eyebrow">{{ t.featured }}</p><h2>{{ t.featured }}</h2><p>{{ t.featuredIntro }}</p></div><div class="project-grid"><article v-for="project in featuredProjects" :key="project.id" class="project-card"><img :src="project.image" :alt="project.title"><div class="card-body"><div class="tag-row"><span v-if="project.featured" class="tag tag-featured">{{ t.featuredTag }}</span><span v-if="project.private" class="tag">{{ t.privateProject }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag">{{ item }}</span></div><div class="card-actions"><a class="button button-small" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="project.live" class="text-link" :href="project.live" target="_blank" rel="noopener noreferrer">{{ t.demo }} ↗</a></div></div></article></div><div class="center"><a class="button button-primary" href="#projects" @click.prevent="navigate('projects')">{{ t.allProjects }}</a></div></div>
+          <div class="container"><div class="section-heading section-heading-left"><p class="eyebrow">02 / {{ t.featured }}</p><h2>{{ t.featured }}</h2><p>{{ t.featuredIntro }}</p></div><div class="project-grid"><article v-for="project in featuredProjects" :key="project.id" class="project-card" :class="{ 'project-card-lead': project.id === 1 }"><div class="project-image"><img :src="project.image" :alt="project.title"><span class="project-number">0{{ project.id }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span v-if="project.private" class="private-mark">● {{ t.privateProject }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="techClass(item)">{{ item }}</span></div><div class="card-actions"><a class="button button-small" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="project.live" class="text-link" :href="project.live" target="_blank" rel="noopener noreferrer">{{ t.demo }} ↗</a></div></div></article></div><div class="center"><a class="button button-primary" href="#projects" @click.prevent="navigate('projects')">{{ t.allProjects }}</a></div></div>
         </section>
         <section class="availability"><div class="container availability-inner"><div><p class="eyebrow">{{ t.availability }}</p><h2>{{ t.availability }}</h2><p>{{ t.availabilityText }}</p></div><a class="button button-light" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a></div></section>
       </template>
 
       <section v-else-if="currentRoute === 'projects'" class="section page-section">
-        <div class="container"><div class="section-heading"><p class="eyebrow">{{ t.projects }}</p><h1>{{ t.myProjects }}</h1><p>{{ t.projectsIntro }}</p></div><div class="filters"><input v-model="search" type="search" :placeholder="t.search"><select v-model="technology"><option value="">{{ t.allTechnologies }}</option><option v-for="item in technologies" :key="item" :value="item">{{ item }}</option></select><label><input v-model="featuredOnly" type="checkbox"> {{ t.onlyFeatured }}</label><button v-if="search || technology || featuredOnly" class="text-button" type="button" @click="search = ''; technology = ''; featuredOnly = false">{{ t.clear }}</button></div><p class="result-count">{{ filteredProjects.length }} {{ t.results }}</p><div v-if="filteredProjects.length" class="project-grid"><article v-for="project in filteredProjects" :key="project.id" class="project-card"><img :src="project.image" :alt="project.title"><div class="card-body"><div class="tag-row"><span v-if="project.featured" class="tag tag-featured">{{ t.featuredTag }}</span><span v-if="project.private" class="tag">{{ t.privateProject }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag">{{ item }}</span></div><div class="card-actions"><a class="button button-small" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="project.github" class="text-link" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div><div v-else class="empty-state"><h2>{{ t.noResults }}</h2><p>{{ t.adjust }}</p></div></div>
+        <div class="container"><div class="section-heading section-heading-left"><p class="eyebrow">03 / {{ t.projects }}</p><h1>{{ t.myProjects }}</h1><p>{{ t.projectsIntro }}</p></div><div class="filters"><input v-model="search" type="search" :placeholder="t.search"><select v-model="technology"><option value="">{{ t.allTechnologies }}</option><option v-for="item in technologies" :key="item" :value="item">{{ item }}</option></select><label><input v-model="featuredOnly" type="checkbox"> {{ t.onlyFeatured }}</label><button v-if="search || technology || featuredOnly" class="text-button" type="button" @click="search = ''; technology = ''; featuredOnly = false">{{ t.clear }}</button></div><p class="result-count">{{ filteredProjects.length }} {{ t.results }}</p><div v-if="filteredProjects.length" class="project-grid"><article v-for="project in filteredProjects" :key="project.id" class="project-card"><div class="project-image"><img :src="project.image" :alt="project.title"><span class="project-number">0{{ project.id }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span v-if="project.private" class="private-mark">● {{ t.privateProject }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="techClass(item)">{{ item }}</span></div><div class="card-actions"><a class="button button-small" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="project.github" class="text-link" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div><div v-else class="empty-state"><h2>{{ t.noResults }}</h2><p>{{ t.adjust }}</p></div></div>
       </section>
 
-      <section v-else-if="currentRoute === 'about'" class="section page-section"><div class="container two-columns"><div class="prose"><p class="eyebrow">{{ t.about }}</p><h1>{{ t.aboutTitle }}</h1><p class="lead">{{ t.aboutIntro }}</p><h2>{{ t.story }}</h2><p>{{ t.storyOne }}</p><p>{{ t.storyTwo }}</p><h2>{{ t.education }}</h2><p>{{ t.educationText }}</p></div><div class="info-panel"><h2>{{ t.skills }}</h2><div class="tag-row large-tags"><span v-for="item in ['Vue.js', 'Nuxt', 'JavaScript', 'Node.js', 'PHP', 'MySQL', 'Laravel', 'Git & GitHub', 'Responsive Design', 'UX']" :key="item" class="tag">{{ item }}</span></div><div class="quote-box"><strong>{{ t.availability }}</strong><p>{{ t.availabilityText }}</p></div></div></div></section>
+      <section v-else-if="currentRoute === 'about'" class="section page-section"><div class="container two-columns"><div class="prose"><p class="eyebrow">04 / {{ t.about }}</p><h1>{{ t.aboutTitle }}</h1><p class="lead">{{ t.aboutIntro }}</p><h2>{{ t.story }}</h2><p>{{ t.storyOne }}</p><p>{{ t.storyTwo }}</p><h2>{{ t.education }}</h2><p>{{ t.educationText }}</p></div><div class="info-panel"><h2>{{ t.skills }}</h2><div class="tag-row large-tags"><span v-for="item in ['Vue.js', 'Nuxt', 'JavaScript', 'Node.js', 'PHP', 'MySQL', 'Laravel', 'Git & GitHub', 'Responsive Design', 'UX']" :key="item" class="tag" :class="techClass(item)">{{ item }}</span></div><div class="quote-box"><strong>{{ t.availability }}</strong><p>{{ t.availabilityText }}</p></div></div></div></section>
 
       <section v-else-if="currentRoute === 'contact'" class="section page-section"><div class="container"><div class="section-heading"><p class="eyebrow">{{ t.contact }}</p><h1>{{ t.contactTitle }}</h1><p>{{ t.contactIntro }}</p></div><div class="two-columns contact-layout"><div class="contact-form-panel"><h2>{{ t.sendMessage }}</h2><p class="muted">{{ t.response }}</p><form @submit.prevent="submitContact"><label>{{ t.name }}<input v-model="form.name" type="text" required></label><label>{{ t.email }}<input v-model="form.email" type="email" required></label><label>{{ t.subject }}<input v-model="form.subject" type="text" required></label><label>{{ t.message }}<textarea v-model="form.message" rows="5" required></textarea></label><p v-if="formError" class="form-error">{{ formError }}</p><button class="button button-primary" type="submit">{{ t.send }} ↗</button></form></div><div class="contact-info"><a class="contact-card" :href="`mailto:${contact.email}`"><strong>{{ t.emailLabel }}</strong><span>{{ contact.email }}</span></a><a class="contact-card" :href="`https://wa.me/${contact.whatsapp}`" target="_blank" rel="noopener noreferrer"><strong>{{ t.whatsappLabel }}</strong><span>{{ contact.phone }}</span></a><a class="contact-card" :href="contact.linkedin" target="_blank" rel="noopener noreferrer"><strong>{{ t.linkedinLabel }}</strong><span>LinkedIn ↗</span></a><div class="contact-card"><strong>{{ t.locationLabel }}</strong><span>{{ contact.location }} · {{ t.remote }}</span></div><div class="faq"><h2>{{ t.faq }}</h2><details><summary>{{ t.faqOne }}</summary><p>{{ t.faqOneAnswer }}</p></details><details><summary>{{ t.faqTwo }}</summary><p>{{ t.faqTwoAnswer }}</p></details></div></div></div></div></section>
 
