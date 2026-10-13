@@ -42,7 +42,7 @@ const text = {
     remote: 'Disponible para trabajo remoto', faq: 'Preguntas frecuentes',
     faqOne: '¿Trabajás con equipos remotos?', faqOneAnswer: 'Sí. Estoy acostumbrado a colaborar con herramientas digitales, Git y comunicación asincrónica.',
     faqTwo: '¿Qué tipo de proyectos te interesan?', faqTwoAnswer: 'Productos web, sitios institucionales, plataformas de contenido y herramientas internas que resuelvan problemas reales.',
-    footer: 'Portfolio de Pedro Méndez Carabán',
+    footer: 'Portfolio de Pedro Méndez Carabán', tagline: 'Creo cosas que funcionan.',
     projectCount: 'proyectos seleccionados', stackLabel: 'Stack principal', openToWork: 'Abierto a oportunidades',
   },
   en: {
@@ -74,7 +74,7 @@ const text = {
     remote: 'Available for remote work', faq: 'Frequently asked questions',
     faqOne: 'Do you work with remote teams?', faqOneAnswer: 'Yes. I am used to collaborating with digital tools, Git and asynchronous communication.',
     faqTwo: 'What kind of projects interest you?', faqTwoAnswer: 'Web products, institutional sites, content platforms and internal tools that solve real problems.',
-    footer: "Pedro Méndez Carabán's portfolio",
+    footer: "Pedro Méndez Carabán's portfolio", tagline: 'I build things that work.',
     projectCount: 'selected projects', stackLabel: 'Core stack', openToWork: 'Open to opportunities',
   },
 };
@@ -170,7 +170,7 @@ onUnmounted(() => window.removeEventListener('hashchange', onHashChange));
       <section v-if="currentRoute === 'home'" class="hero">
         <div class="container hero-content">
           <p class="eyebrow">{{ t.role }} <span class="eyebrow-dot"></span> Buenos Aires</p>
-          <h1>{{ t.greeting }} <span>Pedro.</span><br><em>Creo cosas que funcionan.</em></h1>
+          <h1>{{ t.greeting }} <span>Pedro.</span><br><em>{{ t.tagline }}</em></h1>
           <p class="hero-copy">{{ t.hero }}</p>
           <div class="button-row">
             <a class="button button-light" href="#projects" @click.prevent="navigate('projects')">{{ t.viewProjects }}</a>
