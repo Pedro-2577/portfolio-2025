@@ -28,6 +28,9 @@ export const projects = [
     category: 'Demo para cliente',
     technologies: ['JavaScript', 'HTML', 'CSS', 'Firebase'],
     demoType: 'live',
+    role: 'Frontend development and interaction design',
+    highlights: ['Responsive storefront', 'Category filtering', 'Simulated cart flow', 'Clear demo boundaries'],
+    outcome: 'A reviewable e-commerce experience that communicates the concept without implying real payments or orders.',
   },
   {
     id: 3,
@@ -43,6 +46,9 @@ export const projects = [
     category: 'Proyecto profesional',
     technologies: ['Vue.js', 'JavaScript', 'CSS'],
     demoType: 'live',
+    role: 'Frontend redesign and GitHub Pages deployment',
+    highlights: ['Full public-site redesign', 'Responsive information architecture', 'Spanish / English UI', 'Firebase-backed catalog'],
+    outcome: 'A standalone reviewable version of the frontend work, kept separate from the client production site.',
   },
   {
     id: 4,
@@ -73,6 +79,9 @@ export const projects = [
     category: 'Portfolio',
     technologies: ['Vue.js', 'Vite', 'CSS', 'GitHub Pages'],
     demoType: 'live',
+    role: 'Architecture, migration and deployment',
+    highlights: ['Laravel-to-static migration', 'Hash-based navigation', 'Project catalog and filters', 'Automated Pages deploy'],
+    outcome: 'A portfolio that remains accessible without PHP hosting, while preserving project context and direct evidence.',
   },
   {
     id: 6,
@@ -148,6 +157,9 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['JavaScript', 'PWA', 'HTML', 'CSS', 'APIs'],
     demoType: 'static',
+    role: 'Frontend implementation and API integration',
+    highlights: ['Open-Meteo integration', 'Geocoding search', 'Accessible status updates', 'Responsive weather card'],
+    outcome: 'A focused public demo with no exposed API key and a fast path from search to useful weather data.',
   },
   {
     id: 11,
