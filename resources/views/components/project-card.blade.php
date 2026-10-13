@@ -23,6 +23,12 @@
                         <span x-show="language === 'en'">Featured</span>
                     </span>
                 @endif
+                @if(!empty($project['private']))
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200">
+                        <span x-show="language === 'es'">Proyecto privado</span>
+                        <span x-show="language === 'en'">Private project</span>
+                    </span>
+                @endif
             </div>
             
             <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; max-height: 60px;">
