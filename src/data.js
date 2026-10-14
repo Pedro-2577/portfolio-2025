@@ -13,6 +13,8 @@ export const projects = [
     category: 'Proyecto profesional',
     technologies: ['Laravel', 'PHP', 'MySQL', 'SEO'],
     demoType: 'php',
+    startDate: '2025',
+    academic: false,
     role: 'Desarrollo y mantenimiento de punta a punta dentro de un equipo pequeño',
     roleEn: 'Full-cycle development and maintenance within a small team',
     highlights: ['Publicación de contenidos', 'Categorías y comentarios moderados', 'Mantenimiento evolutivo', 'Trabajo coordinado con el equipo'],
@@ -34,6 +36,8 @@ export const projects = [
     category: 'Demo para cliente',
     technologies: ['JavaScript', 'HTML', 'CSS', 'Firebase'],
     demoType: 'live',
+    startDate: '2026',
+    academic: false,
     role: 'Desarrollo frontend y diseño de interacciones',
     roleEn: 'Frontend development and interaction design',
     highlights: ['Storefront responsive', 'Filtros por categoría', 'Carrito simulado', 'Alcance de demo explícito'],
@@ -55,6 +59,8 @@ export const projects = [
     category: 'Proyecto profesional',
     technologies: ['Vue.js', 'JavaScript', 'CSS'],
     demoType: 'live',
+    startDate: '2024',
+    academic: false,
     role: 'Rediseño frontend y publicación en GitHub Pages',
     roleEn: 'Frontend redesign and GitHub Pages deployment',
     highlights: ['Rediseño completo del sitio público', 'Arquitectura responsive', 'Interfaz español / inglés', 'Catálogo conectado a Firebase'],
@@ -76,6 +82,8 @@ export const projects = [
     category: 'Proyecto profesional',
     technologies: ['Laravel', 'Blade', 'PHP', 'E-commerce'],
     demoType: 'php',
+    startDate: '2024',
+    academic: false,
   },
   {
     id: 5,
@@ -91,6 +99,8 @@ export const projects = [
     category: 'Portfolio',
     technologies: ['Vue.js', 'Vite', 'CSS', 'GitHub Pages'],
     demoType: 'live',
+    startDate: '2025',
+    academic: false,
     role: 'Arquitectura, migración y publicación',
     roleEn: 'Architecture, migration and deployment',
     highlights: ['Migración de Laravel a frontend estático', 'Navegación basada en hash', 'Catálogo y filtros de proyectos', 'Deploy automatizado en Pages'],
@@ -112,6 +122,8 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['JavaScript', 'APIs', 'HTML', 'CSS'],
     demoType: 'static',
+    startDate: '2023',
+    academic: true,
   },
   {
     id: 7,
@@ -127,6 +139,8 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['Vue.js', 'JavaScript', 'CSS'],
     demoType: 'static',
+    startDate: '2022',
+    academic: true,
   },
   {
     id: 8,
@@ -142,6 +156,8 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['Vue.js', 'JavaScript', 'CSS'],
     demoType: 'static',
+    startDate: '2022',
+    academic: true,
   },
   {
     id: 9,
@@ -157,6 +173,8 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['PHP', 'MySQL', 'HTML', 'CSS'],
     demoType: 'php',
+    startDate: '2022',
+    academic: true,
   },
   {
     id: 10,
@@ -172,6 +190,8 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['JavaScript', 'PWA', 'HTML', 'CSS', 'APIs'],
     demoType: 'static',
+    startDate: '2021',
+    academic: true,
     role: 'Implementación frontend e integración de APIs',
     roleEn: 'Frontend implementation and API integration',
     highlights: ['Integración con Open-Meteo', 'Búsqueda con geocodificación', 'Estados accesibles para el usuario', 'Tarjeta meteorológica responsive'],
@@ -193,6 +213,8 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['WordPress', 'PHP', 'CSS'],
     demoType: 'php',
+    startDate: '2024',
+    academic: true,
   },
   {
     id: 12,
@@ -208,6 +230,8 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['JavaScript', 'PWA', 'HTML', 'CSS'],
     demoType: 'live',
+    startDate: '2021',
+    academic: true,
   },
   {
     id: 13,
@@ -223,6 +247,8 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['Node.js', 'JavaScript', 'APIs'],
     demoType: 'node',
+    startDate: '2023',
+    academic: true,
   },
   {
     id: 14,
@@ -238,6 +264,8 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['Node.js', 'Express', 'JavaScript'],
     demoType: 'node',
+    startDate: '2023',
+    academic: true,
   },
   {
     id: 15,
@@ -253,6 +281,8 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['JavaScript', 'HTML', 'CSS', 'Vite'],
     demoType: 'static',
+    startDate: '2023',
+    academic: true,
   },
   {
     id: 16,
@@ -268,6 +298,8 @@ export const projects = [
     category: 'Proyecto académico',
     technologies: ['HTML', 'CSS', 'Git'],
     demoType: 'static',
+    startDate: '2023',
+    academic: true,
   },
 ];
 
