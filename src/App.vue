@@ -44,7 +44,7 @@ const text = {
     faqTwo: '¿Qué tipo de proyectos te interesan?', faqTwoAnswer: 'Productos web, sitios institucionales, plataformas de contenido y herramientas internas que resuelvan problemas reales.',
     workflowTitle: 'Cómo trabajo con IA', workflowText: 'Primero defino la estructura, las restricciones y el resultado esperado. Después uso IA para implementar, explorar alternativas y depurar; finalmente valido comportamiento, accesibilidad, diseño, seguridad y publicación.',
     footer: 'Portfolio de Pedro Méndez Carabán', tagline: 'Creo cosas que funcionan.', sourceCode: 'Ver código', liveDemo: 'Abrir demo', privateCode: 'Código privado', privateDemo: 'Demo privada', phpWarning: 'Este proyecto necesita un deploy PHP. La primera carga puede demorar mientras el servidor inicia.', nodeWarning: 'Este proyecto necesita un servidor Node.js para funcionar; todavía no hay una demo pública configurada.', noDemo: 'Todavía no hay una demo pública configurada para este proyecto.',
-    projectCount: 'proyectos catalogados', publicEvidence: 'demos públicas revisables', stackLabel: 'Stack principal', openToWork: 'Abierto a oportunidades',
+    projectCount: 'proyectos catalogados', publicEvidence: 'demos públicas revisables', stackLabel: 'Trabajo con', stackText: 'código · UX · IA', openToWork: 'Abierto a oportunidades',
     roleLabel: 'Mi responsabilidad', highlightsLabel: 'Qué entregué', outcomeLabel: 'Resultado',
   },
   en: {
@@ -78,7 +78,7 @@ const text = {
     faqTwo: 'What kind of projects interest you?', faqTwoAnswer: 'Web products, institutional sites, content platforms and internal tools that solve real problems.',
     workflowTitle: 'How I work with AI', workflowText: 'I define the structure, constraints and expected outcome first. Then I use AI to implement, explore alternatives and debug; finally I validate behavior, accessibility, design, security and delivery.',
     footer: "Pedro Méndez Carabán's portfolio", tagline: 'I build things that work.', sourceCode: 'View source', liveDemo: 'Open demo', privateCode: 'Private code', privateDemo: 'Private demo', phpWarning: 'This project needs a PHP deployment. The first load may take a moment while the server starts.', nodeWarning: 'This project needs a Node.js server to run; there is no public demo configured yet.', noDemo: 'There is no public demo configured for this project yet.',
-    projectCount: 'cataloged projects', publicEvidence: 'reviewable public demos', stackLabel: 'Core stack', openToWork: 'Open to opportunities',
+    projectCount: 'cataloged projects', publicEvidence: 'reviewable public demos', stackLabel: 'Work across', stackText: 'code · UX · AI', openToWork: 'Open to opportunities',
     roleLabel: 'My responsibility', highlightsLabel: 'What I delivered', outcomeLabel: 'Outcome',
   },
 };
@@ -180,7 +180,7 @@ onUnmounted(() => window.removeEventListener('hashchange', onHashChange));
             <a class="button button-light" href="#projects" @click.prevent="navigate('projects')">{{ t.viewProjects }}</a>
             <a class="button button-outline" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a>
           </div>
-          <div class="hero-meta"><span>{{ projects.length }} {{ t.projectCount }}</span><span>{{ projects.filter((project) => project.live).length }} {{ t.publicEvidence }}</span><span>{{ t.openToWork }}</span></div>
+          <div class="hero-meta"><span>{{ projects.length }} {{ t.projectCount }}</span><span>{{ projects.filter((project) => project.live).length }} {{ t.publicEvidence }}</span><span>{{ t.stackLabel }}: {{ t.stackText }}</span></div>
         </div>
       </section>
 

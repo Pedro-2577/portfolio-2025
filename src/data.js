@@ -13,7 +13,7 @@ export const projects = [
     category: 'Proyecto profesional',
     technologies: ['Laravel', 'PHP', 'MySQL', 'SEO'],
     demoType: 'php',
-    role: 'Desarrollo y mantenimiento full-cycle dentro de un equipo pequeño',
+    role: 'Desarrollo y mantenimiento de punta a punta dentro de un equipo pequeño',
     roleEn: 'Full-cycle development and maintenance within a small team',
     highlights: ['Publicación de contenidos', 'Categorías y comentarios moderados', 'Mantenimiento evolutivo', 'Trabajo coordinado con el equipo'],
     highlightsEn: ['Content publishing', 'Categories and moderated comments', 'Ongoing product maintenance', 'Coordinated team delivery'],
