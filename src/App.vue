@@ -92,9 +92,17 @@ const filteredProjects = computed(() => projects.filter((project) => {
   const matchesSearch = !query || `${project.title} ${project.description}`.toLowerCase().includes(query);
   const matchesTechnology = !technology.value || project.technologies.includes(technology.value);
   return matchesSearch && matchesTechnology && (!featuredOnly.value || project.featured);
+}).sort((a, b) => {
+  if (a.academic !== b.academic) return a.academic ? 1 : -1;
+  if (a.academic) return Number(b.startDate) - Number(a.startDate) || a.id - b.id;
+  return (a.importance || 99) - (b.importance || 99);
 }));
-const professionalProjects = computed(() => projects.filter((project) => !project.academic));
-const academicProjects = computed(() => projects.filter((project) => project.academic));
+const professionalProjects = computed(() => projects
+  .filter((project) => !project.academic)
+  .sort((a, b) => (a.importance || 99) - (b.importance || 99)));
+const academicProjects = computed(() => projects
+  .filter((project) => project.academic)
+  .sort((a, b) => Number(b.startDate) - Number(a.startDate) || a.id - b.id));
 const featuredProjects = computed(() => professionalProjects.value.filter((project) => project.featured));
 
 function techClass(technologyName) {
