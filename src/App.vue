@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
 import { contact, projects } from './data';
 
 const language = ref(localStorage.getItem('language') || 'es');
@@ -11,9 +11,13 @@ const featuredOnly = ref(false);
 const mobileMenuOpen = ref(false);
 const form = ref({ name: '', email: '', subject: '', message: '' });
 const formError = ref('');
+const demoDialog = ref(null);
+const pendingDemo = ref(null);
+let previousBodyOverflow = '';
 
 const text = {
   es: {
+    demoEyebrow: 'Demo académica', demoTitle: 'Antes de abrir la demo', demoWait: 'La demo se activa cuando la visitás. La primera carga puede tardar alrededor de un minuto.', demoTime: 'Tiempo de activación', demoTimeValue: '≈ 1 min', demoData: 'Datos de prueba · Sin compras reales', demoContinue: 'Abrir demo', demoCancel: 'Volver', demoClose: 'Cerrar aviso',
     home: 'Inicio', projects: 'Proyectos', about: 'Sobre mí', contact: 'Contacto',
     greeting: 'Hola, soy', role: 'Desarrollador de producto digital con IA',
     hero: 'Convierto problemas reales en productos web claros, funcionales y mantenibles, combinando criterio propio con herramientas de IA.',
@@ -48,6 +52,7 @@ const text = {
     roleLabel: 'Mi responsabilidad', highlightsLabel: 'Qué entregué', outcomeLabel: 'Resultado', academicProjects: 'Proyectos académicos', professionalProjects: 'Proyectos profesionales y propios', currentSite: 'Estás viendo este proyecto', inDevelopment: 'En desarrollo', developmentNotice: 'Proyecto en desarrollo. La presentación pública estará disponible después del lanzamiento.',
   },
   en: {
+    demoEyebrow: 'Academic demo', demoTitle: 'Before you open the demo', demoWait: 'The demo starts when you visit it. The first load may take about a minute.', demoTime: 'Startup time', demoTimeValue: '≈ 1 min', demoData: 'Sample data · No real purchases', demoContinue: 'Open demo', demoCancel: 'Go back', demoClose: 'Close notice',
     home: 'Home', projects: 'Projects', about: 'About me', contact: 'Contact',
     greeting: "Hi, I'm", role: 'AI-augmented product developer',
     hero: 'I turn real problems into clear, functional and maintainable web products by combining independent judgment with AI tools.',
@@ -110,10 +115,28 @@ function projectUrl(project) {
   return project.currentSite || project.demoType === 'development' ? null : project.live || (!project.private && project.github) || null;
 }
 
-function confirmDemoStart(event, project) {
-  if (project.live && project.demoType === 'php' && !window.confirm(t.value.phpWarning)) {
-    event.preventDefault();
-  }
+async function confirmDemoStart(event, project) {
+  if (!project.live || project.demoType !== 'php') return;
+  event.preventDefault();
+  if (demoDialog.value.open) return;
+  pendingDemo.value = project;
+  previousBodyOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
+  await nextTick();
+  demoDialog.value.showModal();
+}
+
+function closeDemoDialog() {
+  demoDialog.value?.close();
+}
+
+function onDemoDialogClose() {
+  pendingDemo.value = null;
+  document.body.style.overflow = previousBodyOverflow;
+}
+
+function onDemoBackdrop(event) {
+  if (event.target === demoDialog.value) closeDemoDialog();
 }
 
 function techClass(technologyName) {
@@ -169,7 +192,10 @@ onMounted(() => {
   document.documentElement.classList.toggle('dark', darkMode.value);
   window.addEventListener('hashchange', onHashChange);
 });
-onUnmounted(() => window.removeEventListener('hashchange', onHashChange));
+onUnmounted(() => {
+  window.removeEventListener('hashchange', onHashChange);
+  if (pendingDemo.value) document.body.style.overflow = previousBodyOverflow;
+});
 </script>
 
 <template>
@@ -231,6 +257,35 @@ onUnmounted(() => window.removeEventListener('hashchange', onHashChange));
 
       <section v-else-if="routeParts[0] === 'project' && selectedProject" class="section page-section"><div class="container project-detail"><div class="detail-main"><p class="eyebrow">{{ selectedProject.category }} · {{ selectedProject.startDate }}</p><h1>{{ selectedProject.title }}</h1><p class="lead">{{ selectedProject.shortDescription }}</p><img v-if="!selectedProject.academic || selectedProject.preview" :src="selectedProject.image" :alt="selectedProject.title"><h2>{{ t.projectDescription }}</h2><p>{{ selectedProject.description }}</p><div v-if="selectedProject.role || selectedProject.highlights || selectedProject.outcome" class="case-study"><div v-if="selectedProject.role"><p class="eyebrow">{{ t.roleLabel }}</p><p>{{ language === 'es' ? selectedProject.role : selectedProject.roleEn }}</p></div><div v-if="selectedProject.highlights"><p class="eyebrow">{{ t.highlightsLabel }}</p><ul><li v-for="highlight in (language === 'es' ? selectedProject.highlights : selectedProject.highlightsEn)" :key="highlight">{{ highlight }}</li></ul></div><div v-if="selectedProject.outcome"><p class="eyebrow">{{ t.outcomeLabel }}</p><p>{{ language === 'es' ? selectedProject.outcome : selectedProject.outcomeEn }}</p></div></div></div><aside class="info-panel"><h2>{{ t.projectDetails }}</h2><div class="tag-row large-tags"><span v-for="item in selectedProject.technologies" :key="item" class="tag" :class="techClass(item)">{{ item }}</span></div><a v-if="selectedProject.github && !selectedProject.private" class="button button-secondary full-width" :href="selectedProject.github" target="_blank" rel="noopener noreferrer">{{ t.sourceCode }} ↗</a><a v-if="selectedProject.live" class="button button-primary full-width" :href="selectedProject.live" @click="confirmDemoStart($event, selectedProject)" :target="selectedProject.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ t.liveDemo }} ↗</a><div v-if="selectedProject.demoType === 'development'" class="project-notice"><strong>{{ t.inDevelopment }}</strong>{{ t.developmentNotice }}</div><div v-else-if="selectedProject.currentSite" class="project-notice">{{ t.currentSite }}</div><div v-else-if="selectedProject.demoType === 'private'" class="project-notice">{{ t.privateDemo }}<span>{{ t.privateCode }}</span></div><div v-else-if="selectedProject.demoType === 'php'" class="project-notice project-notice-warning">{{ t.phpWarning }}</div><div v-else-if="!selectedProject.live && selectedProject.demoType === 'node'" class="project-notice project-notice-warning">{{ t.nodeWarning }}</div><div v-else-if="!selectedProject.live" class="project-notice">{{ t.noDemo }}</div><a class="text-link back-link" href="#projects" @click.prevent="navigate('projects')">← {{ t.back }}</a></aside></div></section>
     </main>
+
+
+    <dialog ref="demoDialog" class="demo-dialog" aria-labelledby="demo-dialog-title" aria-describedby="demo-dialog-description" @close="onDemoDialogClose" @click="onDemoBackdrop">
+      <div class="demo-dialog-content">
+        <div class="demo-dialog-top">
+          <span class="demo-dialog-label"><span aria-hidden="true"></span>{{ t.demoEyebrow }}</span>
+          <button class="demo-dialog-close" type="button" :aria-label="t.demoClose" @click="closeDemoDialog">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+          </button>
+        </div>
+        <p class="demo-dialog-project">{{ pendingDemo?.title }}</p>
+        <h2 id="demo-dialog-title">{{ t.demoTitle }}</h2>
+        <p id="demo-dialog-description" class="demo-dialog-description">{{ t.demoWait }}</p>
+        <div class="demo-dialog-time">
+          <span class="demo-dialog-clock" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+          </span>
+          <div><span>{{ t.demoTime }}</span><strong>{{ t.demoTimeValue }}</strong></div>
+          <span class="demo-dialog-stack">Laravel / PHP</span>
+        </div>
+        <p class="demo-dialog-data">{{ t.demoData }}</p>
+        <div class="demo-dialog-actions">
+          <button type="button" class="button button-secondary" @click="closeDemoDialog">{{ t.demoCancel }}</button>
+          <a v-if="pendingDemo" class="button button-primary" :href="pendingDemo.live" target="_blank" rel="noopener noreferrer" autofocus @click="closeDemoDialog">
+            {{ t.demoContinue }} <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </dialog>
 
     <footer class="site-footer"><div class="container footer-inner"><div><strong>{{ t.footer }}</strong><p>Vue · Vite · GitHub Pages</p></div><div class="footer-links"><a :href="contact.github" target="_blank" rel="noopener noreferrer">GitHub</a><a :href="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a><a :href="`mailto:${contact.email}`">Email</a></div></div></footer>
   </div>

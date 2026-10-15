@@ -251,3 +251,44 @@ details p { color: var(--muted); line-height: 1.6; }
 .project-current-site { align-self: center; color: var(--muted); font-size: .82rem; }
 
 .project-status { align-self: center; border: 1px solid var(--line); border-radius: 999px; padding: .4rem .7rem; font-size: .78rem; color: var(--muted); }
+
+/* Native dialog supplies the focus trap, Escape handling and inert background. */
+.demo-dialog {
+  width: min(480px, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: 0 28px 90px rgb(0 0 0 / .22);
+  overflow: auto;
+}
+.demo-dialog::backdrop { background: rgb(12 20 30 / .56); backdrop-filter: blur(5px); }
+.demo-dialog[open] { animation: demo-dialog-in .18s ease-out; }
+.demo-dialog-content { padding: 1.75rem; }
+.demo-dialog-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.demo-dialog-label { display: inline-flex; align-items: center; gap: .5rem; color: var(--muted); font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.demo-dialog-label > span { width: .45rem; height: .45rem; background: var(--accent); border-radius: 50%; box-shadow: 0 0 0 3px var(--soft); }
+.demo-dialog-close { display: grid; place-items: center; width: 44px; height: 44px; margin: -.5rem -.5rem -.5rem 0; padding: 0; color: var(--muted); background: transparent; border: 0; border-radius: 50%; cursor: pointer; }
+.demo-dialog-close:hover { color: var(--ink); background: var(--soft); }
+.demo-dialog-project { margin: 1.6rem 0 .5rem; color: var(--muted); font-size: .84rem; }
+.demo-dialog h2 { margin: 0; font-size: clamp(1.7rem, 5vw, 2rem); line-height: 1.12; letter-spacing: -.045em; }
+.demo-dialog-description { margin: 1rem 0 1.4rem; color: var(--muted); font-size: .96rem; line-height: 1.65; }
+.demo-dialog-time { display: flex; align-items: center; gap: .85rem; padding: 1rem; background: var(--soft); border: 1px solid var(--line); border-radius: .7rem; }
+.demo-dialog-clock { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: .65rem; }
+.demo-dialog-time > div { display: grid; gap: .25rem; }
+.demo-dialog-time > div > span { color: var(--muted); font-size: .75rem; }
+.demo-dialog-time strong { font-size: 1.15rem; letter-spacing: -.03em; }
+.demo-dialog-stack { margin-left: auto; color: var(--muted); font-size: .7rem; white-space: nowrap; }
+.demo-dialog-data { margin: .8rem 0 1.75rem; color: var(--muted); font-size: .75rem; }
+.demo-dialog-actions { display: flex; justify-content: flex-end; gap: .65rem; }
+.demo-dialog-actions .button { min-height: 44px; font-size: .88rem; }
+.demo-dialog :focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+@keyframes demo-dialog-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 420px) {
+  .demo-dialog-content { padding: 1.25rem; }
+  .demo-dialog-stack { display: none; }
+  .demo-dialog-actions .button { flex: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .demo-dialog[open] { animation: none; } }
