@@ -97,7 +97,7 @@ export const projects = [
     shortDescription: 'Tienda de tecnología con Laravel y checkout simulado',
     image: './project-placeholder.svg',
     github: null,
-    live: null,
+    live: 'https://techstore-academic-demo.onrender.com/',
     featured: false,
     private: true,
     category: 'Proyecto académico',
