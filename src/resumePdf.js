@@ -69,20 +69,25 @@ function wrap(text, maxWidth, fontSize, bold = false) {
   return lines;
 }
 
+function pdfColor(color, operator) {
+  const values = color.match(/.{2}/g).map((part) => (parseInt(part, 16) / 255).toFixed(3));
+  return values.join(' ') + ' ' + operator;
+}
+
 function textCommand(x, top, value, size = 9, bold = false, color = COLORS.body) {
   const y = PAGE_HEIGHT - top - size;
   const font = bold ? 'F2' : 'F1';
-  return 'BT /' + font + ' ' + size + ' Tf ' + color + ' rg 1 0 0 1 ' + x.toFixed(2) + ' ' + y.toFixed(2) + ' Tm <' + pdfHex(value) + '> Tj ET';
+  return 'BT /' + font + ' ' + size + ' Tf ' + pdfColor(color, 'rg') + ' 1 0 0 1 ' + x.toFixed(2) + ' ' + y.toFixed(2) + ' Tm <' + pdfHex(value) + '> Tj ET';
 }
 
 function rectCommand(x, top, width, height, color) {
   const y = PAGE_HEIGHT - top - height;
-  return 'q ' + color + ' rg ' + x + ' ' + y.toFixed(2) + ' ' + width + ' ' + height + ' re f Q';
+  return 'q ' + pdfColor(color, 'rg') + ' ' + x + ' ' + y.toFixed(2) + ' ' + width + ' ' + height + ' re f Q';
 }
 
 function lineCommand(x1, top, x2, color = COLORS.line, thickness = 0.7) {
   const y = PAGE_HEIGHT - top;
-  return 'q ' + color + ' RG ' + thickness + ' w ' + x1 + ' ' + y.toFixed(2) + ' m ' + x2 + ' ' + y.toFixed(2) + ' l S Q';
+  return 'q ' + pdfColor(color, 'RG') + ' ' + thickness + ' w ' + x1 + ' ' + y.toFixed(2) + ' m ' + x2 + ' ' + y.toFixed(2) + ' l S Q';
 }
 
 export function downloadResumePdf({ language, profile, text, contact, projects }) {
