@@ -27,7 +27,7 @@ const text = {
     allProjects: 'Ver todos los proyectos', skills: 'Tecnologías con las que trabajo',
     skillsIntro: 'Frontend, backend, datos, seguridad e inteligencia artificial: áreas que conecto para desarrollar y mejorar productos web.',
     availability: 'Disponible para nuevos desafíos',
-    availabilityText: 'Trabajo remoto desde Buenos Aires y me interesa colaborar en productos web con impacto.',
+    availabilityText: 'Trabajo remoto desde Buenos Aires. Me interesan oportunidades en desarrollo full stack, integración de IA y ciberseguridad.',
     myProjects: 'Mis proyectos', projectsIntro: 'Proyectos profesionales, demos públicas y trabajos académicos, con enlaces y alcance identificados para revisar cada experiencia con contexto.',
     search: 'Buscar por nombre o descripción', allTechnologies: 'Todas las tecnologías', onlyFeatured: 'Solo destacados',
     clear: 'Limpiar filtros', results: 'proyecto(s)', noResults: 'No se encontraron proyectos',
@@ -46,7 +46,7 @@ const text = {
     whatsappLabel: 'WhatsApp', linkedinLabel: 'Perfil profesional', locationLabel: 'Ubicación',
     remote: 'Disponible para trabajo remoto', faq: 'Preguntas frecuentes',
     faqOne: '¿Trabajás con equipos remotos?', faqOneAnswer: 'Sí. Estoy acostumbrado a colaborar con herramientas digitales, Git y comunicación asincrónica.',
-    faqTwo: '¿Qué tipo de proyectos te interesan?', faqTwoAnswer: 'Productos web, sitios institucionales, plataformas de contenido y herramientas internas que resuelvan problemas reales.',
+    faqTwo: '¿Qué tipo de proyectos te interesan?', faqTwoAnswer: 'Desarrollo full stack, integración de IA, automatización y proyectos de ciberseguridad, además de productos web que resuelvan problemas reales.',
     workflowTitle: 'Cómo trabajo con IA', workflowText: 'Primero defino la estructura, las restricciones y el resultado esperado. Después uso IA para implementar, explorar alternativas y depurar; finalmente valido comportamiento, accesibilidad, diseño, seguridad y publicación.',
     footer: 'Portfolio de Pedro Méndez Carabán', tagline: 'Creo cosas que funcionan.', sourceCode: 'Ver código', liveDemo: 'Abrir demo', privateCode: 'Código privado', privateDemo: 'Demo privada', phpWarning: 'Demo académica desarrollada con Laravel/PHP. El servidor se activa al recibir visitas; la primera carga puede tardar alrededor de un minuto. Los datos son de prueba y pueden reiniciarse.', nodeWarning: 'Este proyecto necesita un servidor Node.js para funcionar; todavía no hay una demo pública configurada.', noDemo: 'Todavía no hay una demo pública configurada para este proyecto.',
     projectCount: 'proyectos catalogados', publicEvidence: 'demos públicas revisables', stackLabel: 'Trabajo con', stackText: 'código · UX · IA', openToWork: 'Abierto a oportunidades',
@@ -62,7 +62,7 @@ const text = {
     allProjects: 'View all projects', skills: 'Technologies I work with',
     skillsIntro: 'Frontend, backend, data, security and artificial intelligence: the areas I connect to build and improve web products.',
     availability: 'Available for new challenges',
-    availabilityText: 'I work remotely from Buenos Aires and enjoy collaborating on impactful web products.',
+    availabilityText: 'I work remotely from Buenos Aires and am open to opportunities in full-stack development, AI integration and cybersecurity.',
     myProjects: 'My projects', projectsIntro: 'Professional projects, public demos and academic work, with scope and links identified so each experience can be reviewed in context.',
     search: 'Search by name or description', allTechnologies: 'All technologies', onlyFeatured: 'Featured only',
     clear: 'Clear filters', results: 'project(s)', noResults: 'No projects found',
@@ -81,7 +81,7 @@ const text = {
     whatsappLabel: 'WhatsApp', linkedinLabel: 'Professional profile', locationLabel: 'Location',
     remote: 'Available for remote work', faq: 'Frequently asked questions',
     faqOne: 'Do you work with remote teams?', faqOneAnswer: 'Yes. I am used to collaborating with digital tools, Git and asynchronous communication.',
-    faqTwo: 'What kind of projects interest you?', faqTwoAnswer: 'Web products, institutional sites, content platforms and internal tools that solve real problems.',
+    faqTwo: 'What kind of projects interest you?', faqTwoAnswer: 'Full-stack development, AI integration, automation and cybersecurity projects, as well as web products that solve real problems.',
     workflowTitle: 'How I work with AI', workflowText: 'I define the structure, constraints and expected outcome first. Then I use AI to implement, explore alternatives and debug; finally I validate behavior, accessibility, design, security and delivery.',
     footer: "Pedro Méndez Carabán's portfolio", tagline: 'I build things that work.', sourceCode: 'View source', liveDemo: 'Open demo', privateCode: 'Private code', privateDemo: 'Private demo', phpWarning: 'Academic demo built with Laravel/PHP. The server starts when visited; the first load may take about a minute. Data is for demonstration and may reset.', nodeWarning: 'This project needs a Node.js server to run; there is no public demo configured yet.', noDemo: 'There is no public demo configured for this project yet.',
     projectCount: 'cataloged projects', publicEvidence: 'reviewable public demos', stackLabel: 'Work across', stackText: 'code · UX · AI', openToWork: 'Open to opportunities',
@@ -238,7 +238,7 @@ onUnmounted(() => {
           <div class="container">
             <div class="section-heading section-heading-left"><p class="eyebrow">01 / {{ t.skills }}</p><h2>{{ t.skills }}</h2><p>{{ t.skillsIntro }}</p></div>
             <div class="skill-grid">
-              <div v-for="area in profile.skills" :key="area.title" class="skill-card"><strong>{{ area.title }}</strong><span>{{ area.items.slice(0, 3).join(' · ') }}</span></div>
+              <div v-for="area in profile.skills.slice(0, 4)" :key="area.title" class="skill-card"><strong>{{ area.title }}</strong><span>{{ area.items.slice(0, 3).join(' · ') }}</span></div>
             </div>
           </div>
         </section>

@@ -1,4 +1,4 @@
-// Professional background based on the CV and the project context supplied by Pedro.
+// Professional background based on Pedro's CV, LinkedIn profile and project context.
 export const professionalProfile = {
   "es": {
     "experienceTitle": "Experiencia profesional",
@@ -10,26 +10,27 @@ export const professionalProfile = {
     "present": "Actualidad",
     "experience": [
       {
-        "period": "2025 — Actualidad",
+        "period": "Oct. 2025 — Actualidad",
         "role": "Desarrollador full stack e integración de IA",
         "organization": "VendoAlgo · Trabajo actual",
         "items": [
           "Desarrollé la plataforma desde cero hasta su versión actual dentro del equipo, trabajando en frontend, backend, APIs y arquitectura.",
           "Participo en diseño visual, experiencia de usuario, marketing y evolución del producto.",
-          "Integro soluciones de IA y automatización para mejorar procesos internos, con prácticas de codificación segura y revisión de código."
+          "Integro soluciones de IA y automatización para mejorar procesos internos, con prácticas de codificación segura y revisión de código.",
+          "Trabajo en rendimiento y respuesta del servidor, con foco en escalabilidad y mantenibilidad."
         ]
       },
       {
-        "period": "2026 — Actualidad",
+        "period": "Ago. 2026 — Actualidad",
         "role": "Investigador de seguridad / Bug bounty",
         "organization": "Independiente · HackerOne y Bugcrowd",
         "items": [
-          "Investigo vulnerabilidades en aplicaciones web: OWASP Top 10, XSS, inyecciones y lógica de negocio.",
-          "Elaboro análisis, reportes técnicos y pruebas de concepto para comunicar los hallazgos y facilitar su corrección."
+          "Investigo vulnerabilidades en aplicaciones web: OWASP Top 10, XSS, inyecciones, autenticación, autorización y lógica de negocio.",
+          "Elaboro reportes técnicos y pruebas de concepto con impacto, evidencia, pasos de reproducción y recomendaciones de mitigación."
         ]
       },
       {
-        "period": "2020 — Actualidad",
+        "period": "Ene. 2020 — Actualidad",
         "role": "Desarrollador web full stack freelance",
         "organization": "Proyectos independientes",
         "items": [
@@ -68,7 +69,8 @@ export const professionalProfile = {
           "Sass",
           "Bootstrap",
           "Quasar",
-          "UX/UI"
+          "UX/UI",
+          "AJAX"
         ]
       },
       {
@@ -78,6 +80,9 @@ export const professionalProfile = {
           "PHP",
           "Laravel",
           "MySQL",
+          "SQL",
+          "NoSQL",
+          "JSON",
           "APIs REST",
           "Arquitectura de software"
         ]
@@ -99,6 +104,25 @@ export const professionalProfile = {
           "Integración de LLMs",
           "APIs de OpenAI y Gemini",
           "Automatización de flujos"
+        ]
+      },
+      {
+        "title": "Herramientas y publicación web",
+        "items": [
+          "Git",
+          "GitHub",
+          "WordPress",
+          "SEO"
+        ]
+      },
+      {
+        "title": "Diseño y comunicación digital",
+        "items": [
+          "Diseño web",
+          "Marketing digital",
+          "Adobe Illustrator",
+          "Adobe Photoshop",
+          "Adobe Premiere Pro"
         ]
       }
     ],
@@ -125,26 +149,27 @@ export const professionalProfile = {
     "present": "Present",
     "experience": [
       {
-        "period": "2025 — Present",
+        "period": "Oct 2025 — Present",
         "role": "Full-stack developer & AI integration",
         "organization": "VendoAlgo · Current role",
         "items": [
           "Developed the platform from scratch to its current version as part of the team, working across frontend, backend, APIs and architecture.",
           "Contribute to visual design, user experience, marketing and ongoing product development.",
-          "Integrate AI and automation to improve internal processes, applying secure coding practices and code review."
+          "Integrate AI and automation to improve internal processes, applying secure coding practices and code review.",
+          "Work on performance and server response, focusing on scalability and maintainability."
         ]
       },
       {
-        "period": "2026 — Present",
+        "period": "Aug 2026 — Present",
         "role": "Security researcher / Bug bounty",
         "organization": "Independent · HackerOne and Bugcrowd",
         "items": [
-          "Research web application vulnerabilities, including OWASP Top 10, XSS, injection flaws and business logic issues.",
-          "Write technical reports, analyses and proofs of concept to communicate findings and support remediation."
+          "Research web application vulnerabilities, including OWASP Top 10, XSS, injection flaws, authentication, authorization and business logic issues.",
+          "Write technical reports and proofs of concept describing impact, evidence, reproduction steps and mitigation recommendations."
         ]
       },
       {
-        "period": "2020 — Present",
+        "period": "Jan 2020 — Present",
         "role": "Freelance full-stack web developer",
         "organization": "Independent projects",
         "items": [
@@ -183,7 +208,8 @@ export const professionalProfile = {
           "Sass",
           "Bootstrap",
           "Quasar",
-          "UX/UI"
+          "UX/UI",
+          "AJAX"
         ]
       },
       {
@@ -193,6 +219,9 @@ export const professionalProfile = {
           "PHP",
           "Laravel",
           "MySQL",
+          "SQL",
+          "NoSQL",
+          "JSON",
           "REST APIs",
           "Software architecture"
         ]
@@ -214,6 +243,25 @@ export const professionalProfile = {
           "LLM integration",
           "OpenAI & Gemini APIs",
           "Workflow automation"
+        ]
+      },
+      {
+        "title": "Tools & web publishing",
+        "items": [
+          "Git",
+          "GitHub",
+          "WordPress",
+          "SEO"
+        ]
+      },
+      {
+        "title": "Design & digital communication",
+        "items": [
+          "Web design",
+          "Digital marketing",
+          "Adobe Illustrator",
+          "Adobe Photoshop",
+          "Adobe Premiere Pro"
         ]
       }
     ],
