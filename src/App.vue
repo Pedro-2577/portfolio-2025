@@ -172,7 +172,7 @@ function toggleLanguage() {
 async function downloadResume() {
   printingResume.value = true;
   previousDocumentTitle = document.title;
-  document.title = 'CV-Pedro-Mendez-Caraban-' + language.value.toUpperCase();
+  document.title = 'CV-Pedro-Martin-Mendez-Caraban-' + language.value.toUpperCase();
   await nextTick();
   window.print();
 }
