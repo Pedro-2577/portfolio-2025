@@ -1,4 +1,4 @@
-// Professional background based on Pedro's CV, LinkedIn profile and project context.
+// Professional background based on Pedro's CV, LinkedIn profile and academic record.
 export const professionalProfile = {
   "es": {
     "experienceTitle": "Experiencia profesional",
@@ -49,10 +49,10 @@ export const professionalProfile = {
         "description": "Formación que complementa mi trabajo tecnológico con una mirada sobre privacidad de datos, contratos tecnológicos y marcos normativos."
       },
       {
-        "period": "2019 — 2024",
-        "title": "Tecnicatura Superior en Diseño y Programación Web",
+        "period": "Desde 2019",
+        "title": "Diseño y Desarrollo Web",
         "institution": "Escuela Da Vinci · Buenos Aires",
-        "status": "Tesis pendiente · Promedio: 8",
+        "status": "Materias aprobadas · Proyecto final pendiente · Promedio: 7,86",
         "description": "Formación en desarrollo frontend y backend, diseño UX/UI y metodologías de desarrollo web."
       }
     ],
@@ -188,10 +188,10 @@ export const professionalProfile = {
         "description": "Studies that complement my technology work with a perspective on data privacy, technology contracts and regulatory frameworks."
       },
       {
-        "period": "2019 — 2024",
-        "title": "Higher Technical Program in Web Design and Programming",
+        "period": "Since 2019",
+        "title": "Web Design and Development",
         "institution": "Da Vinci School · Buenos Aires",
-        "status": "Thesis pending · Average grade: 8",
+        "status": "Coursework passed · Final project pending · Average grade: 7.86",
         "description": "Training in frontend and backend development, UX/UI design and web development methodologies."
       }
     ],
