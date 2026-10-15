@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
 import { contact, projects } from './data';
 import { professionalProfile } from './profile';
+import { downloadResumePdf } from './resumePdf';
 
 const language = ref(localStorage.getItem('language') || 'es');
 const darkMode = ref(localStorage.getItem('darkMode') === 'true');
@@ -14,8 +15,6 @@ const form = ref({ name: '', email: '', subject: '', message: '' });
 const formError = ref('');
 const demoDialog = ref(null);
 const pendingDemo = ref(null);
-const printingResume = ref(false);
-let previousDocumentTitle = '';
 let previousBodyOverflow = '';
 
 const text = {
@@ -169,17 +168,8 @@ function toggleLanguage() {
   language.value = language.value === 'es' ? 'en' : 'es';
 }
 
-async function downloadResume() {
-  printingResume.value = true;
-  previousDocumentTitle = document.title;
-  document.title = 'CV-Pedro-Martin-Mendez-Caraban-' + language.value.toUpperCase();
-  await nextTick();
-  window.print();
-}
-
-function finishResumePrint() {
-  printingResume.value = false;
-  if (previousDocumentTitle) document.title = previousDocumentTitle;
+function downloadResume() {
+  downloadResumePdf({ language: language.value, profile: profile.value, text: t.value, contact, projects: resumeProjects.value });
 }
 
 function toggleTheme() {
@@ -209,11 +199,9 @@ watch(darkMode, (value) => {
 onMounted(() => {
   document.documentElement.classList.toggle('dark', darkMode.value);
   window.addEventListener('hashchange', onHashChange);
-  window.addEventListener('afterprint', finishResumePrint);
 });
 onUnmounted(() => {
   window.removeEventListener('hashchange', onHashChange);
-  window.removeEventListener('afterprint', finishResumePrint);
   if (pendingDemo.value) document.body.style.overflow = previousBodyOverflow;
 });
 </script>
@@ -237,68 +225,6 @@ onUnmounted(() => {
       </div>
     </header>
 
-    <section v-if="printingResume" class="resume-print" :lang="language">
-      <header class="resume-header">
-        <p class="resume-kicker">{{ profile.experienceTitle }} · Buenos Aires, Argentina</p>
-        <h1>Pedro Martín Méndez Carabán</h1>
-        <p class="resume-role">{{ t.role }}</p>
-        <p class="resume-summary">{{ t.resumeSummary }}</p>
-        <div class="resume-contact">
-          <a :href="'mailto:' + contact.email">{{ contact.email }}</a>
-          <a :href="'tel:' + contact.whatsapp">{{ contact.phone }}</a>
-          <a :href="contact.linkedin">LinkedIn</a>
-          <a :href="contact.github">{{ t.resumeGitHub }}</a>
-          <a href="https://pedro-2577.github.io/portfolio-2025/">{{ t.resumeSite }}</a>
-        </div>
-      </header>
-      <div class="resume-columns">
-        <div class="resume-main-column">
-          <section class="resume-section">
-            <h2>{{ profile.experienceTitle }}</h2>
-            <article v-for="experience in profile.experience" :key="experience.role" class="resume-entry">
-              <div class="resume-entry-heading"><h3>{{ experience.role }}</h3><span>{{ experience.period }}</span></div>
-              <p class="resume-org">{{ experience.organization }}</p>
-              <ul><li v-for="item in experience.items" :key="item">{{ item }}</li></ul>
-            </article>
-          </section>
-          <section class="resume-section">
-            <h2>{{ profile.educationTitle }}</h2>
-            <article v-for="education in profile.education" :key="education.title" class="resume-entry">
-              <div class="resume-entry-heading"><h3>{{ education.title }}</h3><span>{{ education.period }}</span></div>
-              <p class="resume-org">{{ education.institution }}</p>
-              <p class="resume-status">{{ education.status }}</p>
-              <p>{{ education.description }}</p>
-            </article>
-          </section>
-          <section class="resume-section">
-            <h2>{{ t.resumeProjectsTitle }}</h2>
-            <article v-for="project in resumeProjects" :key="project.id" class="resume-project">
-              <div class="resume-entry-heading"><h3>{{ project.title }}</h3><span>{{ project.startDate }}</span></div>
-              <p>{{ language === 'es' ? project.role : project.roleEn }}</p>
-              <ul v-if="language === 'es' ? project.highlights : project.highlightsEn"><li v-for="item in (language === 'es' ? project.highlights : project.highlightsEn)" :key="item">{{ item }}</li></ul>
-              <p v-if="language === 'es' ? project.outcome : project.outcomeEn"><strong>{{ t.outcomeLabel }}:</strong> {{ language === 'es' ? project.outcome : project.outcomeEn }}</p>
-            </article>
-          </section>
-        </div>
-        <aside class="resume-side-column">
-          <section class="resume-section">
-            <h2>{{ profile.skillsTitle }}</h2>
-            <div v-for="area in profile.skills" :key="area.title" class="resume-skill"><h3>{{ area.title }}</h3><p>{{ area.items.join(' · ') }}</p></div>
-          </section>
-          <section class="resume-section">
-            <h2>{{ profile.coursesTitle }}</h2>
-            <div v-for="course in profile.courses" :key="course.title" class="resume-skill"><h3>{{ course.title }}</h3><p>{{ course.text }}</p></div>
-          </section>
-          <section class="resume-section">
-            <h2>{{ profile.languagesTitle }}</h2><p>{{ profile.languages }}</p>
-          </section>
-          <section class="resume-section">
-            <h2>{{ profile.strengthsTitle }}</h2><p>{{ profile.strengths }}</p>
-          </section>
-        </aside>
-      </div>
-      <footer class="resume-footer"><span>{{ contact.location }}</span><span>{{ t.resumePage }}</span><span>{{ contact.linkedin }}</span></footer>
-    </section>
     <main>
       <section v-if="currentRoute === 'home'" class="hero">
         <div class="container hero-content">

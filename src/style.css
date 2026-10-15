@@ -325,34 +325,3 @@ details p { color: var(--muted); line-height: 1.6; }
 @media(max-width:800px) { .cv-layout { grid-template-columns:1fr; gap:1rem; } .cv-intro { margin-bottom:2rem; } .cv-timeline { padding-left:1.2rem; } .cv-position::before { left:-1.55rem; } }
 
 
-/* Portfolio-sourced CV print layout. The browser print dialog can save this view as a PDF. */
-.resume-print { display: none; }
-@page { size: A4; margin: 14mm 13mm; }
-@media print {
-  html, body, #app, .app-shell { width: 100%; min-width: 0; min-height: 0; margin: 0; padding: 0; color: #182334; background: #fff !important; font-family: Arial, Helvetica, sans-serif; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-  .app-shell > :not(.resume-print) { display: none !important; }
-  .resume-print { display: block !important; color: #182334; font-size: 9pt; line-height: 1.42; }
-  .resume-header { padding: 0 0 7mm; border-bottom: 2px solid #a8c52b; }
-  .resume-kicker { margin: 0 0 2mm; color: #667085; font-size: 8pt; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-  .resume-header h1 { margin: 0; color: #172033; font-size: 25pt; line-height: 1.05; letter-spacing: -.04em; }
-  .resume-role { margin: 2mm 0; color: #485465; font-size: 12pt; font-weight: 600; }
-  .resume-summary { max-width: 175mm; margin: 3mm 0; color: #485465; font-size: 9.5pt; }
-  .resume-contact { display: flex; flex-wrap: wrap; gap: 2mm 5mm; margin-top: 3mm; color: #344054; font-size: 8pt; }
-  .resume-contact a, .resume-footer span { color: inherit; }
-  .resume-columns { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, .9fr); gap: 8mm; align-items: start; padding-top: 5mm; }
-  .resume-section { margin: 0 0 5mm; break-inside: auto; }
-  .resume-section h2 { margin: 0 0 2.5mm; padding-bottom: 1.2mm; border-bottom: 1px solid #dce1e8; color: #172033; font-size: 12pt; line-height: 1.2; }
-  .resume-entry, .resume-project, .resume-skill { margin: 0 0 3.5mm; break-inside: avoid; }
-  .resume-entry-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 3mm; }
-  .resume-entry-heading h3, .resume-skill h3 { margin: 0; color: #172033; font-size: 9.5pt; line-height: 1.3; }
-  .resume-entry-heading span { flex: none; color: #667085; font-size: 7.5pt; }
-  .resume-org { margin: .6mm 0 1.5mm; color: #667085; font-size: 8pt; }
-  .resume-entry p:not(.resume-org), .resume-project p, .resume-skill p, .resume-side-column > .resume-section > p { margin: 1mm 0; color: #475467; font-size: 8pt; }
-  .resume-entry ul, .resume-project ul { margin: 1mm 0 0; padding-left: 4mm; color: #475467; font-size: 8pt; }
-  .resume-entry li, .resume-project li { margin: .5mm 0; }
-  .resume-status { font-weight: 600; }
-  .resume-skill h3 { margin-bottom: .5mm; }
-  .resume-skill p { line-height: 1.45; }
-  .resume-footer { display: flex; justify-content: space-between; gap: 4mm; margin-top: 4mm; padding-top: 2mm; border-top: 1px solid #dce1e8; color: #667085; font-size: 7pt; }
-  a { text-decoration: none; }
-}
