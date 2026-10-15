@@ -292,3 +292,34 @@ details p { color: var(--muted); line-height: 1.6; }
   .demo-dialog-actions .button { flex: 1; }
 }
 @media (prefers-reduced-motion: reduce) { .demo-dialog[open] { animation: none; } }
+
+.cv-intro { max-width:800px; margin-bottom:3rem; }
+.cv-intro h1 { margin:0 0 1.5rem; font-size:clamp(2.6rem,5vw,4rem); line-height:1.05; letter-spacing:-.055em; }
+.cv-intro > p:not(.eyebrow) { color:var(--muted); font-size:1rem; line-height:1.8; }
+.cv-intro .cv-lead { color:var(--ink); font-size:clamp(1.15rem,2vw,1.4rem); line-height:1.6; }
+.cv-layout { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); gap:3rem; align-items:start; }
+.cv-section { margin-bottom:3rem; }
+.cv-section > h2,.cv-sidebar h2 { margin:0 0 1.5rem; font-size:1.35rem; letter-spacing:-.035em; }
+.cv-timeline { border-left:1px solid var(--line); margin-left:.35rem; padding-left:1.65rem; }
+.cv-position { position:relative; padding-bottom:2rem; }
+.cv-position:last-child { padding-bottom:0; }
+.cv-position::before { content:''; position:absolute; width:9px; height:9px; border-radius:50%; left:-2rem; top:.2rem; background:var(--accent); box-shadow:0 0 0 4px var(--surface); }
+.cv-period { margin:0 0 .6rem; color:var(--muted); font-size:.75rem; font-weight:600; }
+.cv-position h3,.cv-education h3 { margin:0 0 .5rem; font-size:1.12rem; line-height:1.35; letter-spacing:-.025em; }
+.cv-organization { color:var(--muted); margin:0 0 1rem; font-size:.85rem; }
+.cv-position ul { display:grid; gap:.6rem; margin:0; padding-left:1.1rem; color:var(--muted); font-size:.9rem; line-height:1.75; }
+.cv-education { padding:1.5rem; border:1px solid var(--line); border-radius:.6rem; margin-bottom:1rem; }
+.cv-status { display:inline-block; padding:.35rem .6rem; border:1px solid var(--line); background:var(--soft); border-radius:.35rem; font-size:.72rem; }
+.cv-education > p:last-child { margin:1rem 0 0; color:var(--muted); font-size:.88rem; line-height:1.75; }
+.cv-course { padding:1rem 0; border-bottom:1px solid var(--line); }
+.cv-course h3 { margin:0 0 .5rem; font-size:.95rem; }
+.cv-course p,.cv-sidebar p { margin:0; color:var(--muted); font-size:.88rem; line-height:1.75; }
+.cv-sidebar { display:grid; gap:1rem; min-width:0; }
+.cv-sidebar .info-panel { border-radius:.6rem; }
+.cv-skill-area + .cv-skill-area { margin-top:1.5rem; }
+.cv-skill-area h3 { margin:0 0 .75rem; font-size:.85rem; font-weight:600; }
+.cv-sidebar .quote-box { margin-top:1.5rem; }
+.cv-sidebar .quote-box p { margin-top:.6rem; }
+.skill-card strong { line-height:1.3; }
+.skill-card span { line-height:1.5; }
+@media(max-width:800px) { .cv-layout { grid-template-columns:1fr; gap:1rem; } .cv-intro { margin-bottom:2rem; } .cv-timeline { padding-left:1.2rem; } .cv-position::before { left:-1.55rem; } }
