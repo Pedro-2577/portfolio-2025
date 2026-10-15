@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">citARme</title>
+  <desc id="desc">Portada del proyecto en desarrollo.</desc>
+  <rect width="1200" height="760" fill="#17251f"/>
+  <circle cx="1050" cy="80" r="390" fill="#20392c"/>
+  <circle cx="1050" cy="80" r="285" fill="none" stroke="#44694e" stroke-width="2"/>
+  <path d="M90 600H1110" stroke="#44694e" stroke-width="2"/>
+  <text x="90" y="180" font-family="Arial,sans-serif" font-size="24" letter-spacing="5" fill="#c1d2bf">PEDRO MÉNDEZ CARABÁN</text>
+  <text x="85" y="440" font-family="Arial,sans-serif" font-size="140" font-weight="700" fill="#f1f3e9">citARme</text>
+  <text x="95" y="515" font-family="Arial,sans-serif" font-size="28" fill="#c1d2bf">En desarrollo / In development</text>
+  <text x="95" y="665" font-family="Arial,sans-serif" font-size="23" fill="#c1d2bf">Nuxt · Vue · TypeScript</text>
+</svg>

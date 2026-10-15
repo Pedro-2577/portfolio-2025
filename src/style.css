@@ -247,3 +247,7 @@ details p { color: var(--muted); line-height: 1.6; }
   .footer-inner { align-items: flex-start; flex-direction: column; }
   .footer-links { flex-wrap: wrap; }
 }
+
+.project-current-site { align-self: center; color: var(--muted); font-size: .82rem; }
+
+.project-status { align-self: center; border: 1px solid var(--line); border-radius: 999px; padding: .4rem .7rem; font-size: .78rem; color: var(--muted); }
