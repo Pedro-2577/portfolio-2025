@@ -14,6 +14,8 @@ const form = ref({ name: '', email: '', subject: '', message: '' });
 const formError = ref('');
 const demoDialog = ref(null);
 const pendingDemo = ref(null);
+const printingResume = ref(false);
+let previousDocumentTitle = '';
 let previousBodyOverflow = '';
 
 const text = {
@@ -49,7 +51,7 @@ const text = {
     faqTwo: '¿Qué tipo de proyectos te interesan?', faqTwoAnswer: 'Desarrollo full stack, integración de IA, automatización y proyectos de ciberseguridad, además de productos web que resuelvan problemas reales.',
     workflowTitle: 'Cómo trabajo con IA', workflowText: 'Primero defino la estructura, las restricciones y el resultado esperado. Después uso IA para implementar, explorar alternativas y depurar; finalmente valido comportamiento, accesibilidad, diseño, seguridad y publicación.',
     footer: 'Portfolio de Pedro Méndez Carabán', tagline: 'Creo cosas que funcionan.', sourceCode: 'Ver código', liveDemo: 'Abrir demo', privateCode: 'Código privado', privateDemo: 'Demo privada', phpWarning: 'Demo académica desarrollada con Laravel/PHP. El servidor se activa al recibir visitas; la primera carga puede tardar alrededor de un minuto. Los datos son de prueba y pueden reiniciarse.', nodeWarning: 'Este proyecto necesita un servidor Node.js para funcionar; todavía no hay una demo pública configurada.', noDemo: 'Todavía no hay una demo pública configurada para este proyecto.',
-    projectCount: 'proyectos catalogados', publicEvidence: 'demos públicas revisables', stackLabel: 'Trabajo con', stackText: 'código · UX · IA', openToWork: 'Abierto a oportunidades',
+    resumeDownload: 'Descargar CV (PDF)', resumeSummary: 'Desarrollador full stack con experiencia en productos web, integración de IA y seguridad de aplicaciones. Desarrollo desde el frontend hasta las APIs y el backend, con foco en experiencia de usuario, rendimiento y mantenibilidad.', resumeProjectsTitle: 'Proyectos seleccionados', resumeGitHub: 'GitHub', resumeSite: 'Portfolio', resumePage: 'Portfolio', projectCount: 'proyectos catalogados', publicEvidence: 'demos públicas revisables', stackLabel: 'Trabajo con', stackText: 'código · UX · IA', openToWork: 'Abierto a oportunidades',
     roleLabel: 'Mi responsabilidad', highlightsLabel: 'Qué entregué', outcomeLabel: 'Resultado', academicProjects: 'Proyectos académicos', professionalProjects: 'Proyectos profesionales y propios', currentSite: 'Estás viendo este proyecto', inDevelopment: 'En desarrollo', developmentNotice: 'Proyecto en desarrollo. La presentación pública estará disponible después del lanzamiento.',
   },
   en: {
@@ -84,7 +86,7 @@ const text = {
     faqTwo: 'What kind of projects interest you?', faqTwoAnswer: 'Full-stack development, AI integration, automation and cybersecurity projects, as well as web products that solve real problems.',
     workflowTitle: 'How I work with AI', workflowText: 'I define the structure, constraints and expected outcome first. Then I use AI to implement, explore alternatives and debug; finally I validate behavior, accessibility, design, security and delivery.',
     footer: "Pedro Méndez Carabán's portfolio", tagline: 'I build things that work.', sourceCode: 'View source', liveDemo: 'Open demo', privateCode: 'Private code', privateDemo: 'Private demo', phpWarning: 'Academic demo built with Laravel/PHP. The server starts when visited; the first load may take about a minute. Data is for demonstration and may reset.', nodeWarning: 'This project needs a Node.js server to run; there is no public demo configured yet.', noDemo: 'There is no public demo configured for this project yet.',
-    projectCount: 'cataloged projects', publicEvidence: 'reviewable public demos', stackLabel: 'Work across', stackText: 'code · UX · AI', openToWork: 'Open to opportunities',
+    resumeDownload: 'Download CV (PDF)', resumeSummary: 'Full-stack developer experienced in web products, AI integration and application security. I work across frontend, APIs and backend, focusing on user experience, performance and maintainability.', resumeProjectsTitle: 'Selected projects', resumeGitHub: 'GitHub', resumeSite: 'Portfolio', resumePage: 'Portfolio', projectCount: 'cataloged projects', publicEvidence: 'reviewable public demos', stackLabel: 'Work across', stackText: 'code · UX · AI', openToWork: 'Open to opportunities',
     roleLabel: 'My responsibility', highlightsLabel: 'What I delivered', outcomeLabel: 'Outcome', academicProjects: 'Academic projects', professionalProjects: 'Professional and personal projects', currentSite: 'You are viewing this project', inDevelopment: 'In development', developmentNotice: 'Project in development. A public presentation will be available after launch.',
   },
 };
@@ -111,6 +113,7 @@ const academicProjects = computed(() => projects
   .filter((project) => project.academic)
   .sort((a, b) => Number(b.startDate) - Number(a.startDate) || a.id - b.id));
 const featuredProjects = computed(() => professionalProjects.value.filter((project) => project.featured));
+const resumeProjects = computed(() => professionalProjects.value.filter((project) => project.role || project.roleEn).slice(0, 3));
 
 // A project may have public source without a hosted demo.
 function projectUrl(project) {
@@ -166,6 +169,19 @@ function toggleLanguage() {
   language.value = language.value === 'es' ? 'en' : 'es';
 }
 
+async function downloadResume() {
+  printingResume.value = true;
+  previousDocumentTitle = document.title;
+  document.title = 'CV-Pedro-Mendez-Caraban-' + language.value.toUpperCase();
+  await nextTick();
+  window.print();
+}
+
+function finishResumePrint() {
+  printingResume.value = false;
+  if (previousDocumentTitle) document.title = previousDocumentTitle;
+}
+
 function toggleTheme() {
   darkMode.value = !darkMode.value;
 }
@@ -193,9 +209,11 @@ watch(darkMode, (value) => {
 onMounted(() => {
   document.documentElement.classList.toggle('dark', darkMode.value);
   window.addEventListener('hashchange', onHashChange);
+  window.addEventListener('afterprint', finishResumePrint);
 });
 onUnmounted(() => {
   window.removeEventListener('hashchange', onHashChange);
+  window.removeEventListener('afterprint', finishResumePrint);
   if (pendingDemo.value) document.body.style.overflow = previousBodyOverflow;
 });
 </script>
@@ -219,6 +237,68 @@ onUnmounted(() => {
       </div>
     </header>
 
+    <section v-if="printingResume" class="resume-print" :lang="language">
+      <header class="resume-header">
+        <p class="resume-kicker">{{ profile.experienceTitle }} · Buenos Aires, Argentina</p>
+        <h1>Pedro Martín Méndez Carabán</h1>
+        <p class="resume-role">{{ t.role }}</p>
+        <p class="resume-summary">{{ t.resumeSummary }}</p>
+        <div class="resume-contact">
+          <a :href="'mailto:' + contact.email">{{ contact.email }}</a>
+          <a :href="'tel:' + contact.whatsapp">{{ contact.phone }}</a>
+          <a :href="contact.linkedin">LinkedIn</a>
+          <a :href="contact.github">{{ t.resumeGitHub }}</a>
+          <a href="https://pedro-2577.github.io/portfolio-2025/">{{ t.resumeSite }}</a>
+        </div>
+      </header>
+      <div class="resume-columns">
+        <div class="resume-main-column">
+          <section class="resume-section">
+            <h2>{{ profile.experienceTitle }}</h2>
+            <article v-for="experience in profile.experience" :key="experience.role" class="resume-entry">
+              <div class="resume-entry-heading"><h3>{{ experience.role }}</h3><span>{{ experience.period }}</span></div>
+              <p class="resume-org">{{ experience.organization }}</p>
+              <ul><li v-for="item in experience.items" :key="item">{{ item }}</li></ul>
+            </article>
+          </section>
+          <section class="resume-section">
+            <h2>{{ profile.educationTitle }}</h2>
+            <article v-for="education in profile.education" :key="education.title" class="resume-entry">
+              <div class="resume-entry-heading"><h3>{{ education.title }}</h3><span>{{ education.period }}</span></div>
+              <p class="resume-org">{{ education.institution }}</p>
+              <p class="resume-status">{{ education.status }}</p>
+              <p>{{ education.description }}</p>
+            </article>
+          </section>
+          <section class="resume-section">
+            <h2>{{ t.resumeProjectsTitle }}</h2>
+            <article v-for="project in resumeProjects" :key="project.id" class="resume-project">
+              <div class="resume-entry-heading"><h3>{{ project.title }}</h3><span>{{ project.startDate }}</span></div>
+              <p>{{ language === 'es' ? project.role : project.roleEn }}</p>
+              <ul v-if="language === 'es' ? project.highlights : project.highlightsEn"><li v-for="item in (language === 'es' ? project.highlights : project.highlightsEn)" :key="item">{{ item }}</li></ul>
+              <p v-if="language === 'es' ? project.outcome : project.outcomeEn"><strong>{{ t.outcomeLabel }}:</strong> {{ language === 'es' ? project.outcome : project.outcomeEn }}</p>
+            </article>
+          </section>
+        </div>
+        <aside class="resume-side-column">
+          <section class="resume-section">
+            <h2>{{ profile.skillsTitle }}</h2>
+            <div v-for="area in profile.skills" :key="area.title" class="resume-skill"><h3>{{ area.title }}</h3><p>{{ area.items.join(' · ') }}</p></div>
+          </section>
+          <section class="resume-section">
+            <h2>{{ profile.coursesTitle }}</h2>
+            <div v-for="course in profile.courses" :key="course.title" class="resume-skill"><h3>{{ course.title }}</h3><p>{{ course.text }}</p></div>
+          </section>
+          <section class="resume-section">
+            <h2>{{ profile.languagesTitle }}</h2><p>{{ profile.languages }}</p>
+          </section>
+          <section class="resume-section">
+            <h2>{{ profile.strengthsTitle }}</h2><p>{{ profile.strengths }}</p>
+          </section>
+        </aside>
+      </div>
+      <footer class="resume-footer"><span>{{ contact.location }}</span><span>{{ t.resumePage }}</span><span>{{ contact.linkedin }}</span></footer>
+    </section>
     <main>
       <section v-if="currentRoute === 'home'" class="hero">
         <div class="container hero-content">
@@ -226,6 +306,7 @@ onUnmounted(() => {
           <h1>{{ t.greeting }} <span>Pedro.</span><br><em>{{ t.tagline }}</em></h1>
           <p class="hero-copy">{{ t.hero }}</p>
           <div class="button-row">
+            <button class="button button-outline" type="button" @click="downloadResume">{{ t.resumeDownload }}</button>
             <a class="button button-light" href="#projects" @click.prevent="navigate('projects')">{{ t.viewProjects }}</a>
             <a class="button button-outline" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a>
           </div>
@@ -255,7 +336,7 @@ onUnmounted(() => {
 
       <section v-else-if="currentRoute === 'about'" class="section page-section cv-about">
         <div class="container">
-          <header class="cv-intro"><p class="eyebrow">04 / {{ t.about }}</p><h1>{{ t.aboutTitle }}</h1><p class="cv-lead">{{ t.aboutIntro }}</p><p>{{ t.storyOne }}</p><p>{{ t.storyTwo }}</p></header>
+          <header class="cv-intro"><p class="eyebrow">04 / {{ t.about }}</p><h1>{{ t.aboutTitle }}</h1><p class="cv-lead">{{ t.aboutIntro }}</p><button class="button button-primary" type="button" @click="downloadResume">{{ t.resumeDownload }}</button><p>{{ t.storyOne }}</p><p>{{ t.storyTwo }}</p></header>
           <div class="cv-layout">
             <div>
               <section class="cv-section" aria-labelledby="cv-experience-title">
