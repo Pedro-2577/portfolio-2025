@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
 import { contact, projects } from './data';
+import { professionalProfile } from './profile';
 
 const language = ref(localStorage.getItem('language') || 'es');
 const darkMode = ref(localStorage.getItem('darkMode') === 'true');
@@ -19,12 +20,12 @@ const text = {
   es: {
     demoEyebrow: 'Demo académica', demoTitle: 'Antes de abrir la demo', demoWait: 'La demo se activa cuando la visitás. La primera carga puede tardar alrededor de un minuto.', demoTime: 'Tiempo de activación', demoTimeValue: '≈ 1 min', demoData: 'Datos de prueba · Sin compras reales', demoContinue: 'Abrir demo', demoCancel: 'Volver', demoClose: 'Cerrar aviso',
     home: 'Inicio', projects: 'Proyectos', about: 'Sobre mí', contact: 'Contacto',
-    greeting: 'Hola, soy', role: 'Desarrollador de producto digital con IA',
-    hero: 'Convierto problemas reales en productos web claros, funcionales y mantenibles, combinando criterio propio con herramientas de IA.',
+    greeting: 'Hola, soy', role: 'Desarrollador full stack · Seguridad · IA',
+    hero: 'Desarrollo productos web de punta a punta, integro IA y aplico una mirada de seguridad desde el código. Trabajo con JavaScript y PHP desde 2020, combinando programación, UX y criterio de producto.',
     viewProjects: 'Ver proyectos', talk: 'Hablemos', featured: 'Proyectos destacados',
     featuredIntro: 'Una selección curada de demos públicas y proyectos profesionales. El resto del catálogo separa claramente trabajos académicos y experiencias privadas.',
     allProjects: 'Ver todos los proyectos', skills: 'Tecnologías con las que trabajo',
-    skillsIntro: 'Arquitectura, interfaz, datos, comunicación y publicación: el conjunto de habilidades necesario para llevar una idea a producción.',
+    skillsIntro: 'Frontend, backend, datos, seguridad e inteligencia artificial: áreas que conecto para desarrollar y mejorar productos web.',
     availability: 'Disponible para nuevos desafíos',
     availabilityText: 'Trabajo remoto desde Buenos Aires y me interesa colaborar en productos web con impacto.',
     myProjects: 'Mis proyectos', projectsIntro: 'Proyectos profesionales, demos públicas y trabajos académicos, con enlaces y alcance identificados para revisar cada experiencia con contexto.',
@@ -34,10 +35,10 @@ const text = {
     privateProject: 'Proyecto privado', featuredTag: 'Destacado', github: 'GitHub', demo: 'Ver proyecto',
     projectDescription: 'Descripción del proyecto', projectDetails: 'Detalles del proyecto',
     technologies: 'Tecnologías utilizadas', back: 'Volver a proyectos', aboutTitle: 'Sobre mí',
-    aboutIntro: 'Perfil transversal orientado a producto: entiendo el problema, diseño una estrategia técnica, implemento con IA y valido personalmente el resultado.',
-    story: 'Mi recorrido', storyOne: 'Soy Pedro Méndez Carabán, desarrollador de producto digital con experiencia profesional en Vendoalgo y WeCanAgro, además de proyectos propios y académicos.',
-    storyTwo: 'Mi recorrido combina programación, UX, diseño, marketing y comunicación. Esa mezcla me permite adaptarme al problema en lugar de limitarme a una sola capa del producto.',
-    education: 'Formación', educationText: 'Técnico Superior en Diseño y Programación Web — Escuela Da Vinci, Buenos Aires.',
+    aboutIntro: 'Soy Pedro Martín Méndez Carabán. Combino desarrollo full stack, investigación de seguridad e integración de IA para construir productos web con una mirada integral.',
+    story: 'Mi recorrido', storyOne: 'Desde 2020 trabajo en proyectos web independientes. Actualmente soy programador en el equipo de VendoAlgo, donde desarrollé la plataforma desde cero y sigo participando en su evolución.',
+    storyTwo: 'Mi recorrido también incluye UX, diseño, marketing y extensiones para navegadores. La investigación de vulnerabilidades y mis estudios de Abogacía suman una perspectiva sobre seguridad, privacidad y contexto de uso.',
+    education: 'Formación', educationText: 'Tecnicatura Superior en Diseño y Programación Web — Escuela Da Vinci. Tesis pendiente.',
     contactTitle: 'Hablemos', contactIntro: '¿Tenés una idea, una oportunidad o querés conocer más sobre un proyecto? Elegí el canal que te resulte más cómodo.',
     sendMessage: 'Preparar un mensaje', response: 'Normalmente respondo dentro de las 24 horas.',
     name: 'Nombre', email: 'Email', subject: 'Asunto', message: 'Mensaje', send: 'Abrir correo',
@@ -54,12 +55,12 @@ const text = {
   en: {
     demoEyebrow: 'Academic demo', demoTitle: 'Before you open the demo', demoWait: 'The demo starts when you visit it. The first load may take about a minute.', demoTime: 'Startup time', demoTimeValue: '≈ 1 min', demoData: 'Sample data · No real purchases', demoContinue: 'Open demo', demoCancel: 'Go back', demoClose: 'Close notice',
     home: 'Home', projects: 'Projects', about: 'About me', contact: 'Contact',
-    greeting: "Hi, I'm", role: 'AI-augmented product developer',
-    hero: 'I turn real problems into clear, functional and maintainable web products by combining independent judgment with AI tools.',
+    greeting: "Hi, I'm", role: 'Full-stack developer · Security · AI',
+    hero: 'I build web products end to end, integrate AI and bring a security perspective to the code. Working with JavaScript and PHP since 2020, I combine development, UX and product judgment.',
     viewProjects: 'View projects', talk: "Let's talk", featured: 'Featured projects',
     featuredIntro: 'A curated selection of public demos and professional projects. The full catalog clearly separates academic work and private experience.',
     allProjects: 'View all projects', skills: 'Technologies I work with',
-    skillsIntro: 'Architecture, interfaces, data, communication and delivery: the skills needed to take an idea to production.',
+    skillsIntro: 'Frontend, backend, data, security and artificial intelligence: the areas I connect to build and improve web products.',
     availability: 'Available for new challenges',
     availabilityText: 'I work remotely from Buenos Aires and enjoy collaborating on impactful web products.',
     myProjects: 'My projects', projectsIntro: 'Professional projects, public demos and academic work, with scope and links identified so each experience can be reviewed in context.',
@@ -69,10 +70,10 @@ const text = {
     privateProject: 'Private project', featuredTag: 'Featured', github: 'GitHub', demo: 'View project',
     projectDescription: 'Project description', projectDetails: 'Project details',
     technologies: 'Technologies used', back: 'Back to projects', aboutTitle: 'About me',
-    aboutIntro: 'A transversal product profile: I understand the problem, define a technical strategy, implement with AI and personally validate the result.',
-    story: 'My journey', storyOne: 'I am Pedro Méndez Carabán, a product developer with professional experience in Vendoalgo and WeCanAgro, as well as personal and academic projects.',
-    storyTwo: 'My background combines programming, UX, design, marketing and communication. This helps me adapt to the product problem instead of limiting myself to one layer.',
-    education: 'Education', educationText: 'Higher Technician in Web Design and Programming — Da Vinci School, Buenos Aires.',
+    aboutIntro: 'I am Pedro Martín Méndez Carabán. I combine full-stack development, security research and AI integration to build web products from a broad technical perspective.',
+    story: 'My journey', storyOne: 'I have worked on independent web projects since 2020. I currently work as a developer on the VendoAlgo team, where I built the platform from scratch and continue to contribute to its development.',
+    storyTwo: 'My background also includes UX, design, marketing and browser extensions. Vulnerability research and my law studies add a perspective on security, privacy and the context in which software is used.',
+    education: 'Education', educationText: 'Higher Technical Program in Web Design and Programming — Da Vinci School. Thesis pending.',
     contactTitle: "Let's talk", contactIntro: 'Have an idea, an opportunity or want to learn more about a project? Choose the channel that works best for you.',
     sendMessage: 'Prepare a message', response: 'I usually reply within 24 hours.',
     name: 'Name', email: 'Email', subject: 'Subject', message: 'Message', send: 'Open email',
@@ -89,6 +90,7 @@ const text = {
 };
 
 const t = computed(() => text[language.value]);
+const profile = computed(() => professionalProfile[language.value]);
 const routeParts = computed(() => currentRoute.value.split('/').filter(Boolean));
 const selectedProject = computed(() => projects.find((project) => project.slug === routeParts.value[1]));
 const technologies = computed(() => [...new Set(projects.flatMap((project) => project.technologies))].sort());
@@ -236,7 +238,7 @@ onUnmounted(() => {
           <div class="container">
             <div class="section-heading section-heading-left"><p class="eyebrow">01 / {{ t.skills }}</p><h2>{{ t.skills }}</h2><p>{{ t.skillsIntro }}</p></div>
             <div class="skill-grid">
-              <div v-for="skill in ['Vue.js', 'Node.js', 'PHP / MySQL', 'UX / UI']" :key="skill" class="skill-card"><strong>{{ skill }}</strong><span>{{ skill === 'Vue.js' ? 'Frontend' : skill === 'Node.js' ? 'Backend' : skill === 'PHP / MySQL' ? 'Data & APIs' : 'Interfaces' }}</span></div>
+              <div v-for="area in profile.skills" :key="area.title" class="skill-card"><strong>{{ area.title }}</strong><span>{{ area.items.slice(0, 3).join(' · ') }}</span></div>
             </div>
           </div>
         </section>
@@ -251,7 +253,39 @@ onUnmounted(() => {
         <div class="container"><div class="section-heading section-heading-left"><p class="eyebrow">03 / {{ t.projects }}</p><h1>{{ t.myProjects }}</h1><p>{{ t.projectsIntro }}</p></div><div class="filters"><input v-model="search" type="search" :placeholder="t.search"><select v-model="technology"><option value="">{{ t.allTechnologies }}</option><option v-for="item in technologies" :key="item" :value="item">{{ item }}</option></select><label><input v-model="featuredOnly" type="checkbox"> {{ t.onlyFeatured }}</label><button v-if="search || technology || featuredOnly" class="text-button" type="button" @click="search = ''; technology = ''; featuredOnly = false">{{ t.clear }}</button></div><p class="result-count">{{ filteredProjects.length }} {{ t.results }}</p><div v-if="filteredProjects.some((project) => !project.academic)" class="category-divider"><span>{{ t.professionalProjects }}</span></div><div v-if="filteredProjects.length" class="project-grid"><article v-for="project in filteredProjects.filter((item) => !item.academic)" :key="project.id" class="project-card"><div class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">0{{ project.id }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="techClass(item)">{{ item }}</span></div><div class="card-actions"><a class="button button-small" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ t.demo }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span></div></div></article></div><div v-else class="empty-state"><h2>{{ t.noResults }}</h2><p>{{ t.adjust }}</p></div><div v-if="filteredProjects.some((project) => project.academic)" class="category-divider"><span>{{ t.academicProjects }}</span></div><div class="project-grid"><article v-for="project in filteredProjects.filter((item) => item.academic)" :key="project.id" class="project-card academic-card"><div v-if="project.preview" class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">0{{ project.id }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="techClass(item)">{{ item }}</span></div><div class="card-actions"><a class="button button-small" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ t.demo }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span></div></div></article></div></div>
       </section>
 
-      <section v-else-if="currentRoute === 'about'" class="section page-section"><div class="container two-columns"><div class="prose"><p class="eyebrow">04 / {{ t.about }}</p><h1>{{ t.aboutTitle }}</h1><p class="lead">{{ t.aboutIntro }}</p><h2>{{ t.story }}</h2><p>{{ t.storyOne }}</p><p>{{ t.storyTwo }}</p><h2>{{ t.education }}</h2><p>{{ t.educationText }}</p></div><div class="info-panel"><h2>{{ t.skills }}</h2><div class="tag-row large-tags"><span v-for="item in ['Vue.js', 'Nuxt', 'JavaScript', 'Node.js', 'PHP', 'MySQL', 'Laravel', 'Git & GitHub', 'Responsive Design', 'UX']" :key="item" class="tag" :class="techClass(item)">{{ item }}</span></div><div class="quote-box"><strong>{{ t.workflowTitle }}</strong><p>{{ t.workflowText }}</p></div><div class="quote-box"><strong>{{ t.availability }}</strong><p>{{ t.availabilityText }}</p></div></div></div></section>
+      <section v-else-if="currentRoute === 'about'" class="section page-section cv-about">
+        <div class="container">
+          <header class="cv-intro"><p class="eyebrow">04 / {{ t.about }}</p><h1>{{ t.aboutTitle }}</h1><p class="cv-lead">{{ t.aboutIntro }}</p><p>{{ t.storyOne }}</p><p>{{ t.storyTwo }}</p></header>
+          <div class="cv-layout">
+            <div>
+              <section class="cv-section" aria-labelledby="cv-experience-title">
+                <h2 id="cv-experience-title">{{ profile.experienceTitle }}</h2>
+                <div class="cv-timeline">
+                  <article v-for="experience in profile.experience" :key="experience.role" class="cv-position">
+                    <p class="cv-period">{{ experience.period }}</p><h3>{{ experience.role }}</h3><p class="cv-organization">{{ experience.organization }}</p>
+                    <ul><li v-for="item in experience.items" :key="item">{{ item }}</li></ul>
+                  </article>
+                </div>
+              </section>
+              <section class="cv-section" aria-labelledby="cv-education-title">
+                <h2 id="cv-education-title">{{ profile.educationTitle }}</h2>
+                <article v-for="education in profile.education" :key="education.title" class="cv-education">
+                  <p class="cv-period">{{ education.period }}</p><h3>{{ education.title }}</h3><p class="cv-organization">{{ education.institution }}</p><span class="cv-status">{{ education.status }}</span><p>{{ education.description }}</p>
+                </article>
+              </section>
+              <section class="cv-section" aria-labelledby="cv-courses-title">
+                <h2 id="cv-courses-title">{{ profile.coursesTitle }}</h2>
+                <div v-for="course in profile.courses" :key="course.title" class="cv-course"><h3>{{ course.title }}</h3><p>{{ course.text }}</p></div>
+              </section>
+            </div>
+            <aside class="cv-sidebar">
+              <section class="info-panel"><h2>{{ profile.skillsTitle }}</h2><div v-for="area in profile.skills" :key="area.title" class="cv-skill-area"><h3>{{ area.title }}</h3><div class="tag-row"><span v-for="item in area.items" :key="item" class="tag" :class="techClass(item)">{{ item }}</span></div></div></section>
+              <section class="info-panel"><h2>{{ profile.languagesTitle }}</h2><p>{{ profile.languages }}</p><div class="quote-box"><strong>{{ profile.strengthsTitle }}</strong><p>{{ profile.strengths }}</p></div></section>
+              <section class="info-panel"><h2>{{ t.workflowTitle }}</h2><p>{{ t.workflowText }}</p></section>
+            </aside>
+          </div>
+        </div>
+      </section>
 
       <section v-else-if="currentRoute === 'contact'" class="section page-section"><div class="container"><div class="section-heading"><p class="eyebrow">{{ t.contact }}</p><h1>{{ t.contactTitle }}</h1><p>{{ t.contactIntro }}</p></div><div class="two-columns contact-layout"><div class="contact-form-panel"><h2>{{ t.sendMessage }}</h2><p class="muted">{{ t.response }}</p><form @submit.prevent="submitContact"><label>{{ t.name }}<input v-model="form.name" type="text" required></label><label>{{ t.email }}<input v-model="form.email" type="email" required></label><label>{{ t.subject }}<input v-model="form.subject" type="text" required></label><label>{{ t.message }}<textarea v-model="form.message" rows="5" required></textarea></label><p v-if="formError" class="form-error">{{ formError }}</p><button class="button button-primary" type="submit">{{ t.send }} ↗</button></form></div><div class="contact-info"><a class="contact-card" :href="`mailto:${contact.email}`"><strong>{{ t.emailLabel }}</strong><span>{{ contact.email }}</span></a><a class="contact-card" :href="`https://wa.me/${contact.whatsapp}`" target="_blank" rel="noopener noreferrer"><strong>{{ t.whatsappLabel }}</strong><span>{{ contact.phone }}</span></a><a class="contact-card" :href="contact.linkedin" target="_blank" rel="noopener noreferrer"><strong>{{ t.linkedinLabel }}</strong><span>LinkedIn ↗</span></a><div class="contact-card"><strong>{{ t.locationLabel }}</strong><span>{{ contact.location }} · {{ t.remote }}</span></div><div class="faq"><h2>{{ t.faq }}</h2><details><summary>{{ t.faqOne }}</summary><p>{{ t.faqOneAnswer }}</p></details><details><summary>{{ t.faqTwo }}</summary><p>{{ t.faqTwoAnswer }}</p></details></div></div></div></div></section>
 
