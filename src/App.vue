@@ -401,7 +401,6 @@ onUnmounted(() => {
               <p class="contact-hero-copy">{{ t.contactIntro }}</p>
               <p class="contact-personal"><span aria-hidden="true"></span>{{ t.contactPersonal }}</p>
             </div>
-            <a class="button button-light contact-hero-cta" href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ32S-DKDk1irg5ODqUJGUMKz41FLTRoLJh0gwUDu18GhqYozyuLcLxKTE955yYV592Tg0iRFsMQ" target="_blank" rel="noopener noreferrer">{{ t.contactBook }} <span aria-hidden="true">↗</span></a>
           </header>
 
           <div class="contact-methods">
