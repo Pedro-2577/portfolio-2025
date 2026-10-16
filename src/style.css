@@ -200,7 +200,8 @@ input, select, textarea { width: 100%; border: 1px solid var(--line); border-rad
 .dark .project-notice-warning { background: #453914; color: #ffe68a; }
 
 .contact-page { padding-top: clamp(40px, 6vw, 76px); }
-.contact-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-4); padding: clamp(28px, 5vw, 64px); color: white; background: #173e43; }
+.contact-hero { display: block; padding: clamp(28px, 5vw, 64px); color: white; background: #173e43; }
+.contact-hero > div { max-width: 780px; }
 .contact-hero .eyebrow { color: var(--accent); }
 .contact-hero h1 { max-width: 15ch; margin: .3rem 0 1rem; font-size: clamp(2.5rem, 6vw, 5rem); line-height: .98; letter-spacing: -.06em; }
 .contact-hero-copy { max-width: 64ch; margin: 0; color: rgba(255,255,255,.84); font-size: clamp(1.05rem, 1.7vw, 1.2rem); line-height: 1.6; }
