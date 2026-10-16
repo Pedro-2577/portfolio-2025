@@ -4,6 +4,8 @@ import { contact, projects } from './data';
 import { professionalProfile } from './profile';
 import { downloadResumePdf } from './resumePdf';
 
+const assetBase = import.meta.env.BASE_URL;
+
 const language = ref(localStorage.getItem('language') || 'es');
 const darkMode = ref(localStorage.getItem('darkMode') === 'true');
 const currentRoute = ref(window.location.hash.slice(1) || 'home');
@@ -247,7 +249,7 @@ onUnmounted(() => {
           </div>
           <aside class="hero-person">
             <figure class="hero-portrait">
-              <img src="./pedro-portrait.jpg" alt="Pedro Martín Méndez Carabán" width="666" height="888" fetchpriority="high" decoding="async">
+              <img :src="assetBase + 'pedro-portrait.jpg'" alt="Pedro Martín Méndez Carabán" width="666" height="888" fetchpriority="high" decoding="async">
               <figcaption><strong>Pedro Méndez Carabán</strong><span>{{ t.portraitRole }}</span></figcaption>
             </figure>
             <a class="hero-work" href="#project/vendoalgo" @click.prevent="navigate('project/vendoalgo')"><span>{{ t.proofLabel }}</span><strong>VendoAlgo</strong></a>
@@ -280,7 +282,7 @@ onUnmounted(() => {
       <section v-else-if="currentRoute === 'about'" class="section page-section cv-about">
         <div class="container">
           <div class="cv-intro-layout"><header class="cv-intro"><p class="eyebrow">04 / {{ t.about }}</p><h1>{{ t.aboutTitle }}</h1><p class="cv-lead">{{ t.aboutIntro }}</p><button class="button button-primary" type="button" @click="downloadResume">{{ t.resumeDownload }}</button><p>{{ t.storyOne }}</p><p>{{ t.storyTwo }}</p></header>
-            <figure class="about-portrait"><img src="./pedro-about.jpg" alt="Pedro Martín Méndez Carabán" width="666" height="888" loading="lazy" decoding="async"></figure>
+            <figure class="about-portrait"><img :src="assetBase + 'pedro-about.jpg'" alt="Pedro Martín Méndez Carabán" width="666" height="888" loading="lazy" decoding="async"></figure>
           </div>
           <div class="cv-layout">
             <div>
