@@ -73,7 +73,7 @@ export const professionalProfile = {
           "UX/UI",
           "AJAX"
         ],
-        "homeItems": ["JavaScript", "Vue.js", "React (conocimientos)", "Nuxt · TypeScript"]
+        "homeItems": ["JavaScript · TypeScript", "Vue.js · Nuxt", "React (conocimientos)", "HTML5 · CSS3"]
       },
       {
         "title": "Backend y bases de datos",
@@ -88,7 +88,7 @@ export const professionalProfile = {
           "APIs REST",
           "Arquitectura de software"
         ],
-        "homeItems": ["PHP", "Node.js", "Laravel", "MySQL · APIs REST"]
+        "homeItems": ["PHP", "Node.js", "Laravel", "MySQL · SQL · APIs REST"]
       },
       {
         "title": "Seguridad y DevSecOps",
@@ -217,7 +217,7 @@ export const professionalProfile = {
           "UX/UI",
           "AJAX"
         ],
-        "homeItems": ["JavaScript", "Vue.js", "React (familiarity)", "Nuxt · TypeScript"]
+        "homeItems": ["JavaScript · TypeScript", "Vue.js · Nuxt", "React (familiarity)", "HTML5 · CSS3"]
       },
       {
         "title": "Backend & databases",
@@ -232,7 +232,7 @@ export const professionalProfile = {
           "REST APIs",
           "Software architecture"
         ],
-        "homeItems": ["PHP", "Node.js", "Laravel", "MySQL · REST APIs"]
+        "homeItems": ["PHP", "Node.js", "Laravel", "MySQL · SQL · REST APIs"]
       },
       {
         "title": "Security & DevSecOps",
