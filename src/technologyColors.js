@@ -1,7 +1,13 @@
 // Brand hex values from Simple Icons, consulted 2026-10-16.
 // https://github.com/simple-icons/simple-icons/blob/develop/data/simple-icons.json
+// Adobe product colors: Simple Icons 13.0.0, sourced there from Adobe Creative Cloud.
+// https://github.com/simple-icons/simple-icons/blob/13.0.0/_data/simple-icons.json
 // Generic concepts without a distinct brand keep the neutral tag style.
 const colors = {
+  "adobeillustrator": "#FF9A00",
+  "adobephotoshop": "#31A8FF",
+  "adobepremierepro": "#9999FF",
+  "owasp": "#000000",
   "alpinejs": "#8BC0D0",
   "bootstrap": "#7952B3",
   "css": "#663399",
@@ -31,6 +37,10 @@ const colors = {
 };
 
 const aliases = {
+  illustrator: 'adobeillustrator',
+  photoshop: 'adobephotoshop',
+  premierepro: 'adobepremierepro',
+  owasptop10: 'owasp',
   html: 'html5',
   css3: 'css',
   blade: 'laravel',
