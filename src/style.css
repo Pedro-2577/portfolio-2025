@@ -113,6 +113,8 @@ button, input, select, textarea { font: inherit; }
 .button-primary, .button-light { color: var(--accent-dark); background: var(--accent); }
 .button-primary:hover, .button-light:hover { background: #c8e72d; }
 .button-outline { color: white; background: transparent; border-color: rgba(255, 255, 255, .7); }
+.button-download { color: #172033; background: #f4f5f0; }
+.button-download:hover { background: #ffffff; }
 .button-outline:hover { color: var(--ink); background: white; }
 .button-secondary { color: var(--ink); background: var(--soft); border-color: var(--line); }
 .button-small { padding: .5rem .75rem; color: var(--ink); background: var(--accent); font-size: .85rem; }
