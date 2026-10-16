@@ -60,9 +60,19 @@ button, input, select, textarea { font: inherit; }
 .menu-button { display: none; font-size: 1.15rem; }
 
 .hero { background: #172033; color: white; }
-.hero-content { padding: 7rem 0 5rem; max-width: 850px; }
+.hero-content { padding: 6rem 0 4.5rem; }
+.hero-layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: clamp(2.5rem, 7vw, 6rem); align-items: center; }
+.hero-main { min-width: 0; }
+.hero-proof { padding: 1.6rem; border: 1px solid rgba(255, 255, 255, .16); border-top: 3px solid var(--accent); border-radius: .65rem; background: rgba(255, 255, 255, .045); }
+.hero-proof-label { margin: 0 0 1.5rem; color: var(--accent); font-size: .68rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.hero-proof h2 { margin: 0 0 .4rem; font-size: 1.65rem; letter-spacing: -.04em; }
+.hero-proof-status { margin: 0; color: #cbd1c9; font-size: .82rem; }
+.hero-proof-copy { margin: 1.25rem 0; color: #d8ddd7; line-height: 1.6; }
+.hero-proof ul { display: grid; gap: .7rem; margin: 0; padding: 1rem 0 0; border-top: 1px solid rgba(255, 255, 255, .14); list-style: none; }
+.hero-proof li { display: flex; gap: .6rem; color: #f1f3ed; font-size: .84rem; }
+.hero-proof li::before { content: '↗'; color: var(--accent); font-weight: 700; }
 .hero h1 {
-  font-size: clamp(3.2rem, 8vw, 6rem);
+  font-size: clamp(3rem, 6vw, 5.2rem);
   line-height: .98;
   margin: 1rem 0 1.5rem;
   letter-spacing: -.07em;
@@ -118,6 +128,8 @@ button, input, select, textarea { font: inherit; }
 .button-outline:hover { color: var(--ink); background: white; }
 .button-secondary { color: var(--ink); background: var(--soft); border-color: var(--line); }
 .button-small { padding: .5rem .75rem; color: var(--ink); background: var(--accent); font-size: .85rem; }
+.button-repository { color: var(--ink); background: var(--soft); border-color: var(--line); }
+.button-repository:hover { border-color: #aabd36; }
 .full-width { width: 100%; margin-top: 1rem; }
 
 .section { padding: 6rem 0; }
@@ -136,6 +148,8 @@ button, input, select, textarea { font: inherit; }
 .skill-card { display: grid; gap: .35rem; padding: 1.35rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .skill-card strong { font-size: 1.05rem; }
 .skill-card span, .muted { color: var(--muted); font-size: .88rem; }
+.skill-card span { line-height: 1.55; }
+.skill-card small { color: var(--muted); font-size: .76rem; line-height: 1.5; }
 
 .project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .project-card { display: flex; flex-direction: column; overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
@@ -232,6 +246,8 @@ details p { color: var(--muted); line-height: 1.6; }
 .footer-links a:hover { color: var(--ink); }
 
 @media (max-width: 800px) {
+  .hero-layout { grid-template-columns: 1fr; gap: 2.25rem; }
+  .hero-proof { max-width: 560px; }
   .menu-button { display: block; margin-left: auto; }
   .site-nav { display: none; position: absolute; top: 68px; left: 0; right: 0; flex-direction: column; gap: .8rem; padding: 1rem; border-bottom: 1px solid var(--line); background: var(--surface); }
   .site-nav.is-open { display: flex; }
@@ -244,6 +260,8 @@ details p { color: var(--muted); line-height: 1.6; }
   .nav-wrap { gap: .5rem; }
   .brand { font-size: .9rem; }
   .hero-content { padding: 5rem 0 4rem; }
+  .hero h1 { font-size: clamp(3rem, 12vw, 4.4rem); }
+  .hero-proof { padding: 1.25rem; }
   .hero-meta { margin-top: 2.5rem; }
   .skill-grid, .project-grid { grid-template-columns: 1fr; }
   .footer-inner { align-items: flex-start; flex-direction: column; }
