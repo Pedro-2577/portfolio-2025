@@ -232,7 +232,7 @@ onUnmounted(() => {
           <h1>{{ t.greeting }} <span>Pedro.</span><br><em>{{ t.tagline }}</em></h1>
           <p class="hero-copy">{{ t.hero }}</p>
           <div class="button-row">
-            <button class="button button-outline" type="button" @click="downloadResume">{{ t.resumeDownload }}</button>
+            <button class="button button-download" type="button" @click="downloadResume">{{ t.resumeDownload }}</button>
             <a class="button button-light" href="#projects" @click.prevent="navigate('projects')">{{ t.viewProjects }}</a>
             <a class="button button-outline" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a>
           </div>
