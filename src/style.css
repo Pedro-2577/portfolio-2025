@@ -198,6 +198,54 @@ input, select, textarea { width: 100%; border: 1px solid var(--line); border-rad
 .project-notice span { color: var(--ink); font-weight: 600; }
 .project-notice-warning { border-color: #d8a72e; background: #fff8df; color: #725600; }
 .dark .project-notice-warning { background: #453914; color: #ffe68a; }
+
+.contact-page { padding-top: clamp(40px, 6vw, 76px); }
+.contact-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-4); padding: clamp(28px, 5vw, 64px); color: white; background: #173e43; }
+.contact-hero .eyebrow { color: var(--accent); }
+.contact-hero h1 { max-width: 15ch; margin: .3rem 0 1rem; font-size: clamp(2.5rem, 6vw, 5rem); line-height: .98; letter-spacing: -.06em; }
+.contact-hero-copy { max-width: 64ch; margin: 0; color: rgba(255,255,255,.84); font-size: clamp(1.05rem, 1.7vw, 1.2rem); line-height: 1.6; }
+.contact-personal { display: flex; align-items: center; gap: .6rem; margin: 1.25rem 0 0; color: var(--accent); font-weight: 700; }
+.contact-personal > span { width: .55rem; height: .55rem; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 5px rgba(215,244,59,.12); }
+.contact-hero-cta { flex: 0 0 auto; min-height: 54px; }
+.contact-methods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); margin: var(--space-4) 0 var(--space-8); }
+.contact-method { display: flex; align-items: flex-start; gap: 18px; min-width: 0; padding: clamp(20px, 3vw, 30px); border: 1px solid var(--line); background: var(--surface); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.contact-method:hover { transform: translateY(-3px); border-color: #91a763; box-shadow: 0 10px 28px rgba(23,32,51,.08); }
+.contact-method-meet { border-color: #b8ce91; background: var(--soft); }
+.contact-method-icon { display: grid; flex: 0 0 48px; width: 48px; height: 48px; place-items: center; border-radius: 50%; color: #173e43; background: #e7efcf; }
+.contact-method-icon svg { width: 24px; height: 24px; }
+.contact-icon-whatsapp { color: #167c57; background: #e5f5ec; }
+.contact-icon-in { font-size: 1.05rem; font-weight: 800; color: #0a66c2; background: #e7f1fb; }
+.contact-method-copy { display: grid; gap: .45rem; min-width: 0; }
+.contact-method-copy .eyebrow { margin: 0; font-size: .66rem; }
+.contact-method-copy strong { font-size: 1.18rem; line-height: 1.25; }
+.contact-method-copy > span:not(.eyebrow) { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+.contact-method-copy em { overflow-wrap: anywhere; margin-top: .2rem; color: #53652d; font-size: .84rem; font-style: normal; font-weight: 700; }
+.dark .contact-method-copy em { color: var(--accent); }
+.contact-followup { margin-bottom: var(--space-8); }
+.contact-form-panel { grid-column: span 7; }
+.contact-guide { grid-column: span 5; padding: clamp(24px, 3vw, 36px); color: white; background: #202b3a; }
+.contact-guide .eyebrow { color: var(--accent); }
+.contact-guide h2 { margin: .4rem 0 .7rem; font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.05; letter-spacing: -.04em; }
+.contact-guide > p:not(.eyebrow) { color: rgba(255,255,255,.78); line-height: 1.6; }
+.contact-guide ul { display: grid; gap: 0; margin: 1.3rem 0; padding: 0; list-style: none; }
+.contact-guide li { padding: 13px 0 13px 23px; border-bottom: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92); line-height: 1.45; }
+.contact-guide li::before { content: "↗"; margin-left: -23px; margin-right: 10px; color: var(--accent); font-weight: 800; }
+.contact-guide-signoff { margin-bottom: 0; color: var(--accent) !important; font-weight: 700; }
+.contact-form-panel form { margin-top: 1.2rem; }
+.contact-form-panel > .eyebrow { margin-bottom: .4rem; }
+.contact-form-panel > h2 { margin: 0 0 .5rem; font-size: 1.5rem; }
+.contact-form-panel > .muted { line-height: 1.5; }
+@media (max-width: 900px) {
+  .contact-methods { gap: 14px; }
+  .contact-method { padding: 20px; }
+  .contact-hero { align-items: flex-start; flex-direction: column; }
+}
+@media (max-width: 700px) {
+  .contact-methods { grid-template-columns: 1fr; }
+  .contact-followup > :first-child, .contact-followup > :last-child { grid-column: 1 / -1; }
+  .contact-hero h1 { max-width: 12ch; }
+}
+
 .contact-layout { align-items: start; }
 .contact-form-panel form { display: grid; gap: 1rem; margin-top: 1.5rem; }
 .contact-form-panel label { display: grid; gap: .4rem; font-size: .9rem; font-weight: 600; }
