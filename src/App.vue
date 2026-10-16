@@ -325,19 +325,19 @@ onUnmounted(() => {
             <header class="service-stores-heading"><p class="eyebrow">VENDOALGO · E-COMMERCE</p><h2>{{ t.serviceStoresTitle }}</h2><p>{{ t.serviceStoresIntro }}</p></header>
             <div class="service-store-grid">
               <a class="service-store-card" href="https://fumig.ar/" target="_blank" rel="noopener noreferrer">
-                <div class="service-store-image"><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Ffumig.ar%2F?w=1100" alt="Vista previa de FumigAR" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">fumig.ar</span></div>
+                <div class="service-store-image"><img src="https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://fumig.ar/" alt="Vista previa de FumigAR" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">fumig.ar</span></div>
                 <div class="service-store-copy"><p class="eyebrow">{{ t.serviceStoreLabel }}</p><h3>{{ t.storeFumigar }}</h3><p>{{ t.storeFumigarDesc }}</p><span class="text-link">{{ t.serviceStoreVisit }} ↗</span></div>
               </a>
               <a class="service-store-card" href="https://cctvstore.vendoalgo.com/" target="_blank" rel="noopener noreferrer">
-                <div class="service-store-image"><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fcctvstore.vendoalgo.com%2F?w=1100" alt="Vista previa de CCTV Store" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">cctvstore.vendoalgo.com</span></div>
+                <div class="service-store-image"><img src="https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://cctvstore.vendoalgo.com/" alt="Vista previa de CCTV Store" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">cctvstore.vendoalgo.com</span></div>
                 <div class="service-store-copy"><p class="eyebrow">{{ t.serviceStoreLabel }}</p><h3>{{ t.storeCctv }}</h3><p>{{ t.storeCctvDesc }}</p><span class="text-link">{{ t.serviceStoreVisit }} ↗</span></div>
               </a>
               <a class="service-store-card" href="https://redesparabalcon.com.ar/" target="_blank" rel="noopener noreferrer">
-                <div class="service-store-image"><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fredesparabalcon.com.ar%2F?w=1100" alt="Vista previa de Redes para Balcón" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">redesparabalcon.com.ar</span></div>
+                <div class="service-store-image"><img src="https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://redesparabalcon.com.ar/" alt="Vista previa de Redes para Balcón" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">redesparabalcon.com.ar</span></div>
                 <div class="service-store-copy"><p class="eyebrow">{{ t.serviceStoreLabel }}</p><h3>{{ t.storeRedes }}</h3><p>{{ t.storeRedesDesc }}</p><span class="text-link">{{ t.serviceStoreVisit }} ↗</span></div>
               </a>
               <a class="service-store-card" href="https://tiendarg.com.ar/" target="_blank" rel="noopener noreferrer">
-                <div class="service-store-image"><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Ftiendarg.com.ar%2F?w=1100" alt="Vista previa de TiendARG" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">tiendarg.com.ar</span></div>
+                <div class="service-store-image"><img src="https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://tiendarg.com.ar/" alt="Vista previa de TiendARG" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">tiendarg.com.ar</span></div>
                 <div class="service-store-copy"><p class="eyebrow">{{ t.serviceStoreLabel }}</p><h3>{{ t.storeTiendarg }}</h3><p>{{ t.storeTiendargDesc }}</p><span class="text-link">{{ t.serviceStoreVisit }} ↗</span></div>
               </a>
             </div>
