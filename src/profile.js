@@ -63,7 +63,7 @@ export const professionalProfile = {
           "JavaScript",
           "TypeScript",
           "Vue.js",
-          "React (conocimientos)",
+          "React",
           "Nuxt",
           "HTML5",
           "CSS3",
@@ -73,7 +73,7 @@ export const professionalProfile = {
           "UX/UI",
           "AJAX"
         ],
-        "homeItems": ["JavaScript · TypeScript", "Vue.js · Nuxt", "React (conocimientos)", "HTML5 · CSS3"]
+        "homeItems": ["JavaScript · TypeScript", "Vue.js · Nuxt", "React", "HTML5 · CSS3"]
       },
       {
         "title": "Backend y bases de datos",
@@ -207,7 +207,7 @@ export const professionalProfile = {
           "JavaScript",
           "TypeScript",
           "Vue.js",
-          "React (familiarity)",
+          "React",
           "Nuxt",
           "HTML5",
           "CSS3",
@@ -217,7 +217,7 @@ export const professionalProfile = {
           "UX/UI",
           "AJAX"
         ],
-        "homeItems": ["JavaScript · TypeScript", "Vue.js · Nuxt", "React (familiarity)", "HTML5 · CSS3"]
+        "homeItems": ["JavaScript · TypeScript", "Vue.js · Nuxt", "React", "HTML5 · CSS3"]
       },
       {
         "title": "Backend & databases",
