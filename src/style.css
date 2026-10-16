@@ -295,6 +295,44 @@ details p { color: var(--muted); line-height: 1.6; }
 .service-evidence-card p { max-width: 62ch; }
 .service-evidence-card .button-row { margin-top: 1.2rem; }
 .service-demo-card { background: var(--surface); }
+
+
+.service-guide { display: grid; grid-template-columns: .8fr 1.2fr; gap: var(--space-4); align-items: center; margin: var(--space-8) 0; padding: clamp(24px, 4vw, 40px); color: white; background: #173e43; }
+.service-guide header .eyebrow { color: var(--accent); }
+.service-guide h2 { max-width: 16ch; margin: .4rem 0 .8rem; font-size: clamp(1.7rem, 3.4vw, 2.6rem); line-height: 1.03; letter-spacing: -.045em; }
+.service-guide header > p:last-child { max-width: 52ch; margin: 0; color: rgba(255,255,255,.78); line-height: 1.6; }
+.service-guide ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--space-3); margin: 0; padding: 0; list-style: none; counter-reset: service-guide; }
+.service-guide li { counter-increment: service-guide; display: flex; align-items: flex-start; gap: 12px; min-height: 76px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.22); color: rgba(255,255,255,.92); line-height: 1.45; }
+.service-guide li::before { content: "0" counter(service-guide); color: var(--accent); font-size: .78rem; font-weight: 800; }
+@media (max-width: 800px) { .service-guide { grid-template-columns: 1fr; } }
+@media (max-width: 500px) { .service-guide ol { grid-template-columns: 1fr; } }
+
+.service-scope { padding: clamp(28px, 4vw, 48px); margin-bottom: var(--space-8); background: var(--soft); }
+.service-scope .section-heading { margin-bottom: var(--space-3); }
+.service-scope-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--space-4); margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.service-scope-list li { position: relative; padding: 16px 10px 16px 30px; border-bottom: 1px solid var(--line); line-height: 1.45; }
+.service-scope-list li::before { position: absolute; left: 2px; top: 17px; color: #64883e; content: "✓"; font-weight: 800; }
+.service-stores { padding-block: var(--space-4) var(--space-8); }
+.service-stores-heading { max-width: 720px; margin-bottom: var(--space-4); }
+.service-stores-heading h2 { margin: 0 0 .8rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -.05em; }
+.service-stores-heading > p:last-child { max-width: 68ch; color: var(--muted); line-height: 1.65; }
+.service-store-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); }
+.service-store-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); background: var(--surface); transition: transform .2s ease, border-color .2s ease; }
+.service-store-card:hover { transform: translateY(-3px); border-color: #aabd36; }
+.service-store-image { position: relative; display: grid; place-items: center; overflow: hidden; aspect-ratio: 16 / 8.5; background: linear-gradient(135deg, #d8e4dc, #f5efe1 55%, #b6d3d1); }
+.service-store-image img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.service-store-domain { z-index: 1; align-self: end; justify-self: start; max-width: calc(100% - 24px); overflow: hidden; margin: 12px; padding: 7px 10px; border: 1px solid rgba(255,255,255,.42); border-radius: 3px; color: white; background: rgba(18, 35, 39, .82); font-size: .78rem; text-overflow: ellipsis; white-space: nowrap; }
+.service-store-copy { padding: clamp(18px, 3vw, 26px); }
+.service-store-copy .eyebrow { margin-bottom: .5rem; }
+.service-store-copy h3 { margin: 0 0 .45rem; font-size: 1.35rem; letter-spacing: -.03em; }
+.service-store-copy p:not(.eyebrow) { min-height: 3em; margin: 0 0 1rem; color: var(--muted); line-height: 1.55; }
+.service-stores-note { max-width: 78ch; margin: var(--space-3) 0 0; color: var(--muted); font-size: .86rem; line-height: 1.6; }
+@media (max-width: 700px) {
+  .service-scope-list, .service-store-grid { grid-template-columns: 1fr; }
+  .service-scope { padding: 22px; }
+  .service-store-image { aspect-ratio: 16 / 9; }
+}
+
 .service-final { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: clamp(24px, 4vw, 48px); color: white; background: #173e43; }
 .service-final h2 { margin: .5rem 0; color: white; font-size: clamp(1.5rem, 3vw, 2.25rem); letter-spacing: -.04em; }
 .service-final p { max-width: 60ch; margin: 0; color: rgba(255,255,255,.78); }
