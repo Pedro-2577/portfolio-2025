@@ -48,8 +48,8 @@ const text = {
     story: 'Mi recorrido', storyOne: 'Desde 2020 trabajo en proyectos web independientes. Actualmente soy programador en el equipo de VendoAlgo, donde desarrollé la plataforma desde cero y sigo participando en su evolución.',
     storyTwo: 'Mi recorrido también incluye UX, diseño, marketing y extensiones para navegadores. La investigación de vulnerabilidades y mis estudios de Abogacía suman una perspectiva sobre seguridad, privacidad y contexto de uso.',
     education: 'Formación', educationText: 'Tecnicatura Superior en Diseño y Programación Web — Escuela Da Vinci. Tesis pendiente.',
-    contactTitle: 'Hablemos', contactIntro: '¿Tenés una idea, una oportunidad o querés conocer más sobre un proyecto? Elegí el canal que te resulte más cómodo.',
-    sendMessage: 'Preparar un mensaje', response: 'Normalmente respondo dentro de las 24 horas.',
+    contactTitle: 'Contame qué necesitás. Vemos cómo avanzar.', contactIntro: 'Si tenés una tienda, una idea o una tarea que querés delegar, elegí cómo te resulta más cómodo contactarme. Leo y respondo yo.', contactPersonal: 'Vas a hablar directamente conmigo, Pedro.', contactBook: 'Coordinar un Meet de 30 minutos', contactBookEyebrow: 'SI PREFERÍS CONVERSAR', contactBookText: 'Elegí un horario disponible y nos conectamos por Google Meet.', contactWhatsappTitle: 'Escribime por WhatsApp', contactWhatsappText: 'Para una consulta corta o para empezar por un mensaje.', contactEmailTitle: 'Mandame un correo', contactEmailText: 'Ideal para explicar con más detalle qué necesitás.', contactLinkedinTitle: 'Conectemos en LinkedIn', contactLinkedinText: 'Mirá mi experiencia profesional y escribime por ahí.', contactScheduleHint: 'Ver horarios disponibles', contactWhatsAppMessage: 'Hola Pedro, vi tu portfolio y quería consultarte sobre tus servicios.', contactGuideTitle: '¿Qué me podés contar?', contactGuideIntro: 'Con un poco de contexto puedo orientarte mejor:', contactGuideOne: 'Qué vende tu negocio o qué proyecto estás pensando', contactGuideTwo: 'Qué tarea, problema o proceso querés resolver', contactGuideThree: 'Qué herramientas o sistemas usás hoy, si aplica', contactFormNote: 'Al abrir el correo, vas a poder revisar el mensaje antes de enviarlo.',
+    sendMessage: 'Mandame un correo con contexto', response: 'Al abrir el correo, vas a poder revisar el mensaje antes de enviarlo.',
     name: 'Nombre', email: 'Email', subject: 'Asunto', message: 'Mensaje', send: 'Abrir correo',
     required: 'Completá todos los campos para preparar el mensaje.', emailLabel: 'Email directo',
     whatsappLabel: 'WhatsApp', linkedinLabel: 'Perfil profesional', locationLabel: 'Ubicación',
@@ -88,8 +88,8 @@ const text = {
     story: 'My journey', storyOne: 'I have worked on independent web projects since 2020. I currently work as a developer on the VendoAlgo team, where I built the platform from scratch and continue to contribute to its development.',
     storyTwo: 'My background also includes UX, design, marketing and browser extensions. Vulnerability research and my law studies add a perspective on security, privacy and the context in which software is used.',
     education: 'Education', educationText: 'Higher Technical Program in Web Design and Programming — Da Vinci School. Thesis pending.',
-    contactTitle: "Let's talk", contactIntro: 'Have an idea, an opportunity or want to learn more about a project? Choose the channel that works best for you.',
-    sendMessage: 'Prepare a message', response: 'I usually reply within 24 hours.',
+    contactTitle: 'Tell me what you need. Let’s find a way forward.', contactIntro: 'If you run a store, have an idea, or want to delegate a task, choose the way that works best for you. I read and reply personally.', contactPersonal: 'You’ll be speaking directly with me, Pedro.', contactBook: 'Book a 30-minute Meet', contactBookEyebrow: 'IF YOU WOULD RATHER TALK', contactBookText: 'Pick an available time and we’ll meet on Google Meet.', contactWhatsappTitle: 'Message me on WhatsApp', contactWhatsappText: 'For a quick question or to start with a message.', contactEmailTitle: 'Send me an email', contactEmailText: 'Best if you want to explain what you need in more detail.', contactLinkedinTitle: 'Connect on LinkedIn', contactLinkedinText: 'See my professional experience and reach out there.', contactScheduleHint: 'See available times', contactWhatsAppMessage: 'Hi Pedro, I saw your portfolio and would like to ask about your services.', contactGuideTitle: 'What should you include?', contactGuideIntro: 'A little context helps me point you in the right direction:', contactGuideOne: 'What your business sells or the project you have in mind', contactGuideTwo: 'The task, problem, or process you want to address', contactGuideThree: 'The tools or systems you use today, if relevant', contactFormNote: 'Your email app will open so you can review the message before sending.',
+    sendMessage: 'Email me with some context', response: 'Your email app will open so you can review the message before sending.',
     name: 'Name', email: 'Email', subject: 'Subject', message: 'Message', send: 'Open email',
     required: 'Complete every field to prepare the message.', emailLabel: 'Direct email',
     whatsappLabel: 'WhatsApp', linkedinLabel: 'Professional profile', locationLabel: 'Location',
@@ -392,7 +392,50 @@ onUnmounted(() => {
         </div>
       </section>
 
-      <section v-else-if="currentRoute === 'contact'" class="section page-section"><div class="container"><div class="section-heading"><p class="eyebrow">{{ t.contact }}</p><h1>{{ t.contactTitle }}</h1><p>{{ t.contactIntro }}</p></div><div class="two-columns contact-layout"><div class="contact-form-panel"><h2>{{ t.sendMessage }}</h2><p class="muted">{{ t.response }}</p><form @submit.prevent="submitContact"><label>{{ t.name }}<input v-model="form.name" type="text" required></label><label>{{ t.email }}<input v-model="form.email" type="email" required></label><label>{{ t.subject }}<input v-model="form.subject" type="text" required></label><label>{{ t.message }}<textarea v-model="form.message" rows="5" required></textarea></label><p v-if="formError" class="form-error">{{ formError }}</p><button class="button button-primary" type="submit">{{ t.send }} ↗</button></form></div><div class="contact-info"><a class="contact-card" :href="`mailto:${contact.email}`"><strong>{{ t.emailLabel }}</strong><span>{{ contact.email }}</span></a><a class="contact-card" :href="`https://wa.me/${contact.whatsapp}`" target="_blank" rel="noopener noreferrer"><strong>{{ t.whatsappLabel }}</strong><span>{{ contact.phone }}</span></a><a class="contact-card" :href="contact.linkedin" target="_blank" rel="noopener noreferrer"><strong>{{ t.linkedinLabel }}</strong><span>LinkedIn ↗</span></a><div class="contact-card"><strong>{{ t.locationLabel }}</strong><span>{{ contact.location }} · {{ t.remote }}</span></div><div class="faq"><h2>{{ t.faq }}</h2><details><summary>{{ t.faqOne }}</summary><p>{{ t.faqOneAnswer }}</p></details><details><summary>{{ t.faqTwo }}</summary><p>{{ t.faqTwoAnswer }}</p></details></div></div></div></div></section>
+      <section v-else-if="currentRoute === 'contact'" class="section page-section contact-page">
+        <div class="container">
+          <header class="contact-hero">
+            <div>
+              <p class="eyebrow">{{ t.contact }}</p>
+              <h1>{{ t.contactTitle }}</h1>
+              <p class="contact-hero-copy">{{ t.contactIntro }}</p>
+              <p class="contact-personal"><span aria-hidden="true"></span>{{ t.contactPersonal }}</p>
+            </div>
+            <a class="button button-light contact-hero-cta" href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ32S-DKDk1irg5ODqUJGUMKz41FLTRoLJh0gwUDu18GhqYozyuLcLxKTE955yYV592Tg0iRFsMQ" target="_blank" rel="noopener noreferrer">{{ t.contactBook }} <span aria-hidden="true">↗</span></a>
+          </header>
+
+          <div class="contact-methods">
+            <a class="contact-method contact-method-meet" href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ32S-DKDk1irg5ODqUJGUMKz41FLTRoLJh0gwUDu18GhqYozyuLcLxKTE955yYV592Tg0iRFsMQ" target="_blank" rel="noopener noreferrer">
+              <span class="contact-method-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M7.5 3v4M16.5 3v4M3.5 9h17M8 13h3v3H8z"/></svg></span>
+              <span class="contact-method-copy"><span class="eyebrow">{{ t.contactBookEyebrow }}</span><strong>{{ t.contactBook }}</strong><span>{{ t.contactBookText }}</span><em>{{ t.contactScheduleHint }} ↗</em></span>
+            </a>
+            <a class="contact-method" :href="`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.contactWhatsAppMessage)}`" target="_blank" rel="noopener noreferrer">
+              <span class="contact-method-icon contact-icon-whatsapp" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.4-4A8 8 0 1 1 20 11.5Z"/><path d="M9 9.2c.5 2.3 2.3 4 4.7 4.7l1.1-1.1 2 .9c-.2 1.2-.9 1.9-2.2 2-3.7-.4-7-3.6-7.3-7.2.1-1.3.8-2 2-2.2l.9 2Z"/></svg></span>
+              <span class="contact-method-copy"><span class="eyebrow">{{ t.whatsappLabel }}</span><strong>{{ t.contactWhatsappTitle }}</strong><span>{{ t.contactWhatsappText }}</span><em>{{ contact.phone }} ↗</em></span>
+            </a>
+            <a class="contact-method" :href="`mailto:${contact.email}`">
+              <span class="contact-method-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+              <span class="contact-method-copy"><span class="eyebrow">{{ t.emailLabel }}</span><strong>{{ t.contactEmailTitle }}</strong><span>{{ t.contactEmailText }}</span><em>{{ contact.email }} ↗</em></span>
+            </a>
+            <a class="contact-method" :href="contact.linkedin" target="_blank" rel="noopener noreferrer">
+              <span class="contact-method-icon contact-icon-in" aria-hidden="true">in</span>
+              <span class="contact-method-copy"><span class="eyebrow">{{ t.linkedinLabel }}</span><strong>{{ t.contactLinkedinTitle }}</strong><span>{{ t.contactLinkedinText }}</span><em>LinkedIn ↗</em></span>
+            </a>
+          </div>
+
+          <div class="two-columns contact-layout contact-followup">
+            <section class="contact-form-panel">
+              <p class="eyebrow">{{ t.emailLabel }}</p><h2>{{ t.sendMessage }}</h2><p class="muted">{{ t.contactFormNote }}</p>
+              <form @submit.prevent="submitContact"><label>{{ t.name }}<input v-model="form.name" type="text" required></label><label>{{ t.email }}<input v-model="form.email" type="email" required></label><label>{{ t.subject }}<input v-model="form.subject" type="text" required></label><label>{{ t.message }}<textarea v-model="form.message" rows="5" required></textarea></label><p v-if="formError" class="form-error">{{ formError }}</p><button class="button button-primary" type="submit">{{ t.send }} ↗</button></form>
+            </section>
+            <aside class="contact-guide">
+              <p class="eyebrow">{{ t.contact }}</p><h2>{{ t.contactGuideTitle }}</h2><p>{{ t.contactGuideIntro }}</p>
+              <ul><li>{{ t.contactGuideOne }}</li><li>{{ t.contactGuideTwo }}</li><li>{{ t.contactGuideThree }}</li></ul>
+              <p class="contact-guide-signoff">{{ t.contactPersonal }}</p>
+            </aside>
+          </div>
+        </div>
+      </section>
 
       <section v-else-if="routeParts[0] === 'project' && selectedProject" class="section page-section"><div class="container project-detail"><div class="detail-main"><p class="eyebrow">{{ selectedProject.category }} · {{ selectedProject.startDate }}</p><h1>{{ selectedProject.title }}</h1><p class="lead">{{ selectedProject.shortDescription }}</p><img v-if="!selectedProject.academic || selectedProject.preview" :src="selectedProject.image" :alt="selectedProject.title"><h2>{{ t.projectDescription }}</h2><p>{{ selectedProject.description }}</p><div v-if="selectedProject.role || selectedProject.highlights || selectedProject.outcome" class="case-study"><div v-if="selectedProject.role"><p class="eyebrow">{{ t.roleLabel }}</p><p>{{ language === 'es' ? selectedProject.role : selectedProject.roleEn }}</p></div><div v-if="selectedProject.highlights"><p class="eyebrow">{{ t.highlightsLabel }}</p><ul><li v-for="highlight in (language === 'es' ? selectedProject.highlights : selectedProject.highlightsEn)" :key="highlight">{{ highlight }}</li></ul></div><div v-if="selectedProject.outcome"><p class="eyebrow">{{ t.outcomeLabel }}</p><p>{{ language === 'es' ? selectedProject.outcome : selectedProject.outcomeEn }}</p></div></div></div><aside class="info-panel"><h2>{{ t.projectDetails }}</h2><div class="tag-row large-tags"><span v-for="item in selectedProject.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><a v-if="selectedProject.github && !selectedProject.private" class="button button-secondary full-width" :href="selectedProject.github" target="_blank" rel="noopener noreferrer">{{ t.sourceCode }} ↗</a><a v-if="selectedProject.live" class="button button-primary full-width" :href="selectedProject.live" @click="confirmDemoStart($event, selectedProject)" :target="selectedProject.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ t.liveDemo }} ↗</a><div v-if="selectedProject.demoType === 'development'" class="project-notice"><strong>{{ t.inDevelopment }}</strong>{{ t.developmentNotice }}</div><div v-else-if="selectedProject.currentSite" class="project-notice">{{ t.currentSite }}</div><div v-else-if="selectedProject.demoType === 'private'" class="project-notice">{{ t.privateDemo }}<span>{{ t.privateCode }}</span></div><div v-else-if="selectedProject.demoType === 'php'" class="project-notice project-notice-warning">{{ t.phpWarning }}</div><div v-else-if="!selectedProject.live && selectedProject.demoType === 'node'" class="project-notice project-notice-warning">{{ t.nodeWarning }}</div><div v-else-if="!selectedProject.live" class="project-notice">{{ t.noDemo }}</div><a class="text-link back-link" href="#projects" @click.prevent="navigate('projects')">← {{ t.back }}</a></aside></div></section>
     </main>
