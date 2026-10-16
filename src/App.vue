@@ -282,7 +282,7 @@ onUnmounted(() => {
       <section v-else-if="currentRoute === 'about'" class="section page-section cv-about">
         <div class="container">
           <div class="cv-intro-layout"><header class="cv-intro"><p class="eyebrow">04 / {{ t.about }}</p><h1>{{ t.aboutTitle }}</h1><p class="cv-lead">{{ t.aboutIntro }}</p><button class="button button-primary" type="button" @click="downloadResume">{{ t.resumeDownload }}</button><p>{{ t.storyOne }}</p><p>{{ t.storyTwo }}</p></header>
-            <figure class="about-portrait"><img :src="assetBase + 'pedro-about.jpg'" alt="Pedro Martín Méndez Carabán" width="666" height="888" loading="lazy" decoding="async"></figure>
+            <figure class="about-portrait"><img :src="assetBase + 'pedro-about.png'" alt="Pedro Martín Méndez Carabán" width="666" height="888" loading="lazy" decoding="async"></figure>
           </div>
           <div class="cv-layout">
             <div>
