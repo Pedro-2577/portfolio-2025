@@ -21,8 +21,9 @@ const text = {
   es: {
     demoEyebrow: 'Demo académica', demoTitle: 'Antes de abrir la demo', demoWait: 'La demo se activa cuando la visitás. La primera carga puede tardar alrededor de un minuto.', demoTime: 'Tiempo de activación', demoTimeValue: '≈ 1 min', demoData: 'Datos de prueba · Sin compras reales', demoContinue: 'Abrir demo', demoCancel: 'Volver', demoClose: 'Cerrar aviso',
     home: 'Inicio', projects: 'Proyectos', about: 'Sobre mí', contact: 'Contacto',
+    proofLabel: 'Experiencia actual', proofStatus: 'Plataforma de e-commerce en producción', proofCopy: 'Construcción desde cero y evolución continua dentro de un equipo.', proofPoints: ['Frontend, backend y APIs', 'Diseño, UX y producto', 'IA y automatización aplicadas'],
     greeting: 'Hola, soy', role: 'Desarrollador full stack · Seguridad · IA',
-    hero: 'Desarrollo productos web de punta a punta, integro IA y aplico una mirada de seguridad desde el código. Trabajo con JavaScript y PHP desde 2020, combinando programación, UX y criterio de producto.',
+    hero: 'Soy desarrollador full stack en VendoAlgo, donde construí la plataforma desde cero junto a un equipo y sigo impulsando su evolución. Trabajo entre frontend, backend, APIs y experiencia de usuario; integro IA y automatización cuando resuelven una necesidad real, con una mirada atenta a la seguridad.',
     viewProjects: 'Ver proyectos', talk: 'Hablemos', featured: 'Proyectos destacados',
     featuredIntro: 'Una selección curada de demos públicas y proyectos profesionales. El resto del catálogo separa claramente trabajos académicos y experiencias privadas.',
     allProjects: 'Ver todos los proyectos', skills: 'Tecnologías con las que trabajo',
@@ -49,15 +50,16 @@ const text = {
     faqOne: '¿Trabajás con equipos remotos?', faqOneAnswer: 'Sí. Estoy acostumbrado a colaborar con herramientas digitales, Git y comunicación asincrónica.',
     faqTwo: '¿Qué tipo de proyectos te interesan?', faqTwoAnswer: 'Desarrollo full stack, integración de IA, automatización y proyectos de ciberseguridad, además de productos web que resuelvan problemas reales.',
     workflowTitle: 'Cómo trabajo con IA', workflowText: 'Primero defino la estructura, las restricciones y el resultado esperado. Después uso IA para implementar, explorar alternativas y depurar; finalmente valido comportamiento, accesibilidad, diseño, seguridad y publicación.',
-    footer: 'Portfolio de Pedro Méndez Carabán', tagline: 'Creo cosas que funcionan.', sourceCode: 'Ver código', liveDemo: 'Abrir demo', privateCode: 'Código privado', privateDemo: 'Demo privada', phpWarning: 'Demo académica desarrollada con Laravel/PHP. El servidor se activa al recibir visitas; la primera carga puede tardar alrededor de un minuto. Los datos son de prueba y pueden reiniciarse.', nodeWarning: 'Este proyecto necesita un servidor Node.js para funcionar; todavía no hay una demo pública configurada.', noDemo: 'Todavía no hay una demo pública configurada para este proyecto.',
-    resumeDownload: 'Descargar CV (PDF)', resumeSummary: 'Desarrollador full stack con experiencia en productos web, integración de IA y seguridad de aplicaciones. Desarrollo desde el frontend hasta las APIs y el backend, con foco en experiencia de usuario, rendimiento y mantenibilidad.', resumeProjectsTitle: 'Proyectos seleccionados', resumeGitHub: 'GitHub', resumeSite: 'Portfolio', resumePage: 'Portfolio', projectCount: 'proyectos catalogados', publicEvidence: 'demos públicas revisables', stackLabel: 'Trabajo con', stackText: 'código · UX · IA', openToWork: 'Abierto a oportunidades',
+    footer: 'Portfolio de Pedro Méndez Carabán', tagline: 'Construyo y hago evolucionar productos web.', sourceCode: 'Ver código', liveDemo: 'Abrir demo', privateCode: 'Código privado', privateDemo: 'Demo privada', phpWarning: 'Demo académica desarrollada con Laravel/PHP. El servidor se activa al recibir visitas; la primera carga puede tardar alrededor de un minuto. Los datos son de prueba y pueden reiniciarse.', nodeWarning: 'Este proyecto necesita un servidor Node.js para funcionar; todavía no hay una demo pública configurada.', noDemo: 'Todavía no hay una demo pública configurada para este proyecto.',
+    viewProject: 'Ver proyecto', demo: 'Ver demo', repository: 'Ver repositorio', resumeDownload: 'Descargar CV (PDF)', resumeSummary: 'Desarrollador full stack con experiencia en productos web, integración de IA y seguridad de aplicaciones. Desarrollo desde el frontend hasta las APIs y el backend, con foco en experiencia de usuario, rendimiento y mantenibilidad.', resumeProjectsTitle: 'Proyectos seleccionados', resumeGitHub: 'GitHub', resumeSite: 'Portfolio', resumePage: 'Portfolio', projectCount: 'proyectos catalogados', publicEvidence: 'demos públicas revisables', stackLabel: 'Trabajo con', stackText: 'código · UX · IA', openToWork: 'Abierto a oportunidades',
     roleLabel: 'Mi responsabilidad', highlightsLabel: 'Qué entregué', outcomeLabel: 'Resultado', academicProjects: 'Proyectos académicos', professionalProjects: 'Proyectos profesionales y propios', currentSite: 'Estás viendo este proyecto', inDevelopment: 'En desarrollo', developmentNotice: 'Proyecto en desarrollo. La presentación pública estará disponible después del lanzamiento.',
   },
   en: {
     demoEyebrow: 'Academic demo', demoTitle: 'Before you open the demo', demoWait: 'The demo starts when you visit it. The first load may take about a minute.', demoTime: 'Startup time', demoTimeValue: '≈ 1 min', demoData: 'Sample data · No real purchases', demoContinue: 'Open demo', demoCancel: 'Go back', demoClose: 'Close notice',
     home: 'Home', projects: 'Projects', about: 'About me', contact: 'Contact',
+    proofLabel: 'Current experience', proofStatus: 'E-commerce platform in production', proofCopy: 'Built from scratch and continuously evolved as part of a team.', proofPoints: ['Frontend, backend and APIs', 'Design, UX and product', 'Applied AI and automation'],
     greeting: "Hi, I'm", role: 'Full-stack developer · Security · AI',
-    hero: 'I build web products end to end, integrate AI and bring a security perspective to the code. Working with JavaScript and PHP since 2020, I combine development, UX and product judgment.',
+    hero: 'I am a full-stack developer at VendoAlgo, where I helped build the platform from scratch as part of a team and continue to evolve it. I work across frontend, backend, APIs and user experience, adding AI and automation when they solve a real need, with security in mind.',
     viewProjects: 'View projects', talk: "Let's talk", featured: 'Featured projects',
     featuredIntro: 'A curated selection of public demos and professional projects. The full catalog clearly separates academic work and private experience.',
     allProjects: 'View all projects', skills: 'Technologies I work with',
@@ -84,8 +86,8 @@ const text = {
     faqOne: 'Do you work with remote teams?', faqOneAnswer: 'Yes. I am used to collaborating with digital tools, Git and asynchronous communication.',
     faqTwo: 'What kind of projects interest you?', faqTwoAnswer: 'Full-stack development, AI integration, automation and cybersecurity projects, as well as web products that solve real problems.',
     workflowTitle: 'How I work with AI', workflowText: 'I define the structure, constraints and expected outcome first. Then I use AI to implement, explore alternatives and debug; finally I validate behavior, accessibility, design, security and delivery.',
-    footer: "Pedro Méndez Carabán's portfolio", tagline: 'I build things that work.', sourceCode: 'View source', liveDemo: 'Open demo', privateCode: 'Private code', privateDemo: 'Private demo', phpWarning: 'Academic demo built with Laravel/PHP. The server starts when visited; the first load may take about a minute. Data is for demonstration and may reset.', nodeWarning: 'This project needs a Node.js server to run; there is no public demo configured yet.', noDemo: 'There is no public demo configured for this project yet.',
-    resumeDownload: 'Download CV (PDF)', resumeSummary: 'Full-stack developer experienced in web products, AI integration and application security. I work across frontend, APIs and backend, focusing on user experience, performance and maintainability.', resumeProjectsTitle: 'Selected projects', resumeGitHub: 'GitHub', resumeSite: 'Portfolio', resumePage: 'Portfolio', projectCount: 'cataloged projects', publicEvidence: 'reviewable public demos', stackLabel: 'Work across', stackText: 'code · UX · AI', openToWork: 'Open to opportunities',
+    footer: "Pedro Méndez Carabán's portfolio", tagline: 'I build and evolve web products.', sourceCode: 'View source', liveDemo: 'Open demo', privateCode: 'Private code', privateDemo: 'Private demo', phpWarning: 'Academic demo built with Laravel/PHP. The server starts when visited; the first load may take about a minute. Data is for demonstration and may reset.', nodeWarning: 'This project needs a Node.js server to run; there is no public demo configured yet.', noDemo: 'There is no public demo configured for this project yet.',
+    viewProject: 'View project', demo: 'View demo', repository: 'View repository', resumeDownload: 'Download CV (PDF)', resumeSummary: 'Full-stack developer experienced in web products, AI integration and application security. I work across frontend, APIs and backend, focusing on user experience, performance and maintainability.', resumeProjectsTitle: 'Selected projects', resumeGitHub: 'GitHub', resumeSite: 'Portfolio', resumePage: 'Portfolio', projectCount: 'cataloged projects', publicEvidence: 'reviewable public demos', stackLabel: 'Work across', stackText: 'code · UX · AI', openToWork: 'Open to opportunities',
     roleLabel: 'My responsibility', highlightsLabel: 'What I delivered', outcomeLabel: 'Outcome', academicProjects: 'Academic projects', professionalProjects: 'Professional and personal projects', currentSite: 'You are viewing this project', inDevelopment: 'In development', developmentNotice: 'Project in development. A public presentation will be available after launch.',
   },
 };
@@ -116,7 +118,11 @@ const resumeProjects = computed(() => professionalProjects.value.filter((project
 
 // A project may have public source without a hosted demo.
 function projectUrl(project) {
-  return project.currentSite || project.demoType === 'development' ? null : project.live || (!project.private && project.github) || null;
+  return project.currentSite || project.demoType === 'development' ? null : project.live || null;
+}
+
+function projectButtonLabel(project) {
+  return project.academic ? t.value.demo : t.value.viewProject;
 }
 
 async function confirmDemoStart(event, project) {
@@ -228,6 +234,8 @@ onUnmounted(() => {
     <main>
       <section v-if="currentRoute === 'home'" class="hero">
         <div class="container hero-content">
+        <div class="hero-layout">
+          <div class="hero-main">
           <p class="eyebrow">{{ t.role }} <span class="eyebrow-dot"></span> Buenos Aires</p>
           <h1>{{ t.greeting }} <span>Pedro.</span><br><em>{{ t.tagline }}</em></h1>
           <p class="hero-copy">{{ t.hero }}</p>
@@ -236,6 +244,15 @@ onUnmounted(() => {
             <a class="button button-light" href="#projects" @click.prevent="navigate('projects')">{{ t.viewProjects }}</a>
             <a class="button button-outline" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a>
           </div>
+          </div>
+          <aside class="hero-proof">
+            <p class="hero-proof-label">{{ t.proofLabel }}</p>
+            <h2>VendoAlgo</h2>
+            <p class="hero-proof-status">{{ t.proofStatus }}</p>
+            <p class="hero-proof-copy">{{ t.proofCopy }}</p>
+            <ul><li v-for="point in t.proofPoints" :key="point">{{ point }}</li></ul>
+          </aside>
+        </div>
           <div class="hero-meta"><span>{{ projects.length }} {{ t.projectCount }}</span><span>{{ projects.filter((project) => project.live).length }} {{ t.publicEvidence }}</span><span>{{ t.stackLabel }}: {{ t.stackText }}</span></div>
         </div>
       </section>
@@ -245,12 +262,12 @@ onUnmounted(() => {
           <div class="container">
             <div class="section-heading section-heading-left"><p class="eyebrow">01 / {{ t.skills }}</p><h2>{{ t.skills }}</h2><p>{{ t.skillsIntro }}</p></div>
             <div class="skill-grid">
-              <div v-for="area in profile.skills.slice(0, 4)" :key="area.title" class="skill-card"><strong>{{ area.title }}</strong><span>{{ area.items.slice(0, 3).join(' · ') }}</span></div>
+              <div v-for="area in profile.skills.slice(0, 4)" :key="area.title" class="skill-card"><strong>{{ area.title }}</strong><span>{{ (area.homeItems || area.items.slice(0, 3)).join(' · ') }}</span><small v-if="area.focus">{{ area.focus }}</small></div>
             </div>
           </div>
         </section>
         <section class="section section-muted">
-          <div class="container"><div class="section-heading section-heading-left"><p class="eyebrow">02 / {{ t.featured }}</p><h2>{{ t.featured }}</h2><p>{{ t.featuredIntro }}</p></div><div class="project-grid"><article v-for="project in featuredProjects" :key="project.id" class="project-card" :class="{ 'project-card-lead': project.id === 1 }"><div class="project-image"><img :src="project.image" :alt="project.title"><span class="project-number">0{{ project.id }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="techClass(item)">{{ item }}</span></div><div class="card-actions"><a class="button button-small" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ t.demo }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span></div></div></article></div><div class="center"><a class="button button-primary" href="#projects" @click.prevent="navigate('projects')">{{ t.allProjects }}</a></div></div>
+          <div class="container"><div class="section-heading section-heading-left"><p class="eyebrow">02 / {{ t.featured }}</p><h2>{{ t.featured }}</h2><p>{{ t.featuredIntro }}</p></div><div class="project-grid"><article v-for="project in featuredProjects" :key="project.id" class="project-card" :class="{ 'project-card-lead': project.id === 1 }"><div class="project-image"><img :src="project.image" :alt="project.title"><span class="project-number">0{{ project.id }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="techClass(item)">{{ item }}</span></div><div class="card-actions"><a class="button button-small" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="button button-small button-repository" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.repository }} ↗</a></div></div></article></div><div class="center"><a class="button button-primary" href="#projects" @click.prevent="navigate('projects')">{{ t.allProjects }}</a></div></div>
         </section>
         <section class="section academic-preview"><div class="container"><div class="category-divider"><span>{{ t.academicProjects }}</span></div><div class="project-grid"><article v-for="project in academicProjects.slice(0, 3)" :key="project.id" class="project-card academic-card"><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="card-actions"><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ t.demo }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a class="text-link" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }} →</a></div></div></article></div></div></section>
         <section class="availability"><div class="container availability-inner"><div><p class="eyebrow">{{ t.availability }}</p><h2>{{ t.availability }}</h2><p>{{ t.availabilityText }}</p></div><a class="button button-light" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a></div></section>
