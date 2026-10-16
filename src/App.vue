@@ -400,14 +400,11 @@ onUnmounted(() => {
               <h1>{{ t.contactTitle }}</h1>
               <p class="contact-hero-copy">{{ t.contactIntro }}</p>
               <p class="contact-personal"><span aria-hidden="true"></span>{{ t.contactPersonal }}</p>
+            <a class="button button-light contact-hero-cta" href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ32S-DKDk1irg5ODqUJGUMKz41FLTRoLJh0gwUDu18GhqYozyuLcLxKTE955yYV592Tg0iRFsMQ" target="_blank" rel="noopener noreferrer">{{ t.contactBook }} <span aria-hidden="true">↗</span></a>
             </div>
           </header>
 
           <div class="contact-methods">
-            <a class="contact-method contact-method-meet" href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ32S-DKDk1irg5ODqUJGUMKz41FLTRoLJh0gwUDu18GhqYozyuLcLxKTE955yYV592Tg0iRFsMQ" target="_blank" rel="noopener noreferrer">
-              <span class="contact-method-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M7.5 3v4M16.5 3v4M3.5 9h17M8 13h3v3H8z"/></svg></span>
-              <span class="contact-method-copy"><span class="eyebrow">{{ t.contactBookEyebrow }}</span><strong>{{ t.contactBook }}</strong><span>{{ t.contactBookText }}</span><em>{{ t.contactScheduleHint }} ↗</em></span>
-            </a>
             <a class="contact-method" :href="`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.contactWhatsAppMessage)}`" target="_blank" rel="noopener noreferrer">
               <span class="contact-method-icon contact-icon-whatsapp" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.4-4A8 8 0 1 1 20 11.5Z"/><path d="M9 9.2c.5 2.3 2.3 4 4.7 4.7l1.1-1.1 2 .9c-.2 1.2-.9 1.9-2.2 2-3.7-.4-7-3.6-7.3-7.2.1-1.3.8-2 2-2.2l.9 2Z"/></svg></span>
               <span class="contact-method-copy"><span class="eyebrow">{{ t.whatsappLabel }}</span><strong>{{ t.contactWhatsappTitle }}</strong><span>{{ t.contactWhatsappText }}</span><em>{{ contact.phone }} ↗</em></span>
