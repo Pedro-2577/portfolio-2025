@@ -3,7 +3,7 @@ export const professionalProfile = {
   "es": {
     "experienceTitle": "Experiencia profesional",
     "educationTitle": "Formación académica",
-    "skillsTitle": "Áreas de trabajo",
+    "skillsTitle": "Tecnologías y áreas de trabajo",
     "languagesTitle": "Idiomas",
     "strengthsTitle": "Cómo encaro los problemas",
     "coursesTitle": "Aprendizaje continuo",
@@ -58,12 +58,13 @@ export const professionalProfile = {
     ],
     "skills": [
       {
-        "title": "Frontend y experiencia de usuario",
+        "title": "Frontend, frameworks y UX",
         "items": [
           "JavaScript",
+          "TypeScript",
           "Vue.js",
+          "React (conocimientos)",
           "Nuxt",
-          "React",
           "HTML5",
           "CSS3",
           "Sass",
@@ -71,13 +72,14 @@ export const professionalProfile = {
           "Quasar",
           "UX/UI",
           "AJAX"
-        ]
+        ],
+        "homeItems": ["JavaScript", "Vue.js", "React (conocimientos)", "Nuxt · TypeScript"]
       },
       {
-        "title": "Backend y datos",
+        "title": "Backend y bases de datos",
         "items": [
-          "Node.js",
           "PHP",
+          "Node.js",
           "Laravel",
           "MySQL",
           "SQL",
@@ -85,7 +87,8 @@ export const professionalProfile = {
           "JSON",
           "APIs REST",
           "Arquitectura de software"
-        ]
+        ],
+        "homeItems": ["PHP", "Node.js", "Laravel", "MySQL · APIs REST"]
       },
       {
         "title": "Seguridad y DevSecOps",
@@ -98,13 +101,15 @@ export const professionalProfile = {
         ]
       },
       {
-        "title": "IA y automatización",
+        "title": "IA aplicada y automatización",
         "items": [
-          "Prompt engineering",
-          "Integración de LLMs",
-          "APIs de OpenAI y Gemini",
-          "Automatización de flujos"
-        ]
+          "Integración de LLMs en producto",
+          "Automatización de tareas y flujos",
+          "Diseño de prompts y contexto",
+          "Validación de resultados"
+        ],
+        "homeItems": ["LLMs en producto", "Automatización de flujos", "Prompts y contexto", "Validación de resultados"],
+        "focus": "En actualización: RAG, agentes y evaluación de respuestas."
       },
       {
         "title": "Herramientas y publicación web",
@@ -142,7 +147,7 @@ export const professionalProfile = {
   "en": {
     "experienceTitle": "Professional experience",
     "educationTitle": "Education",
-    "skillsTitle": "Areas of practice",
+    "skillsTitle": "Technologies & areas of practice",
     "languagesTitle": "Languages",
     "strengthsTitle": "How I approach problems",
     "coursesTitle": "Continuous learning",
@@ -197,12 +202,13 @@ export const professionalProfile = {
     ],
     "skills": [
       {
-        "title": "Frontend & user experience",
+        "title": "Frontend, frameworks & UX",
         "items": [
           "JavaScript",
+          "TypeScript",
           "Vue.js",
+          "React (familiarity)",
           "Nuxt",
-          "React",
           "HTML5",
           "CSS3",
           "Sass",
@@ -210,13 +216,14 @@ export const professionalProfile = {
           "Quasar",
           "UX/UI",
           "AJAX"
-        ]
+        ],
+        "homeItems": ["JavaScript", "Vue.js", "React (familiarity)", "Nuxt · TypeScript"]
       },
       {
-        "title": "Backend & data",
+        "title": "Backend & databases",
         "items": [
-          "Node.js",
           "PHP",
+          "Node.js",
           "Laravel",
           "MySQL",
           "SQL",
@@ -224,7 +231,8 @@ export const professionalProfile = {
           "JSON",
           "REST APIs",
           "Software architecture"
-        ]
+        ],
+        "homeItems": ["PHP", "Node.js", "Laravel", "MySQL · REST APIs"]
       },
       {
         "title": "Security & DevSecOps",
@@ -237,13 +245,15 @@ export const professionalProfile = {
         ]
       },
       {
-        "title": "AI & automation",
+        "title": "Applied AI & automation",
         "items": [
-          "Prompt engineering",
-          "LLM integration",
-          "OpenAI & Gemini APIs",
-          "Workflow automation"
-        ]
+          "LLM integration in product features",
+          "Task and workflow automation",
+          "Prompt and context design",
+          "Output validation"
+        ],
+        "homeItems": ["LLMs in product features", "Workflow automation", "Prompts & context", "Output validation"],
+        "focus": "Keeping current: RAG, agents and response evaluation."
       },
       {
         "title": "Tools & web publishing",
