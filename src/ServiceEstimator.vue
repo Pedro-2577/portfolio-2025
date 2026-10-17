@@ -362,6 +362,8 @@ const basicAmount = computed(() => checkedBasics.value.reduce((sum, item) => sum
 const automationCount = computed(() => checkedExtras.value.filter(item => item.group === 'automation').length);
 const sharedInitialSaving = computed(() => Math.max(0, automationCount.value - 1) * sharedAutomation.initial);
 const sharedMonthlySaving = computed(() => Math.max(0, automationCount.value - 1) * sharedAutomation.monthly);
+const sharedInitialSavingUpper = computed(() => Math.max(0, automationCount.value - 1) * sharedAutomation.initialUpper);
+const sharedMonthlySavingUpper = computed(() => Math.max(0, automationCount.value - 1) * sharedAutomation.monthlyUpper);
 const amount = computed(() => basicAmount.value + checkedExtras.value.reduce((sum, item) => sum + (item.initial || 0), 0) - sharedInitialSaving.value);
 const monthlyAmount = computed(() => checkedExtras.value.reduce((sum, item) => sum + (item.monthly || 0), 0) - sharedMonthlySaving.value);
 const pendingOnce = computed(() => checkedExtras.value.some(item => item.mode !== 'monthly' && !Number.isFinite(item.initial)));
@@ -447,8 +449,8 @@ const message = computed(() => {
     '',
     ...checkedBasics.value.map(item => '- ' + title(item) + (props.showPrices ? ': ' + basicFees(item) + (es.value ? ' una vez' : ' one-time') : '')),
     ...checkedExtras.value.map(item => '- ' + title(item) + (props.showPrices ? ': ' + itemFees(item) : '')),
-    ...(props.showPrices && sharedInitialSaving.value ? [(es.value ? 'Preparación compartida (una fuente): -' : 'Shared setup (one source): -') + money(sharedInitialSaving.value)] : []),
-    ...(props.showPrices && sharedMonthlySaving.value ? [(es.value ? 'Descuento en el cuidado mensual: -' : 'Shared monthly review: -') + money(sharedMonthlySaving.value) + (es.value ? '/mes' : '/month')] : []),
+    ...(props.showPrices && sharedInitialSaving.value ? [(es.value ? 'Preparación compartida (una fuente): -' : 'Shared setup (one source): -') + moneyRange(sharedInitialSaving.value, sharedInitialSavingUpper.value)] : []),
+    ...(props.showPrices && sharedMonthlySaving.value ? [(es.value ? 'Descuento en el cuidado mensual: -' : 'Shared monthly review: -') + moneyRange(sharedMonthlySaving.value, sharedMonthlySavingUpper.value) + (es.value ? '/mes' : '/month')] : []),
     ...contextLines.value,
     '',
     ...(props.showPrices ? [
@@ -594,8 +596,8 @@ function contact(event) {
         <ul class="estimate-selected-list">
           <li v-for="item in checkedBasics" :key="item.id"><span>{{ title(item) }}</span><strong v-if="showPrices">{{ basicFees(item) }}</strong></li>
           <li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}<small class="estimate-summary-mode">{{ modeLabel(item) }}</small></span><strong v-if="showPrices" class="estimate-summary-fee">{{ itemFees(item) }}</strong></li>
-          <li v-if="showPrices && sharedInitialSaving" class="estimate-saving"><span>{{ es ? 'Descuento por usar el mismo proveedor' : 'Shared setup · one source' }}</span><strong>−{{ money(sharedInitialSaving) }}</strong></li>
-          <li v-if="showPrices && sharedMonthlySaving" class="estimate-saving"><span>{{ es ? 'Descuento en el cuidado mensual' : 'Shared monthly review' }}</span><strong>−{{ money(sharedMonthlySaving) }}/{{ es ? 'mes' : 'month' }}</strong></li>
+          <li v-if="showPrices && sharedInitialSaving" class="estimate-saving"><span>{{ es ? 'Descuento por usar el mismo proveedor' : 'Shared setup · one source' }}</span><strong>−{{ moneyRange(sharedInitialSaving, sharedInitialSavingUpper) }}</strong></li>
+          <li v-if="showPrices && sharedMonthlySaving" class="estimate-saving"><span>{{ es ? 'Descuento en el cuidado mensual' : 'Shared monthly review' }}</span><strong>−{{ moneyRange(sharedMonthlySaving, sharedMonthlySavingUpper) }}/{{ es ? 'mes' : 'month' }}</strong></li>
         </ul>
           </div>
         </details>
