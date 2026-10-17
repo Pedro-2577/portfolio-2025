@@ -215,7 +215,20 @@ const staffRoles = [
   { id: 'sales', es: 'Vendedor', en: 'Salesperson' },
   { id: 'cm', es: 'Community manager', en: 'Community manager' },
 ];
-const groupSelected = group => extras.filter(item => item.group === group && selected.value.includes(item.id));
+const expandedGroups = ref({});
+const groupOptions = group => extras.filter(item => item.group === group);
+const groupSelected = group => groupOptions(group).filter(item => selected.value.includes(item.id));
+const groupAllSelected = group => groupSelected(group).length === groupOptions(group).length;
+const groupPartiallySelected = group => groupSelected(group).length > 0 && !groupAllSelected(group);
+function toggleGroup(group, checked) {
+  for (const item of groupOptions(group)) toggleExtra(item, checked);
+}
+const groupCaption = group => {
+  const count = groupOptions(group).length;
+  const modes = groupOptions(group).map(item => item.mode);
+  const mode = modes.every(value => value === 'once') ? (es.value ? 'pago por única vez' : 'one-time payment') : modes.every(value => value === 'monthly') ? (es.value ? 'servicio mensual' : 'monthly service') : (es.value ? 'pago único y mensual según servicio' : 'one-time and monthly by service');
+  return count + (es.value ? ' servicios · ' : ' services · ') + mode;
+};
 const modeLabel = item => item.mode === 'both' ? (es.value ? 'Implementación + mantenimiento mensual' : 'Setup + monthly maintenance') : item.mode === 'monthly' ? (es.value ? 'Servicio mensual' : 'Monthly service') : (es.value ? 'Trabajo por única vez' : 'One-time service');
 function toggleExtra(item, checked) {
   selected.value = checked ? [...new Set([...selected.value, item.id])] : selected.value.filter(id => id !== item.id);
@@ -337,13 +350,19 @@ function contact(event) {
           </div>
         </div>
 
-        <div class="estimate-extra-heading">
-          <h3>{{ es ? '¿Qué más querés delegar?' : 'What else would you like to delegate?' }}</h3>
-          <p class="estimate-note">{{ es ? 'Abrí solo lo que te interese. Podés contratar estos servicios sin elegir la puesta en marcha.' : 'Open only what interests you. These services can be booked without the launch setup.' }}</p>
-        </div>
-        <details v-for="group in serviceGroups" :key="group.id" class="estimate-details estimate-service-group">
-          <summary><span>{{ title(group) }}</span><span v-if="groupSelected(group.id).length" class="estimate-count">{{ groupSelected(group.id).length }}</span><svg class="estimate-group-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
-          <p class="estimate-note">{{ es ? group.introEs : group.introEn }}</p>
+        <div v-for="group in serviceGroups" :key="group.id" class="estimate-package estimate-category" :class="{ 'is-selected': groupSelected(group.id).length }">
+          <div class="estimate-package-heading">
+            <label class="estimate-package-select">
+              <input type="checkbox" :checked="groupAllSelected(group.id)" :indeterminate.prop="groupPartiallySelected(group.id)" @change="toggleGroup(group.id, $event.target.checked)">
+              <span><strong>{{ title(group) }}</strong><span class="estimate-caption">{{ groupCaption(group.id) }}</span></span>
+            </label>
+            <strong class="estimate-package-price estimate-quote-price">{{ quote }}</strong>
+            <button type="button" class="estimate-expand" :aria-expanded="!!expandedGroups[group.id]" :aria-controls="'service-group-' + group.id" :aria-label="(es ? 'Ver o editar: ' : 'View or edit: ') + title(group)" @click="expandedGroups[group.id] = !expandedGroups[group.id]">
+              <svg :class="{ 'is-open': expandedGroups[group.id] }" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+          </div>
+          <p class="estimate-package-hint">{{ groupSelected(group.id).length ? (groupPartiallySelected(group.id) ? (es ? 'Selección personalizada · ' : 'Custom selection · ') : '') + groupSelected(group.id).length + (es ? ' servicios seleccionados · a cotizar' : ' services selected · quote pending') : (es ? group.introEs : group.introEn) }}</p>
+          <div v-show="expandedGroups[group.id]" :id="'service-group-' + group.id" class="estimate-options estimate-category-options">
           <label v-for="item in extras.filter(service => service.group === group.id)" :key="item.id" class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
             <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleExtra(item, $event.target.checked)">
             <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><span>{{ description(item) }}</span><em>{{ modeLabel(item) }} · {{ quote }}</em></span>
@@ -368,7 +387,8 @@ function contact(event) {
             <label v-if="group.id === 'support' && selected.includes('technical-help')" class="estimate-field">{{ es ? '¿Qué está pasando?' : 'What is happening?' }}<textarea v-model="details.issue" rows="2" maxlength="500"></textarea></label>
             <p class="estimate-note">{{ es ? 'Estos servicios requieren una cotización según el alcance. Si combinás tareas, reviso qué trabajo comparten antes de presupuestarlas.' : 'These services require a scope-based quote. When you combine tasks, I review shared work before quoting.' }}</p>
           </div>
-        </details>
+          </div>
+        </div>
 
         <details class="estimate-details">
           <summary>{{ es ? 'VendoAlgo: plan y funciones adicionales' : 'VendoAlgo: plan and extra features' }}</summary>
@@ -500,4 +520,9 @@ function contact(event) {
 .estimate-staff-roles label { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: .82rem; cursor: pointer; }
 .estimate-summary-mode { display: block; margin-top: 3px; font-size: .71rem; color: var(--muted); line-height: 1.5; }
 @media (prefers-reduced-motion: reduce) { .estimate-group-chevron { transition: none; } }
+
+.estimate-category { margin-top: 16px; }
+.estimate-quote-price { font-size: .85rem; font-weight: 500; color: var(--muted); }
+.estimate-category-options > .estimate-option { grid-template-columns: 22px minmax(0, 1fr); }
+.estimate-category .estimate-package-select strong { font-size: 1rem; }
 </style>
