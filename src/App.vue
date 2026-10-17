@@ -229,7 +229,15 @@ function onDemoBackdrop(event) {
 
 
 
+function removePreviewVersion() {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has('v')) return;
+  url.searchParams.delete('v');
+  window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+}
+
 function navigate(route) {
+  removePreviewVersion();
   if (hostedNotFound) {
     window.location.assign(assetBase + '#' + route);
     return;
@@ -277,6 +285,7 @@ watch(darkMode, (value) => {
 });
 
 onMounted(() => {
+  removePreviewVersion();
   document.documentElement.lang = language.value;
   document.documentElement.classList.toggle('dark', darkMode.value);
   window.addEventListener('hashchange', onHashChange);
