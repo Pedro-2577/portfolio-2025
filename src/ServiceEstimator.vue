@@ -100,7 +100,7 @@ function contact(event) {
               <input type="checkbox" :checked="allBasics" :indeterminate.prop="partialBasics" @change="toggleBasics">
               <span><strong>{{ es ? 'Puesta en marcha' : 'Store launch setup' }}</strong><span class="estimate-caption">{{ es ? '5 servicios · pago por única vez' : '5 services · one-time payment' }}</span></span>
             </label>
-            <strong class="estimate-package-price">{{ money(150000) }}</strong>
+            <strong class="estimate-package-price">{{ money(partialBasics ? amount : 150000) }}</strong>
             <button type="button" class="estimate-expand" :aria-expanded="expanded" aria-controls="launch-service-options" :aria-label="es ? 'Ver o editar los servicios de puesta en marcha' : 'View or edit launch services'" @click="expanded = !expanded"><span :class="{ 'is-open': expanded }" aria-hidden="true">⌄</span></button>
           </div>
           <p class="estimate-package-hint">{{ partialBasics ? (es ? 'Selección personalizada · ' : 'Custom selection · ') + money(amount) : (es ? 'Marcá la casilla para seleccionar todo. Abrí la flecha para elegir servicio por servicio.' : 'Check the box to select all. Open the arrow to choose individual services.') }}</p>
