@@ -101,9 +101,9 @@ function contact(event) {
               <span><strong>{{ es ? 'Puesta en marcha' : 'Store launch setup' }}</strong><span class="estimate-caption">{{ es ? '5 servicios · pago por única vez' : '5 services · one-time payment' }}</span></span>
             </label>
             <strong class="estimate-package-price">{{ money(partialBasics ? amount : 150000) }}</strong>
-            <button type="button" class="estimate-expand" :aria-expanded="expanded" aria-controls="launch-service-options" :aria-label="es ? 'Ver o editar los servicios de puesta en marcha' : 'View or edit launch services'" @click="expanded = !expanded"><span :class="{ 'is-open': expanded }" aria-hidden="true">⌄</span></button>
+            <button type="button" class="estimate-expand" :aria-expanded="expanded" aria-controls="launch-service-options" :aria-label="es ? 'Ver o editar los servicios de puesta en marcha' : 'View or edit launch services'" @click="expanded = !expanded"><svg :class="{ 'is-open': expanded }" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
           </div>
-          <p class="estimate-package-hint">{{ partialBasics ? (es ? 'Selección personalizada · ' : 'Custom selection · ') + money(amount) : (es ? 'Marcá la casilla para seleccionar todo. Abrí la flecha para elegir servicio por servicio.' : 'Check the box to select all. Open the arrow to choose individual services.') }}</p>
+          <p class="estimate-package-hint">{{ partialBasics ? (es ? 'Selección personalizada · ' : 'Custom selection · ') + money(amount) : (es ? 'Todo lo necesario para empezar. Desplegá el detalle para personalizarlo.' : 'Everything you need to get started. Expand the details to customize it.') }}</p>
           <div v-show="expanded" id="launch-service-options" class="estimate-options">
             <label v-for="item in options" :key="item.id" class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
               <input v-model="selected" type="checkbox" :value="item.id">
@@ -176,14 +176,15 @@ function contact(event) {
 .estimate-choices, .estimate-summary { min-width: 0; }
 .estimate-package { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
 .estimate-package.is-selected { border-color: #879b3d; }
-.estimate-package-heading { display: flex; align-items: center; gap: 12px; padding: 20px 16px 12px; background: var(--soft); }
+.estimate-package-heading { display: grid; grid-template-columns: minmax(0, 1fr) auto 44px; align-items: center; gap: 10px; padding: 18px 16px 10px; background: var(--soft); }
 .estimate-package-select { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; margin: 0; min-width: 0; }
 .estimate-package-select strong { font-size: 1.08rem; }
 .estimate-caption { display: block; font-size: .78rem; font-weight: 400; color: var(--muted); margin-top: 5px; line-height: 1.4; }
 .estimate-package-price { font-size: 1.05rem; white-space: nowrap; }
-.estimate-expand { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; border: 1px solid var(--line); background: var(--surface); border-radius: 6px; color: var(--ink); cursor: pointer; }
-.estimate-expand span { display: block; font-size: 1.6rem; line-height: 1; transition: transform .15s; }
-.estimate-expand span.is-open { transform: rotate(180deg); }
+.estimate-expand { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; border-radius: 50%; color: var(--muted); cursor: pointer; transition: background-color .15s, color .15s; }
+.estimate-expand:hover { background: var(--surface); color: var(--ink); }
+.estimate-expand svg { display: block; flex-shrink: 0; transition: transform .2s ease; }
+.estimate-expand svg.is-open { transform: rotate(180deg); }
 .estimate-package-hint { margin: 0; padding: 0 16px 18px; color: var(--muted); background: var(--soft); font-size: .82rem; line-height: 1.5; }
 .estimate-options { padding: 0 16px; }
 .estimate-option { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: start; gap: 10px; padding: 18px 0; margin: 0; border-top: 1px solid var(--line); cursor: pointer; }
@@ -223,9 +224,10 @@ function contact(event) {
 .service-estimator :is(input, select, textarea, button, a, summary):focus-visible { outline: 3px solid #749b2e; outline-offset: 4px; }
 @media (max-width: 900px) { .estimate-layout { grid-template-columns: 1fr; } }
 @media (max-width: 500px) {
-  .estimate-package-heading { flex-wrap: wrap; gap: 8px; padding: 16px 12px 12px; }
-  .estimate-package-select { flex-basis: calc(100% - 58px); }
-  .estimate-package-price { order: 3; margin-left: 32px; }
+  .estimate-package-heading { grid-template-columns: minmax(0, 1fr) 44px; gap: 6px 8px; padding: 16px 12px 10px; }
+  .estimate-package-select { grid-column: 1; grid-row: 1; }
+  .estimate-package-price { grid-column: 1; grid-row: 2; margin-left: 32px; font-size: 1rem; }
+  .estimate-expand { grid-column: 2; grid-row: 1 / 3; }
   .estimate-package-hint { padding-inline: 12px; }
   .estimate-summary { padding: 20px 16px; }
   .estimate-options { padding-inline: 12px; }
@@ -234,5 +236,5 @@ function contact(event) {
   .estimate-module { grid-template-columns: 22px minmax(0, 1fr); }
   .estimate-module strong { grid-column: 2; }
 }
-@media (prefers-reduced-motion: reduce) { .estimate-expand span { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .estimate-expand, .estimate-expand svg { transition: none; } }
 </style>
