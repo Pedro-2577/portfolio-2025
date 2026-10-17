@@ -57,6 +57,7 @@ button, input, select, textarea { font: inherit; }
 .site-nav a:hover, .site-nav a.active { color: var(--ink); }
 .site-nav a.active { border-bottom: 2px solid var(--accent); }
 .nav-actions { grid-column: 12; display: flex; justify-content: flex-end; gap: .25rem; }
+.nav-actions .icon-button { flex: 0 0 40px; }
 .icon-button, .menu-button {
   border: 0;
   background: transparent;
