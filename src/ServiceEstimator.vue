@@ -215,8 +215,120 @@ const staffRoles = [
   { id: 'sales', es: 'Vendedor', en: 'Salesperson' },
   { id: 'cm', es: 'Community manager', en: 'Community manager' },
 ];
+// Proposed service estimates, 2026-10-17. These are Pedro's scoped rates,
+// informed by published comparable services, not competitor quotes for each item.
+// References: nudge.com.ar/diseno-de-tiendas-online-en-tiendanube/
+// aotech.com.ar (migration and hourly training); vantage-growth.com/automatizacion
+// julimarketing.com/desarrollo-ecommerce/ (monthly support).
+const extraRates = {
+  "migration": {
+    "initial": 60000,
+    "monthly": 0,
+    "scopeEs": "Base: hasta 100 productos desde un archivo exportado y ordenado de una tienda.",
+    "scopeEn": "Base: up to 100 products from an organized store export."
+  },
+  "more-products": {
+    "initial": 15000,
+    "monthly": 0,
+    "scopeEs": "Base: una tanda de hasta 10 productos adicionales con material completo.",
+    "scopeEn": "Base: one batch of up to 10 extra products with complete materials."
+  },
+  "catalog-order": {
+    "initial": 20000,
+    "monthly": 0,
+    "scopeEs": "Base: revisión de hasta 50 productos y 10 categorías.",
+    "scopeEn": "Base: review of up to 50 products and 10 categories."
+  },
+  "visual-changes": {
+    "initial": 35000,
+    "monthly": 0,
+    "scopeEs": "Base: ajustes en hasta 2 secciones con tu material.",
+    "scopeEn": "Base: adjustments to up to 2 sections using your materials."
+  },
+  "auto-prices": {
+    "initial": 120000,
+    "monthly": 25000,
+    "scopeEs": "Base: un proveedor o fuente, hasta 100 productos, una actualización diaria y reglas simples. El abono cubre revisión mensual y hasta una hora de ajustes menores de esta tarea. Si combinás tareas sobre la misma fuente, la preparación y revisión comunes se cuentan una sola vez.",
+    "scopeEn": "Base: one supplier or source, up to 100 products, one daily update and simple rules. The monthly fee covers a monthly review and up to one hour of minor task adjustments. Shared setup and review for tasks using the same source are counted once."
+  },
+  "auto-stock": {
+    "initial": 110000,
+    "monthly": 20000,
+    "scopeEs": "Base: un proveedor o fuente, hasta 100 productos, una actualización diaria y reglas simples. El abono cubre revisión mensual y hasta una hora de ajustes menores de esta tarea. Si combinás tareas sobre la misma fuente, la preparación y revisión comunes se cuentan una sola vez.",
+    "scopeEn": "Base: one supplier or source, up to 100 products, one daily update and simple rules. The monthly fee covers a monthly review and up to one hour of minor task adjustments. Shared setup and review for tasks using the same source are counted once."
+  },
+  "auto-new": {
+    "initial": 130000,
+    "monthly": 25000,
+    "scopeEs": "Base: un proveedor o fuente, hasta 100 productos, una actualización diaria y reglas simples. El abono cubre revisión mensual y hasta una hora de ajustes menores de esta tarea. Si combinás tareas sobre la misma fuente, la preparación y revisión comunes se cuentan una sola vez.",
+    "scopeEn": "Base: one supplier or source, up to 100 products, one daily update and simple rules. The monthly fee covers a monthly review and up to one hour of minor task adjustments. Shared setup and review for tasks using the same source are counted once."
+  },
+  "auto-discontinued": {
+    "initial": 100000,
+    "monthly": 18000,
+    "scopeEs": "Base: un proveedor o fuente, hasta 100 productos, una actualización diaria y reglas simples. El abono cubre revisión mensual y hasta una hora de ajustes menores de esta tarea. Si combinás tareas sobre la misma fuente, la preparación y revisión comunes se cuentan una sola vez.",
+    "scopeEn": "Base: one supplier or source, up to 100 products, one daily update and simple rules. The monthly fee covers a monthly review and up to one hour of minor task adjustments. Shared setup and review for tasks using the same source are counted once."
+  },
+  "auto-offers": {
+    "initial": 100000,
+    "monthly": 18000,
+    "scopeEs": "Base: un proveedor o fuente, hasta 100 productos, una actualización diaria y reglas simples. El abono cubre revisión mensual y hasta una hora de ajustes menores de esta tarea. Si combinás tareas sobre la misma fuente, la preparación y revisión comunes se cuentan una sola vez.",
+    "scopeEn": "Base: one supplier or source, up to 100 products, one daily update and simple rules. The monthly fee covers a monthly review and up to one hour of minor task adjustments. Shared setup and review for tasks using the same source are counted once."
+  },
+  "ml": {
+    "initial": 30000,
+    "monthly": 0,
+    "scopeEs": "Base: una cuenta y vinculación inicial de hasta 50 productos.",
+    "scopeEn": "Base: one account and initial linking of up to 50 products."
+  },
+  "arca": {
+    "initial": 20000,
+    "monthly": 0,
+    "scopeEs": "Base: configuración técnica para un CUIT con datos y autorizaciones disponibles.",
+    "scopeEn": "Base: technical setup for one tax ID with the required details and authorization."
+  },
+  "shipping-rules": {
+    "initial": 25000,
+    "monthly": 0,
+    "scopeEs": "Base: hasta 5 zonas con una tarifa definida por zona.",
+    "scopeEn": "Base: up to 5 zones with one defined rate per zone."
+  },
+  "team-training": {
+    "initial": 30000,
+    "monthly": 0,
+    "scopeEs": "Base: 2 horas de capacitación para hasta 5 personas.",
+    "scopeEn": "Base: 2 hours of training for up to 5 people."
+  },
+  "roles": {
+    "initial": 15000,
+    "monthly": 0,
+    "scopeEs": "Base: hasta 5 empleados y 3 perfiles de permisos.",
+    "scopeEn": "Base: up to 5 employees and 3 permission profiles."
+  },
+  "hiring": {
+    "initial": 90000,
+    "monthly": 0,
+    "scopeEs": "Base: un perfil, revisión de hasta 10 postulaciones, coordinación de hasta 2 entrevistas y una hora de incorporación. Publicaciones pagas, sueldos y honorarios del personal aparte.",
+    "scopeEn": "Base: one role, review of up to 10 applications, coordination of up to 2 interviews and one onboarding hour. Paid job ads and staff fees or salaries are separate."
+  },
+  "maintenance": {
+    "initial": 0,
+    "monthly": 45000,
+    "scopeEs": "Base: hasta 2 horas al mes para consultas y cambios en la tienda. El mantenimiento de automatizaciones se detalla en sus propios servicios.",
+    "scopeEn": "Base: up to 2 hours per month for store questions and changes. Automation maintenance is listed with those services."
+  },
+  "technical-help": {
+    "initial": 15000,
+    "monthly": 0,
+    "scopeEs": "Base: una hora de revisión y asistencia. Si hace falta más trabajo, te paso el alcance antes de continuar.",
+    "scopeEn": "Base: one hour of review and assistance. Additional work is scoped before continuing."
+  }
+};
+const sharedAutomation = { initial: 80000, monthly: 15000 };
+const pricedExtras = extras.map(item => ({ ...item, ...extraRates[item.id] }));
+
 const expandedGroups = ref({});
-const groupOptions = group => extras.filter(item => item.group === group);
+const groupOptions = group => pricedExtras.filter(item => item.group === group);
 const groupSelected = group => groupOptions(group).filter(item => selected.value.includes(item.id));
 const groupAllSelected = group => groupSelected(group).length === groupOptions(group).length;
 const groupPartiallySelected = group => groupSelected(group).length > 0 && !groupAllSelected(group);
@@ -242,13 +354,20 @@ function toggleBasic(item, checked) {
   if (checked && item.id === 'design') selected.value = selected.value.filter(id => id !== 'visual-changes');
 }
 const checkedBasics = computed(() => options.filter(item => selected.value.includes(item.id)));
-const checkedExtras = computed(() => extras.filter(item => selected.value.includes(item.id)));
+const checkedExtras = computed(() => pricedExtras.filter(item => selected.value.includes(item.id)));
 const allBasics = computed(() => checkedBasics.value.length === options.length);
 const partialBasics = computed(() => checkedBasics.value.length > 0 && !allBasics.value);
 const hasSelection = computed(() => selected.value.length > 0);
-const amount = computed(() => checkedBasics.value.reduce((sum, item) => sum + item.price, 0));
-const pendingOnce = computed(() => checkedExtras.value.some(item => item.mode !== 'monthly'));
-const pendingMonthly = computed(() => checkedExtras.value.some(item => item.mode !== 'once'));
+const basicAmount = computed(() => checkedBasics.value.reduce((sum, item) => sum + item.price, 0));
+const automationCount = computed(() => checkedExtras.value.filter(item => item.group === 'automation').length);
+const sharedInitialSaving = computed(() => Math.max(0, automationCount.value - 1) * sharedAutomation.initial);
+const sharedMonthlySaving = computed(() => Math.max(0, automationCount.value - 1) * sharedAutomation.monthly);
+const amount = computed(() => basicAmount.value + checkedExtras.value.reduce((sum, item) => sum + (item.initial || 0), 0) - sharedInitialSaving.value);
+const monthlyAmount = computed(() => checkedExtras.value.reduce((sum, item) => sum + (item.monthly || 0), 0) - sharedMonthlySaving.value);
+const pendingOnce = computed(() => checkedExtras.value.some(item => item.mode !== 'monthly' && !Number.isFinite(item.initial)));
+const pendingMonthly = computed(() => checkedExtras.value.some(item => item.mode !== 'once' && !Number.isFinite(item.monthly)));
+const estimatedOnce = computed(() => checkedExtras.value.some(item => item.initial > 0));
+const estimatedMonthly = computed(() => monthlyAmount.value > 0);
 const requiredModuleIds = computed(() => [
   ...(selected.value.includes('ml') ? ['mercadolibre'] : []),
   ...(selected.value.includes('arca') ? ['invoicing'] : []),
@@ -264,8 +383,24 @@ const money = value => new Intl.NumberFormat('es-AR', { style: 'currency', curre
 const title = item => es.value ? item.es : item.en;
 const description = item => es.value ? item.descEs : item.descEn;
 const quote = computed(() => es.value ? 'A cotizar' : 'To be quoted');
-const onceLabel = computed(() => amount.value ? money(amount.value) + (pendingOnce.value ? (es.value ? ' + a cotizar' : ' + quote pending') : '') : pendingOnce.value ? quote.value : money(0));
-const monthlyLabel = computed(() => pendingMonthly.value ? quote.value : money(0));
+const fromLabel = computed(() => es.value ? 'Desde ' : 'From ');
+const onceLabel = computed(() => (estimatedOnce.value ? fromLabel.value : '') + money(amount.value) + (pendingOnce.value ? (es.value ? ' + a cotizar' : ' + quote pending') : ''));
+const monthlyLabel = computed(() => (estimatedMonthly.value ? fromLabel.value : '') + money(monthlyAmount.value) + (pendingMonthly.value ? (es.value ? ' + a cotizar' : ' + quote pending') : ''));
+const itemFees = item => {
+  const parts = [];
+  if (item.initial) parts.push(fromLabel.value + money(item.initial) + (es.value ? ' por única vez' : ' one-time'));
+  if (item.monthly) parts.push(fromLabel.value + money(item.monthly) + (es.value ? '/mes' : '/month'));
+  return parts.join(' · ') || quote.value;
+};
+const itemScope = item => es.value ? item.scopeEs : item.scopeEn;
+const groupEstimate = group => {
+  const items = groupSelected(group).length ? groupSelected(group) : groupOptions(group);
+  const commonCount = group === 'automation' ? Math.max(0, items.length - 1) : 0;
+  return {
+    initial: items.reduce((sum, item) => sum + (item.initial || 0), 0) - commonCount * sharedAutomation.initial,
+    monthly: items.reduce((sum, item) => sum + (item.monthly || 0), 0) - commonCount * sharedAutomation.monthly,
+  };
+};
 function toggleBasics(event) {
   const basicIds = options.map(item => item.id);
   selected.value = event.target.checked ? [...new Set([...selected.value.filter(id => !['migration', 'visual-changes'].includes(id)), ...basicIds])] : selected.value.filter(id => !basicIds.includes(id));
@@ -294,7 +429,9 @@ const message = computed(() => {
     es.value ? 'Hola Pedro, me interesan estos servicios para mi tienda:' : 'Hi Pedro, I am interested in these services for my store:',
     '',
     ...checkedBasics.value.map(item => '- ' + title(item) + ': ' + money(item.price) + (es.value ? ' por única vez' : ' one-time')),
-    ...checkedExtras.value.map(item => '- ' + title(item) + ': ' + quote.value + ' · ' + modeLabel(item)),
+    ...checkedExtras.value.map(item => '- ' + title(item) + ': ' + itemFees(item)),
+    ...(sharedInitialSaving.value ? [(es.value ? 'Preparación compartida (una fuente): -' : 'Shared setup (one source): -') + money(sharedInitialSaving.value)] : []),
+    ...(sharedMonthlySaving.value ? [(es.value ? 'Revisión mensual compartida: -' : 'Shared monthly review: -') + money(sharedMonthlySaving.value) + (es.value ? '/mes' : '/month')] : []),
     ...contextLines.value,
     '',
     (es.value ? 'Honorarios por única vez: ' : 'One-time service fees: ') + onceLabel.value,
@@ -307,7 +444,7 @@ const message = computed(() => {
     ...(inquiry.value.business.trim() ? [(es.value ? 'Negocio / web: ' : 'Business / website: ') + inquiry.value.business.trim()] : []),
     ...(inquiry.value.message.trim() ? ['', inquiry.value.message.trim()] : []),
     '',
-    es.value ? 'Estimación orientativa en ARS. Alcance e importe final a confirmar. Los conceptos a cotizar no están incluidos en los importes numéricos.' : 'Indicative estimate in ARS. Final scope and price to be confirmed. Items pending a quote are not included in numeric amounts.',
+    es.value ? 'Estimación orientativa en ARS para los alcances base publicados. Importe final a confirmar según cantidad, fuentes y complejidad. Los ahorros de automatización suponen una única fuente compartida. VendoAlgo, módulos y otros servicios externos se abonan aparte.' : 'Indicative estimate in ARS for published base scopes. Final price depends on quantity, sources and complexity. Automation savings assume one shared source. Platform, module and other external service fees are separate.',
   ];
   return lines.join('\n');
 });
@@ -337,10 +474,10 @@ function contact(event) {
               <input type="checkbox" :checked="allBasics" :indeterminate.prop="partialBasics" @change="toggleBasics">
               <span><strong>{{ es ? 'Puesta en marcha' : 'Store launch setup' }}</strong><span class="estimate-caption">{{ es ? '5 servicios · pago por única vez' : '5 services · one-time payment' }}</span></span>
             </label>
-            <strong class="estimate-package-price">{{ money(partialBasics ? amount : 150000) }}</strong>
+            <strong class="estimate-package-price">{{ money(partialBasics ? basicAmount : 150000) }}</strong>
             <button type="button" class="estimate-expand" :aria-expanded="expanded" aria-controls="launch-service-options" :aria-label="es ? 'Ver o editar los servicios de puesta en marcha' : 'View or edit launch services'" @click="expanded = !expanded"><svg :class="{ 'is-open': expanded }" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
           </div>
-          <p class="estimate-package-hint">{{ partialBasics ? (es ? 'Selección personalizada · ' : 'Custom selection · ') + money(amount) : (es ? 'Todo lo necesario para empezar. Desplegá el detalle para personalizarlo.' : 'Everything you need to get started. Expand the details to customize it.') }}</p>
+          <p class="estimate-package-hint">{{ partialBasics ? (es ? 'Selección personalizada · ' : 'Custom selection · ') + money(basicAmount) : (es ? 'Todo lo necesario para empezar. Desplegá el detalle para personalizarlo.' : 'Everything you need to get started. Expand the details to customize it.') }}</p>
           <div v-show="expanded" id="launch-service-options" class="estimate-options">
             <label v-for="item in options" :key="item.id" class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
               <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleBasic(item, $event.target.checked)">
@@ -356,16 +493,16 @@ function contact(event) {
               <input type="checkbox" :checked="groupAllSelected(group.id)" :indeterminate.prop="groupPartiallySelected(group.id)" @change="toggleGroup(group.id, $event.target.checked)">
               <span><strong>{{ title(group) }}</strong><span class="estimate-caption">{{ groupCaption(group.id) }}</span></span>
             </label>
-            <strong class="estimate-package-price estimate-quote-price">{{ quote }}</strong>
+            <span class="estimate-package-price estimate-category-price"><strong v-if="groupEstimate(group.id).initial">{{ fromLabel }}{{ money(groupEstimate(group.id).initial) }}</strong><span v-if="groupEstimate(group.id).monthly">{{ fromLabel }}{{ money(groupEstimate(group.id).monthly) }}/{{ es ? 'mes' : 'month' }}</span></span>
             <button type="button" class="estimate-expand" :aria-expanded="!!expandedGroups[group.id]" :aria-controls="'service-group-' + group.id" :aria-label="(es ? 'Ver o editar: ' : 'View or edit: ') + title(group)" @click="expandedGroups[group.id] = !expandedGroups[group.id]">
               <svg :class="{ 'is-open': expandedGroups[group.id] }" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
             </button>
           </div>
-          <p class="estimate-package-hint">{{ groupSelected(group.id).length ? (groupPartiallySelected(group.id) ? (es ? 'Selección personalizada · ' : 'Custom selection · ') : '') + groupSelected(group.id).length + (es ? ' servicios seleccionados · a cotizar' : ' services selected · quote pending') : (es ? group.introEs : group.introEn) }}</p>
+          <p class="estimate-package-hint">{{ groupSelected(group.id).length ? (groupPartiallySelected(group.id) ? (es ? 'Selección personalizada · ' : 'Custom selection · ') : '') + groupSelected(group.id).length + (es ? ' servicios seleccionados · estimado orientativo' : ' services selected · indicative estimate') : (es ? group.introEs : group.introEn) }}</p>
           <div v-show="expandedGroups[group.id]" :id="'service-group-' + group.id" class="estimate-options estimate-category-options">
-          <label v-for="item in extras.filter(service => service.group === group.id)" :key="item.id" class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
+          <label v-for="item in pricedExtras.filter(service => service.group === group.id)" :key="item.id" class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
             <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleExtra(item, $event.target.checked)">
-            <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><span>{{ description(item) }}</span><em>{{ modeLabel(item) }} · {{ quote }}</em></span>
+            <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><span>{{ description(item) }}</span><span class="estimate-scope">{{ itemScope(item) }}</span><em class="estimate-service-fee">{{ itemFees(item) }}</em></span>
           </label>
           <div v-if="groupSelected(group.id).length" class="estimate-context">
             <p class="estimate-context-title">{{ es ? 'Si querés, sumá un poco de contexto' : 'Add some context if you like' }}</p>
@@ -385,7 +522,7 @@ function contact(event) {
             </template>
             <label v-if="group.id === 'support' && selected.includes('maintenance')" class="estimate-field">{{ es ? '¿Qué tareas querés delegar cada mes?' : 'What tasks would you like to delegate each month?' }}<textarea v-model="details.supportNotes" rows="2" maxlength="400"></textarea></label>
             <label v-if="group.id === 'support' && selected.includes('technical-help')" class="estimate-field">{{ es ? '¿Qué está pasando?' : 'What is happening?' }}<textarea v-model="details.issue" rows="2" maxlength="500"></textarea></label>
-            <p class="estimate-note">{{ es ? 'Estos servicios requieren una cotización según el alcance. Si combinás tareas, reviso qué trabajo comparten antes de presupuestarlas.' : 'These services require a scope-based quote. When you combine tasks, I review shared work before quoting.' }}</p>
+            <p class="estimate-note">{{ es ? 'Los valores corresponden al alcance base de cada servicio. Cantidades, fuentes o reglas adicionales se presupuestan antes de comenzar.' : 'Prices apply to each service’s base scope. Extra quantities, sources or rules are quoted before work begins.' }}</p>
           </div>
           </div>
         </div>
@@ -415,15 +552,18 @@ function contact(event) {
         <p v-if="!hasSelection" class="estimate-note">{{ es ? 'Elegí al menos un servicio para armar tu consulta.' : 'Choose at least one service to build your inquiry.' }}</p>
         <ul v-else class="estimate-selected-list">
           <li v-for="item in checkedBasics" :key="item.id"><span>{{ title(item) }}</span><strong>{{ money(item.price) }}</strong></li>
-          <li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}<small class="estimate-summary-mode">{{ modeLabel(item) }}</small></span><strong>{{ quote }}</strong></li>
+          <li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}<small class="estimate-summary-mode">{{ modeLabel(item) }}</small></span><strong class="estimate-summary-fee">{{ itemFees(item) }}</strong></li>
+          <li v-if="sharedInitialSaving" class="estimate-saving"><span>{{ es ? 'Preparación compartida · una fuente' : 'Shared setup · one source' }}</span><strong>−{{ money(sharedInitialSaving) }}</strong></li>
+          <li v-if="sharedMonthlySaving" class="estimate-saving"><span>{{ es ? 'Revisión mensual compartida' : 'Shared monthly review' }}</span><strong>−{{ money(sharedMonthlySaving) }}/{{ es ? 'mes' : 'month' }}</strong></li>
         </ul>
         <div class="estimate-totals" role="status" aria-live="polite" aria-atomic="true">
           <div><span>{{ es ? 'Mis servicios · por única vez' : 'My services · one-time' }}</span><strong>{{ onceLabel }}</strong></div>
           <div><span>{{ es ? 'Mis servicios · por mes' : 'My services · per month' }}</span><strong>{{ monthlyLabel }}</strong></div>
           <div class="estimate-platform-total"><span>{{ es ? 'VendoAlgo · por mes, aparte' : 'VendoAlgo · per month, separate' }}</span><strong>{{ platformCost === null ? (es ? 'Plan por definir' : 'Plan to confirm') : money(platformCost) }}</strong></div>
         </div>
-        <p v-if="hasSelection && !pendingMonthly" class="estimate-note">{{ es ? 'Los servicios seleccionados no requieren contratarme un abono mensual.' : 'The selected services do not require a monthly service retainer.' }}</p>
-        <p v-if="pendingOnce || pendingMonthly" class="estimate-note">{{ es ? 'Hay servicios a cotizar: el total final queda pendiente. Los importes numéricos solo suman los conceptos con precio definido.' : 'Some services need a quote: the final total is pending. Numeric amounts only include items with a defined price.' }}</p>
+        <p v-if="hasSelection && !monthlyAmount && !pendingMonthly" class="estimate-note">{{ es ? 'Los servicios seleccionados no requieren contratarme un abono mensual.' : 'The selected services do not require a monthly service retainer.' }}</p>
+        <p v-if="pendingOnce || pendingMonthly" class="estimate-note">{{ es ? 'Hay conceptos pendientes de cotizar. Los importes numéricos solo suman los conceptos con precio definido.' : 'Some services need a quote: the final total is pending. Numeric amounts only include items with a defined price.' }}</p>
+        <p v-if="automationCount" class="estimate-note">{{ es ? 'Automatizaciones: estimado para una fuente compartida, hasta 100 productos y una actualización diaria. Más fuentes, mayor volumen, reglas especiales o consumo de servicios externos pueden cambiar el importe.' : 'Automations: estimate for one shared source, up to 100 products and one daily update. Extra sources, higher volumes, special rules or external service usage may change the price.' }}</p>
         <p class="estimate-invoice">{{ es ? 'Emito factura por mis servicios.' : 'I issue invoices for my services.' }}</p>
         <p class="estimate-note">{{ es ? 'Valores orientativos en pesos argentinos. Confirmo con vos el alcance y el importe final antes de comenzar.' : 'Indicative amounts in Argentine pesos. I confirm the scope and final price with you before starting.' }}</p>
         <form @submit.prevent="contact">
@@ -525,4 +665,12 @@ function contact(event) {
 .estimate-quote-price { font-size: .85rem; font-weight: 500; color: var(--muted); }
 .estimate-category-options > .estimate-option { grid-template-columns: 22px minmax(0, 1fr); }
 .estimate-category .estimate-package-select strong { font-size: 1rem; }
+.estimate-category-price { display: grid; gap: 4px; text-align: right; font-size: .82rem; font-weight: 500; }
+.estimate-category-price strong { font-size: .9rem; }
+.estimate-category-price > span { font-size: .75rem; color: var(--muted); }
+.estimate-option-copy .estimate-service-fee { color: var(--ink); font-weight: 600; font-size: .83rem; }
+.estimate-option-copy .estimate-scope { padding-left: 10px; border-left: 2px solid var(--line); font-size: .76rem; }
+.estimate-selected-list .estimate-summary-fee { flex-shrink: 1; flex-basis: 45%; text-align: right; font-size: .73rem; min-width: 0; }
+.estimate-saving { color: var(--muted); }
+@media (max-width: 500px) { .estimate-category-price { text-align: left; } }
 </style>
