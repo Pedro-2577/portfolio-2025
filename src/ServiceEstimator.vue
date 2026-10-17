@@ -16,14 +16,218 @@ const options = [
   { id: 'shipping', price: 20000, es: 'Configuración de envíos y retiro', en: 'Shipping and pickup setup', descEs: 'Configuración básica de entrega y retiro según las opciones disponibles y tus tarifas. Reglas especiales se revisan antes de confirmar.', descEn: 'Basic delivery and pickup setup using available options and your rates. Special rules are reviewed before confirmation.' },
   { id: 'training', price: 15000, es: 'Capacitación inicial · 1 hora', en: 'Initial training · 1 hour', descEs: 'Una sesión para aprender las tareas habituales de tu tienda. Capacitación adicional y preparación de equipos se cotizan aparte.', descEn: 'One session covering everyday store tasks. Additional training and team onboarding are quoted separately.' },
 ];
-const extras = [
-  { id: 'automation', mode: 'both', es: 'Automatizar precios, stock o novedades', en: 'Automate prices, stock or new products', descEs: 'Según tus proveedores, las reglas de tu negocio y la frecuencia que necesites. Implementación y mantenimiento a cotizar.', descEn: 'Based on your suppliers, business rules and required schedule. Implementation and maintenance quoted separately.' },
-  { id: 'ml', mode: 'once', es: 'Configurar Mercado Libre', en: 'Set up Mercado Libre', descEs: 'Configuración del módulo que contrates en VendoAlgo. Mis honorarios se cotizan aparte de la suscripción del módulo.', descEn: 'Setup of the VendoAlgo module you subscribe to. My setup fee is quoted separately from the module subscription.' },
-  { id: 'arca', mode: 'once', es: 'Configurar facturación ARCA', en: 'Set up ARCA invoicing', descEs: 'Configuración de la facturación automática del módulo de VendoAlgo. Honorarios a cotizar; módulo mensual aparte.', descEn: 'Setup of automatic invoicing through the VendoAlgo module. Setup fee quoted separately; module subscription is separate.' },
-  { id: 'maintenance', mode: 'monthly', es: 'Mantenimiento y asistencia', en: 'Maintenance and support', descEs: 'Acordamos qué cambios y atención necesitás cada mes. El alcance y los honorarios se definen antes de comenzar.', descEn: 'We agree on monthly changes and support. Scope and fees are confirmed before starting.' },
-  { id: 'team', mode: 'once', es: 'Capacitar al equipo y preparar permisos', en: 'Train the team and set permissions', descEs: 'Capacitación según cada puesto y configuración de roles. El plan Pro permite asignar roles y permisos.', descEn: 'Role-specific training and permission setup. The Pro plan supports staff roles and permissions.' },
-  { id: 'hiring', mode: 'once', es: 'Ayuda para conseguir personal', en: 'Help finding staff', descEs: 'Diseñador, operario, vendedor o community manager: búsqueda e incorporación según lo acordado. Sus honorarios o sueldos son aparte.', descEn: 'Designer, operator, salesperson or community manager: search and onboarding as agreed. Their fees or salaries are separate.' },
+const serviceGroups = [
+  {
+    "id": "catalogue",
+    "es": "Catálogo y presentación",
+    "en": "Catalog and presentation",
+    "introEs": "Para ampliar o reorganizar una tienda que ya existe.",
+    "introEn": "Expand or reorganize an existing store."
+  },
+  {
+    "id": "automation",
+    "es": "Tareas automáticas",
+    "en": "Automated tasks",
+    "introEs": "Elegí qué querés mantener al día. Si varias tareas comparten proveedor o información, las evalúo juntas para evitar trabajo duplicado.",
+    "introEn": "Choose what to keep up to date. Tasks sharing a supplier or information are assessed together to avoid duplicate work."
+  },
+  {
+    "id": "configuration",
+    "es": "Configuraciones adicionales",
+    "en": "Additional configuration",
+    "introEs": "Funciones que podés sumar según cómo trabaja tu negocio.",
+    "introEn": "Features to add based on how your business operates."
+  },
+  {
+    "id": "team",
+    "es": "Equipo y capacitación",
+    "en": "Team and training",
+    "introEs": "Ayuda para organizar a las personas que trabajan con tu tienda.",
+    "introEn": "Help organizing the people who work with your store."
+  },
+  {
+    "id": "support",
+    "es": "Mantenimiento y asistencia",
+    "en": "Maintenance and support",
+    "introEs": "Podés pedirme resolver algo puntual o acompañarte cada mes.",
+    "introEn": "Ask for a specific fix or ongoing monthly support."
+  }
 ];
+const extras = [
+  {
+    "id": "migration",
+    "group": "catalogue",
+    "mode": "once",
+    "es": "Migrar productos de otra tienda",
+    "en": "Migrate products from another store",
+    "descEs": "Reviso el catálogo de origen e importo los productos y datos acordados. Es una alternativa a la carga inicial: no cobro dos veces por los mismos productos.",
+    "descEn": "I review the source catalog and import the agreed products and data. An alternative to initial upload: the same products are not charged twice."
+  },
+  {
+    "id": "more-products",
+    "group": "catalogue",
+    "mode": "once",
+    "es": "Cargar productos adicionales",
+    "en": "Upload additional products",
+    "descEs": "Para ampliar el catálogo existente o superar los 40 productos de la carga inicial. Indico en la propuesta la cantidad adicional y el trabajo incluido.",
+    "descEn": "Expand an existing catalog or go beyond the initial 40 products. The quote specifies the additional quantity and included work."
+  },
+  {
+    "id": "catalog-order",
+    "group": "catalogue",
+    "mode": "once",
+    "es": "Organizar categorías, variantes y fichas",
+    "en": "Organize categories, variants and listings",
+    "descEs": "Reordeno el catálogo existente y ajusto la información que me entregues para que sea más fácil encontrar y elegir productos.",
+    "descEn": "Reorganize your existing catalog and adjust the information you supply to make products easier to find and choose."
+  },
+  {
+    "id": "visual-changes",
+    "group": "catalogue",
+    "mode": "once",
+    "es": "Ajustar el diseño de una tienda existente",
+    "en": "Adjust the design of an existing store",
+    "descEs": "Cambios en estilos, portada, secciones y contenido con el material que me entregues. Para una tienda nueva, elegí el diseño de puesta en marcha.",
+    "descEn": "Adjust styles, homepage, sections and content using your materials. For a new store, choose the launch design service."
+  },
+  {
+    "id": "auto-prices",
+    "group": "automation",
+    "mode": "both",
+    "es": "Actualizar precios automáticamente",
+    "en": "Update prices automatically",
+    "descEs": "Según los costos de tus proveedores y las reglas que acordemos. Puede incluir cálculos por insumos o márgenes según tu negocio.",
+    "descEn": "Based on supplier costs and agreed rules, including input cost or margin calculations where needed."
+  },
+  {
+    "id": "auto-stock",
+    "group": "automation",
+    "mode": "both",
+    "es": "Actualizar stock automáticamente",
+    "en": "Update stock automatically",
+    "descEs": "Mantengo las existencias al día con las fuentes de información y la frecuencia que acordemos.",
+    "descEn": "Keep stock up to date using agreed information sources and schedule."
+  },
+  {
+    "id": "auto-new",
+    "group": "automation",
+    "mode": "both",
+    "es": "Incorporar novedades de proveedores",
+    "en": "Add new supplier products",
+    "descEs": "Preparo la incorporación de productos nuevos según las categorías, datos y criterios que definas.",
+    "descEn": "Set up new product additions using your categories, information and criteria."
+  },
+  {
+    "id": "auto-discontinued",
+    "group": "automation",
+    "mode": "both",
+    "es": "Gestionar productos que dejan de ofrecerse",
+    "en": "Handle discontinued products",
+    "descEs": "Definimos qué hacer cuando un proveedor deja de ofrecer un producto: actualizar su disponibilidad o desactivarlo según tus reglas.",
+    "descEn": "Agree how to handle products a supplier stops offering: update availability or deactivate them according to your rules."
+  },
+  {
+    "id": "auto-offers",
+    "group": "automation",
+    "mode": "both",
+    "es": "Actualizar ofertas automáticamente",
+    "en": "Update offers automatically",
+    "descEs": "Preparo los cambios de precios promocionales según la información, las condiciones y los horarios que acordemos.",
+    "descEn": "Set up promotional price changes based on agreed information, conditions and schedule."
+  },
+  {
+    "id": "ml",
+    "group": "configuration",
+    "mode": "once",
+    "es": "Configurar Mercado Libre",
+    "en": "Set up Mercado Libre",
+    "descEs": "Te ayudo a conectar y configurar el módulo que contrates en VendoAlgo. La suscripción del módulo se muestra aparte.",
+    "descEn": "Help connect and configure the VendoAlgo module you subscribe to. The module subscription is shown separately."
+  },
+  {
+    "id": "arca",
+    "group": "configuration",
+    "mode": "once",
+    "es": "Configurar facturación automática ARCA",
+    "en": "Set up automatic ARCA invoicing",
+    "descEs": "Preparo la configuración del módulo con los datos y accesos que correspondan. Su suscripción mensual se muestra aparte.",
+    "descEn": "Configure the module using the required details and access. Its monthly subscription is shown separately."
+  },
+  {
+    "id": "shipping-rules",
+    "group": "configuration",
+    "mode": "once",
+    "es": "Preparar reglas especiales de entrega",
+    "en": "Set up special delivery rules",
+    "descEs": "Reviso zonas, tarifas y condiciones adicionales que no entren en la configuración básica de envíos.",
+    "descEn": "Review extra delivery zones, rates and conditions outside basic shipping setup."
+  },
+  {
+    "id": "team-training",
+    "group": "team",
+    "mode": "once",
+    "es": "Capacitar al equipo según cada puesto",
+    "en": "Train staff for their roles",
+    "descEs": "Enseño las tareas que necesita cada persona: catálogo, pedidos, ventas u operación. Definimos participantes y sesiones.",
+    "descEn": "Teach the tasks each person needs: catalog, orders, sales or operations. Participants and sessions are agreed."
+  },
+  {
+    "id": "roles",
+    "group": "team",
+    "mode": "once",
+    "es": "Asignar roles y permisos",
+    "en": "Set staff roles and permissions",
+    "descEs": "Configuro qué puede ver y hacer cada empleado en la tienda. Esta función requiere el plan Pro de VendoAlgo.",
+    "descEn": "Configure what each employee can see and do in the store. Requires the VendoAlgo Pro plan."
+  },
+  {
+    "id": "hiring",
+    "group": "team",
+    "mode": "once",
+    "es": "Ayudarte a conseguir e incorporar personal",
+    "en": "Help find and onboard staff",
+    "descEs": "Diseñador, operario, vendedor o community manager. Acordamos la búsqueda y su incorporación; los honorarios o sueldos de esa persona son aparte.",
+    "descEn": "Designer, operator, salesperson or community manager. Agree on the search and onboarding; that person's fees or salary are separate."
+  },
+  {
+    "id": "maintenance",
+    "group": "support",
+    "mode": "monthly",
+    "es": "Mantenimiento y asistencia mensual",
+    "en": "Monthly maintenance and support",
+    "descEs": "Cambios y atención de problemas dentro del alcance que acordemos. Doy seguimiento a las incidencias que necesiten intervención del equipo de VendoAlgo.",
+    "descEn": "Changes and issue handling within the agreed scope. I follow up on incidents requiring the VendoAlgo team's involvement."
+  },
+  {
+    "id": "technical-help",
+    "group": "support",
+    "mode": "once",
+    "es": "Resolver un problema puntual",
+    "en": "Resolve a specific issue",
+    "descEs": "Reviso qué está pasando y te propongo cómo abordarlo. Si depende de la plataforma, elevo el reclamo y le doy seguimiento.",
+    "descEn": "Review the issue and propose an approach. If it depends on the platform, I escalate it and follow up."
+  }
+];
+const details = ref({ productCount: '', source: '', suppliers: '', frequency: '', teamSize: '', roles: [], issue: '' });
+const staffRoles = [
+  { id: 'designer', es: 'Diseñador', en: 'Designer' },
+  { id: 'operator', es: 'Operario', en: 'Operator' },
+  { id: 'sales', es: 'Vendedor', en: 'Salesperson' },
+  { id: 'cm', es: 'Community manager', en: 'Community manager' },
+];
+const groupSelected = group => extras.filter(item => item.group === group && selected.value.includes(item.id));
+const modeLabel = item => item.mode === 'both' ? (es.value ? 'Implementación + mantenimiento mensual' : 'Setup + monthly maintenance') : item.mode === 'monthly' ? (es.value ? 'Servicio mensual' : 'Monthly service') : (es.value ? 'Trabajo por única vez' : 'One-time service');
+function toggleExtra(item, checked) {
+  selected.value = checked ? [...new Set([...selected.value, item.id])] : selected.value.filter(id => id !== item.id);
+  // Migration replaces the basic product upload; a visual adjustment replaces a new-store design.
+  if (checked && item.id === 'migration') selected.value = selected.value.filter(id => id !== 'catalog');
+  if (checked && item.id === 'visual-changes') selected.value = selected.value.filter(id => id !== 'design');
+}
+function toggleBasic(item, checked) {
+  selected.value = checked ? [...new Set([...selected.value, item.id])] : selected.value.filter(id => id !== item.id);
+  if (checked && item.id === 'catalog') selected.value = selected.value.filter(id => id !== 'migration');
+  if (checked && item.id === 'design') selected.value = selected.value.filter(id => id !== 'visual-changes');
+}
 const checkedBasics = computed(() => options.filter(item => selected.value.includes(item.id)));
 const checkedExtras = computed(() => extras.filter(item => selected.value.includes(item.id)));
 const allBasics = computed(() => checkedBasics.value.length === options.length);
@@ -37,7 +241,7 @@ const requiredModuleIds = computed(() => [
   ...(selected.value.includes('arca') ? ['invoicing'] : []),
 ]);
 const selectedModules = computed(() => storePlatformPricing.modules.filter(item => modules.value.includes(item.id) || requiredModuleIds.value.includes(item.id)));
-const proRequired = computed(() => selectedModules.value.length > 0 || selected.value.includes('team'));
+const proRequired = computed(() => selectedModules.value.length > 0 || selected.value.includes('roles'));
 function toggleModule(id, checked) {
   modules.value = checked ? [...new Set([...modules.value, id])] : modules.value.filter(value => value !== id);
 }
@@ -51,14 +255,29 @@ const onceLabel = computed(() => amount.value ? money(amount.value) + (pendingOn
 const monthlyLabel = computed(() => pendingMonthly.value ? quote.value : money(0));
 function toggleBasics(event) {
   const basicIds = options.map(item => item.id);
-  selected.value = event.target.checked ? [...new Set([...selected.value, ...basicIds])] : selected.value.filter(id => !basicIds.includes(id));
+  selected.value = event.target.checked ? [...new Set([...selected.value.filter(id => !['migration', 'visual-changes'].includes(id)), ...basicIds])] : selected.value.filter(id => !basicIds.includes(id));
 }
+const contextLines = computed(() => {
+  const lines = [];
+  const add = (labelEs, labelEn, value) => { if (String(value).trim()) lines.push((es.value ? labelEs : labelEn) + ': ' + String(value).trim()); };
+  if (groupSelected('catalogue').length) add('Cantidad aproximada de productos', 'Approximate product count', details.value.productCount);
+  if (selected.value.includes('migration')) add('Tienda o catálogo de origen', 'Source store or catalog', details.value.source);
+  if (groupSelected('automation').length) {
+    add('Proveedores o fuentes a usar', 'Suppliers or information sources', details.value.suppliers);
+    add('Frecuencia o reglas deseadas', 'Desired schedule or rules', details.value.frequency);
+  }
+  if (selected.value.includes('team-training') || selected.value.includes('roles')) add('Personas a capacitar / organizar', 'People to train / organize', details.value.teamSize);
+  if (selected.value.includes('hiring') && details.value.roles.length) add('Perfiles que necesito', 'Staff roles needed', staffRoles.filter(role => details.value.roles.includes(role.id)).map(title).join(', '));
+  if (selected.value.includes('technical-help')) add('Problema a resolver', 'Issue to resolve', details.value.issue);
+  return lines.length ? ['', es.value ? 'Detalles de mi pedido:' : 'Request details:', ...lines] : [];
+});
 const message = computed(() => {
   const lines = [
     es.value ? 'Hola Pedro, me interesan estos servicios para mi tienda:' : 'Hi Pedro, I am interested in these services for my store:',
     '',
     ...checkedBasics.value.map(item => '- ' + title(item) + ': ' + money(item.price) + (es.value ? ' por única vez' : ' one-time')),
-    ...checkedExtras.value.map(item => '- ' + title(item) + ': ' + quote.value),
+    ...checkedExtras.value.map(item => '- ' + title(item) + ': ' + quote.value + ' · ' + modeLabel(item)),
+    ...contextLines.value,
     '',
     (es.value ? 'Honorarios por única vez: ' : 'One-time service fees: ') + onceLabel.value,
     (es.value ? 'Honorarios mensuales: ' : 'Monthly service fees: ') + monthlyLabel.value,
@@ -106,20 +325,41 @@ function contact(event) {
           <p class="estimate-package-hint">{{ partialBasics ? (es ? 'Selección personalizada · ' : 'Custom selection · ') + money(amount) : (es ? 'Todo lo necesario para empezar. Desplegá el detalle para personalizarlo.' : 'Everything you need to get started. Expand the details to customize it.') }}</p>
           <div v-show="expanded" id="launch-service-options" class="estimate-options">
             <label v-for="item in options" :key="item.id" class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
-              <input v-model="selected" type="checkbox" :value="item.id">
+              <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleBasic(item, $event.target.checked)">
               <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><span>{{ description(item) }}</span></span>
               <strong class="estimate-option-price">{{ money(item.price) }}</strong>
             </label>
           </div>
         </div>
 
-        <details class="estimate-details">
-          <summary>{{ es ? '¿Necesitás algo más? Ver otros servicios' : 'Need something else? See more services' }}<span v-if="checkedExtras.length" class="estimate-count">{{ checkedExtras.length }}</span></summary>
-          <p class="estimate-note">{{ es ? 'Podés sumarlos a la consulta. Te paso un precio según el trabajo; no se incluyen como $0 en la estimación.' : 'Add these to your inquiry. I will quote the scope; they are not treated as free in the estimate.' }}</p>
-          <label v-for="item in extras" :key="item.id" class="estimate-option">
-            <input v-model="selected" type="checkbox" :value="item.id">
-            <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><span>{{ description(item) }}</span><em>{{ quote }}</em></span>
+        <div class="estimate-extra-heading">
+          <h3>{{ es ? '¿Qué más querés delegar?' : 'What else would you like to delegate?' }}</h3>
+          <p class="estimate-note">{{ es ? 'Abrí solo lo que te interese. Podés contratar estos servicios sin elegir la puesta en marcha.' : 'Open only what interests you. These services can be booked without the launch setup.' }}</p>
+        </div>
+        <details v-for="group in serviceGroups" :key="group.id" class="estimate-details estimate-service-group">
+          <summary><span>{{ title(group) }}</span><span v-if="groupSelected(group.id).length" class="estimate-count">{{ groupSelected(group.id).length }}</span><svg class="estimate-group-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+          <p class="estimate-note">{{ es ? group.introEs : group.introEn }}</p>
+          <label v-for="item in extras.filter(service => service.group === group.id)" :key="item.id" class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
+            <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleExtra(item, $event.target.checked)">
+            <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><span>{{ description(item) }}</span><em>{{ modeLabel(item) }} · {{ quote }}</em></span>
           </label>
+          <div v-if="groupSelected(group.id).length" class="estimate-context">
+            <p class="estimate-context-title">{{ es ? 'Si querés, sumá un poco de contexto' : 'Add some context if you like' }}</p>
+            <template v-if="group.id === 'catalogue'">
+              <label class="estimate-field">{{ es ? 'Cantidad aproximada de productos' : 'Approximate product count' }}<input v-model="details.productCount" inputmode="numeric" maxlength="40" :placeholder="es ? 'Ej.: 150 productos' : 'E.g. 150 products'"></label>
+              <label v-if="selected.includes('migration')" class="estimate-field">{{ es ? 'Web o catálogo de origen' : 'Source website or catalog' }}<input v-model="details.source" maxlength="300" :placeholder="es ? 'Link o nombre de la tienda anterior' : 'Previous store name or link'"></label>
+            </template>
+            <template v-if="group.id === 'automation'">
+              <label class="estimate-field">{{ es ? 'Proveedores o fuentes de información' : 'Suppliers or information sources' }}<input v-model="details.suppliers" maxlength="300" :placeholder="es ? 'Ej.: dos proveedores, sus webs o listas de precios' : 'E.g. two suppliers, their websites or price lists'"></label>
+              <label class="estimate-field">{{ es ? '¿Cada cuánto y con qué reglas?' : 'How often, and using which rules?' }}<textarea v-model="details.frequency" rows="2" maxlength="500" :placeholder="es ? 'Ej.: cada mañana, con el margen de cada categoría' : 'E.g. every morning, using each category’s margin'"></textarea></label>
+            </template>
+            <template v-if="group.id === 'team'">
+              <label v-if="selected.includes('team-training') || selected.includes('roles')" class="estimate-field">{{ es ? '¿Cuántas personas y qué tareas hacen?' : 'How many people, and what do they do?' }}<input v-model="details.teamSize" maxlength="200" :placeholder="es ? 'Ej.: tres personas que cargan productos y preparan pedidos' : 'E.g. three people handling products and orders'"></label>
+              <fieldset v-if="selected.includes('hiring')" class="estimate-staff-roles"><legend>{{ es ? '¿Qué perfiles te interesan?' : 'Which roles do you need?' }}</legend><label v-for="role in staffRoles" :key="role.id"><input v-model="details.roles" type="checkbox" :value="role.id"><span>{{ title(role) }}</span></label></fieldset>
+            </template>
+            <label v-if="group.id === 'support' && selected.includes('technical-help')" class="estimate-field">{{ es ? '¿Qué está pasando?' : 'What is happening?' }}<textarea v-model="details.issue" rows="2" maxlength="500"></textarea></label>
+            <p class="estimate-note">{{ es ? 'Estos servicios requieren una cotización según el alcance. Si combinás tareas, reviso qué trabajo comparten antes de presupuestarlas.' : 'These services require a scope-based quote. When you combine tasks, I review shared work before quoting.' }}</p>
+          </div>
         </details>
 
         <details class="estimate-details">
@@ -147,7 +387,7 @@ function contact(event) {
         <p v-if="!hasSelection" class="estimate-note">{{ es ? 'Elegí al menos un servicio para armar tu consulta.' : 'Choose at least one service to build your inquiry.' }}</p>
         <ul v-else class="estimate-selected-list">
           <li v-for="item in checkedBasics" :key="item.id"><span>{{ title(item) }}</span><strong>{{ money(item.price) }}</strong></li>
-          <li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}</span><strong>{{ quote }}</strong></li>
+          <li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}<small class="estimate-summary-mode">{{ modeLabel(item) }}</small></span><strong>{{ quote }}</strong></li>
         </ul>
         <div class="estimate-totals" role="status" aria-live="polite" aria-atomic="true">
           <div><span>{{ es ? 'Mis servicios · por única vez' : 'My services · one-time' }}</span><strong>{{ onceLabel }}</strong></div>
@@ -237,4 +477,19 @@ function contact(event) {
   .estimate-module strong { grid-column: 2; }
 }
 @media (prefers-reduced-motion: reduce) { .estimate-expand, .estimate-expand svg { transition: none; } }
+
+.estimate-extra-heading { margin: 28px 0 8px; }
+.estimate-extra-heading h3 { font-size: 1.08rem; margin: 0; letter-spacing: -.02em; }
+.estimate-extra-heading .estimate-note { margin-top: 8px; }
+.estimate-service-group summary { display: flex; align-items: center; gap: 8px; list-style: none; min-height: 56px; }
+.estimate-service-group summary::-webkit-details-marker { display: none; }
+.estimate-group-chevron { flex-shrink: 0; margin-left: auto; color: var(--muted); transition: transform .2s ease; }
+.estimate-service-group[open] .estimate-group-chevron { transform: rotate(180deg); }
+.estimate-context { border-top: 1px solid var(--line); padding-block: 14px 4px; }
+.estimate-context-title { font-size: .82rem; font-weight: 600; margin: 0; }
+.estimate-staff-roles { padding: 0; margin: 16px 0; border: 0; }
+.estimate-staff-roles legend { font-size: .82rem; font-weight: 500; margin-bottom: 10px; }
+.estimate-staff-roles label { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: .82rem; cursor: pointer; }
+.estimate-summary-mode { display: block; margin-top: 3px; font-size: .71rem; color: var(--muted); line-height: 1.5; }
+@media (prefers-reduced-motion: reduce) { .estimate-group-chevron { transition: none; } }
 </style>
