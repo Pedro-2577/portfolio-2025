@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import { storePlatformPricing } from './storeServices';
 
-const props = defineProps({ language: { type: String, default: 'es' } });
+const props = defineProps({ language: { type: String, default: 'es' }, showPrices: { type: Boolean, default: false } });
 const es = computed(() => props.language !== 'en');
 const selected = ref([]);
 const expanded = ref(false);
@@ -324,8 +324,11 @@ const extraRates = {
     "scopeEn": "Base: one hour of review and assistance. Additional work is scoped before continuing."
   }
 };
-const sharedAutomation = { initial: 80000, monthly: 15000 };
-const pricedExtras = extras.map(item => ({ ...item, ...extraRates[item.id] }));
+// Indicative upper estimates vary with product count, suppliers and work required.
+const basicUpper = { design: 100000, catalog: 80000, payments: 25000, shipping: 40000, training: 30000 };
+const extraUpper = {"migration":[150000,0],"more-products":[45000,0],"catalog-order":[60000,0],"visual-changes":[100000,0],"auto-prices":[300000,60000],"auto-stock":[280000,55000],"auto-new":[350000,65000],"auto-discontinued":[250000,45000],"auto-offers":[250000,45000],"ml":[80000,0],"arca":[40000,0],"shipping-rules":[60000,0],"team-training":[75000,0],"roles":[40000,0],"hiring":[200000,0],"maintenance":[0,90000],"technical-help":[45000,0]};
+const sharedAutomation = { initial: 80000, monthly: 15000, initialUpper: 160000, monthlyUpper: 30000 };
+const pricedExtras = extras.map(item => ({ ...item, ...extraRates[item.id], initialUpper: extraUpper[item.id][0], monthlyUpper: extraUpper[item.id][1] }));
 
 const expandedGroups = ref({});
 const groupOptions = group => pricedExtras.filter(item => item.group === group);
@@ -365,6 +368,9 @@ const pendingOnce = computed(() => checkedExtras.value.some(item => item.mode !=
 const pendingMonthly = computed(() => checkedExtras.value.some(item => item.mode !== 'once' && !Number.isFinite(item.monthly)));
 const estimatedOnce = computed(() => checkedExtras.value.some(item => item.initial > 0));
 const estimatedMonthly = computed(() => monthlyAmount.value > 0);
+const basicAmountUpper = computed(() => checkedBasics.value.reduce((sum, item) => sum + basicUpper[item.id], 0));
+const amountUpper = computed(() => basicAmountUpper.value + checkedExtras.value.reduce((sum, item) => sum + item.initialUpper, 0) - Math.max(0, automationCount.value - 1) * sharedAutomation.initialUpper);
+const monthlyAmountUpper = computed(() => checkedExtras.value.reduce((sum, item) => sum + item.monthlyUpper, 0) - Math.max(0, automationCount.value - 1) * sharedAutomation.monthlyUpper);
 const requiredModuleIds = computed(() => [
   ...(selected.value.includes('ml') ? ['mercadolibre'] : []),
   ...(selected.value.includes('arca') ? ['invoicing'] : []),
@@ -377,16 +383,18 @@ function toggleModule(id, checked) {
 const effectivePlatform = computed(() => proRequired.value ? 'pro' : platform.value);
 const platformCost = computed(() => effectivePlatform.value === 'unsure' ? null : (effectivePlatform.value === 'pro' ? storePlatformPricing.plans.pro.monthly : 0) + selectedModules.value.reduce((sum, item) => sum + item.monthly, 0));
 const money = value => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(value);
+const moneyRange = (lower, upper) => lower === upper ? money(lower) : money(lower) + ' – ' + money(upper);
 const title = item => es.value ? item.es : item.en;
 const description = item => es.value ? item.descEs : item.descEn;
 const quote = computed(() => es.value ? 'A cotizar' : 'To be quoted');
 const fromLabel = computed(() => es.value ? 'Desde ' : 'From ');
-const onceLabel = computed(() => (estimatedOnce.value ? fromLabel.value : '') + money(amount.value) + (pendingOnce.value ? (es.value ? ' + a cotizar' : ' + quote pending') : ''));
-const monthlyLabel = computed(() => (estimatedMonthly.value ? fromLabel.value : '') + money(monthlyAmount.value) + (pendingMonthly.value ? (es.value ? ' + a cotizar' : ' + quote pending') : ''));
+const onceLabel = computed(() => moneyRange(amount.value, amountUpper.value));
+const monthlyLabel = computed(() => moneyRange(monthlyAmount.value, monthlyAmountUpper.value));
+const basicFees = item => moneyRange(item.price, basicUpper[item.id]);
 const itemFees = item => {
   const parts = [];
-  if (item.initial) parts.push(fromLabel.value + money(item.initial) + (es.value ? ' por única vez' : ' one-time'));
-  if (item.monthly) parts.push(fromLabel.value + money(item.monthly) + (es.value ? '/mes' : '/month'));
+  if (item.initial) parts.push(moneyRange(item.initial, item.initialUpper) + (es.value ? ' una vez' : ' one-time'));
+  if (item.monthly) parts.push(moneyRange(item.monthly, item.monthlyUpper) + (es.value ? '/mes' : '/month'));
   return parts.join(' · ') || quote.value;
 };
 const itemScope = item => es.value ? item.scopeEs : item.scopeEn;
@@ -397,6 +405,8 @@ const groupEstimate = group => {
   return {
     initial: items.reduce((sum, item) => sum + (item.initial || 0), 0) - commonCount * sharedAutomation.initial,
     monthly: items.reduce((sum, item) => sum + (item.monthly || 0), 0) - commonCount * sharedAutomation.monthly,
+    initialUpper: items.reduce((sum, item) => sum + item.initialUpper, 0) - commonCount * sharedAutomation.initialUpper,
+    monthlyUpper: items.reduce((sum, item) => sum + item.monthlyUpper, 0) - commonCount * sharedAutomation.monthlyUpper,
   };
 };
 function toggleBasics(event) {
@@ -435,23 +445,25 @@ const message = computed(() => {
   const lines = [
     es.value ? 'Hola Pedro, me interesan estos servicios para mi tienda:' : 'Hi Pedro, I am interested in these services for my store:',
     '',
-    ...checkedBasics.value.map(item => '- ' + title(item) + ': ' + money(item.price) + (es.value ? ' por única vez' : ' one-time')),
-    ...checkedExtras.value.map(item => '- ' + title(item) + ': ' + itemFees(item)),
-    ...(sharedInitialSaving.value ? [(es.value ? 'Preparación compartida (una fuente): -' : 'Shared setup (one source): -') + money(sharedInitialSaving.value)] : []),
-    ...(sharedMonthlySaving.value ? [(es.value ? 'Descuento en el cuidado mensual: -' : 'Shared monthly review: -') + money(sharedMonthlySaving.value) + (es.value ? '/mes' : '/month')] : []),
+    ...checkedBasics.value.map(item => '- ' + title(item) + (props.showPrices ? ': ' + basicFees(item) + (es.value ? ' una vez' : ' one-time') : '')),
+    ...checkedExtras.value.map(item => '- ' + title(item) + (props.showPrices ? ': ' + itemFees(item) : '')),
+    ...(props.showPrices && sharedInitialSaving.value ? [(es.value ? 'Preparación compartida (una fuente): -' : 'Shared setup (one source): -') + money(sharedInitialSaving.value)] : []),
+    ...(props.showPrices && sharedMonthlySaving.value ? [(es.value ? 'Descuento en el cuidado mensual: -' : 'Shared monthly review: -') + money(sharedMonthlySaving.value) + (es.value ? '/mes' : '/month')] : []),
     ...contextLines.value,
     '',
+    ...(props.showPrices ? [
     (es.value ? 'Mi trabajo, una sola vez: ' : 'One-time service fees: ') + onceLabel.value,
     (es.value ? 'Mi trabajo, cada mes: ' : 'Monthly service fees: ') + monthlyLabel.value,
     (es.value ? 'VendoAlgo mensual (se paga aparte): ' : 'VendoAlgo monthly (paid separately): ') + (platformCost.value === null ? (es.value ? 'plan por definir' : 'plan to be confirmed') : money(platformCost.value)),
     (es.value ? 'Plan: ' : 'Plan: ') + (effectivePlatform.value === 'unsure' ? (es.value ? 'necesito orientación' : 'I need advice') : effectivePlatform.value === 'pro' ? 'Pro' : (es.value ? 'Gratis (hasta 50 productos activos)' : 'Free (up to 50 active products)')),
     ...selectedModules.value.map(item => '- ' + item.name + ': ' + money(item.monthly) + (es.value ? '/mes' : '/month')),
+    ] : []),
     '',
     (es.value ? 'Nombre: ' : 'Name: ') + inquiry.value.name.trim(),
     ...(inquiry.value.business.trim() ? [(es.value ? 'Negocio / web: ' : 'Business / website: ') + inquiry.value.business.trim()] : []),
     ...(inquiry.value.message.trim() ? ['', inquiry.value.message.trim()] : []),
     '',
-    es.value ? 'Precio estimado en pesos argentinos para el trabajo indicado. Antes de empezar, confirmamos qué incluye y cuánto cuesta. Los descuentos en tareas automáticas son para tareas que usan el mismo proveedor. VendoAlgo y otros servicios pagos van aparte.' : 'Indicative estimate in ARS for published base scopes. Final price depends on quantity, sources and complexity. Automation savings assume one shared source. Platform, module and other external service fees are separate.',
+    props.showPrices ? (es.value ? 'Rangos orientativos en pesos argentinos. El precio depende de la cantidad de productos, proveedores y trabajo necesario. Confirmamos el presupuesto antes de empezar. VendoAlgo se paga aparte.' : 'Indicative ranges in ARS. Final price depends on products, suppliers and work required. We confirm a quote before starting. VendoAlgo is separate.') : (es.value ? 'Quisiera que conversemos sobre lo que necesito y me pases un presupuesto.' : 'I would like to discuss what I need and receive a quote.'),
   ];
   return lines.join('\n');
 });
@@ -467,11 +479,11 @@ function contact(event) {
 </script>
 
 <template>
-  <div class="service-estimator">
+  <div class="service-estimator" :class="{ 'without-prices': !showPrices }">
     <header class="buyer-section-heading">
       <p class="eyebrow">{{ es ? 'ELEGÍ LO QUE NECESITÁS' : 'CHOOSE WHAT YOU NEED' }}</p>
       <h2 id="service-scope-title">{{ es ? '¿En qué te puedo ayudar?' : 'How can I help?' }}</h2>
-      <p>{{ es ? 'Marcá lo que te interesa. Abrí la flecha para ver cada servicio y su precio.' : 'Choose what to delegate and see your estimate.' }}</p>
+      <p>{{ es ? (showPrices ? 'Elegí los servicios para ver un rango de precio. El valor final depende del tamaño y las necesidades de tu negocio.' : 'Marcá lo que te interesa. Abrí la flecha para ver qué incluye.') : (showPrices ? 'Choose services to see a price range. Final pricing depends on your business size and needs.' : 'Choose what interests you. Open the arrow to see what is included.') }}</p>
     </header>
     <div class="estimate-toolbar" aria-label="Selección de servicios">
       <span class="estimate-toolbar-count" role="status" aria-live="polite">{{ selected.length }} {{ es ? 'servicios seleccionados' : 'services selected' }}</span>
@@ -488,14 +500,14 @@ function contact(event) {
               <input type="checkbox" :checked="allBasics" :indeterminate.prop="partialBasics" @change="toggleBasics">
               <span><strong>{{ es ? 'Crear mi tienda' : 'Store launch setup' }}</strong><span class="estimate-caption">{{ es ? '5 servicios · se paga una sola vez' : '5 services · one-time payment' }}</span></span>
             </label>
-            <strong class="estimate-package-price">{{ money(partialBasics ? basicAmount : 150000) }}</strong>
+            <strong v-if="showPrices" class="estimate-package-price">{{ moneyRange(partialBasics ? basicAmount : 150000, partialBasics ? basicAmountUpper : 275000) }}</strong>
             <button type="button" class="estimate-expand" :aria-expanded="expanded" aria-controls="launch-service-options" :aria-label="es ? 'Ver o editar los servicios de puesta en marcha' : 'View or edit launch services'" @click="expanded = !expanded"><svg :class="{ 'is-open': expanded }" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
           </div>
           <div v-show="expanded" id="launch-service-options" class="estimate-options">
             <label v-for="item in options" :key="item.id" class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
               <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleBasic(item, $event.target.checked)">
               <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><span>{{ description(item) }}</span></span>
-              <strong class="estimate-option-price">{{ money(item.price) }}</strong>
+              <strong v-if="showPrices" class="estimate-option-price">{{ basicFees(item) }}</strong>
             </label>
           </div>
         </div>
@@ -506,7 +518,7 @@ function contact(event) {
               <input type="checkbox" :checked="groupAllSelected(group.id)" :indeterminate.prop="groupPartiallySelected(group.id)" @change="toggleGroup(group.id, $event.target.checked)">
               <span><strong>{{ title(group) }}</strong><span class="estimate-caption">{{ groupCaption(group.id) }}</span></span>
             </label>
-            <span class="estimate-package-price estimate-category-price"><strong v-if="groupEstimate(group.id).initial">{{ fromLabel }}{{ money(groupEstimate(group.id).initial) }}</strong><span v-if="groupEstimate(group.id).monthly">{{ fromLabel }}{{ money(groupEstimate(group.id).monthly) }}/{{ es ? 'mes' : 'month' }}</span></span>
+            <span v-if="showPrices" class="estimate-package-price estimate-category-price"><strong v-if="groupEstimate(group.id).initial">{{ moneyRange(groupEstimate(group.id).initial, groupEstimate(group.id).initialUpper) }}</strong><span v-if="groupEstimate(group.id).monthly">{{ moneyRange(groupEstimate(group.id).monthly, groupEstimate(group.id).monthlyUpper) }}/{{ es ? 'mes' : 'month' }}</span></span>
             <button type="button" class="estimate-expand" :aria-expanded="!!expandedGroups[group.id]" :aria-controls="'service-group-' + group.id" :aria-label="(es ? 'Ver o editar: ' : 'View or edit: ') + title(group)" @click="expandedGroups[group.id] = !expandedGroups[group.id]">
               <svg :class="{ 'is-open': expandedGroups[group.id] }" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
             </button>
@@ -515,7 +527,7 @@ function contact(event) {
           <div v-for="item in pricedExtras.filter(service => service.group === group.id)" :key="item.id" class="estimate-service-item">
             <label class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
               <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleExtra(item, $event.target.checked)">
-              <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><em class="estimate-service-fee">{{ itemFees(item) }}</em></span>
+              <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><em v-if="showPrices" class="estimate-service-fee">{{ itemFees(item) }}</em></span>
             </label>
             <details class="estimate-item-details">
               <summary>{{ es ? 'Qué incluye' : 'What is included' }}</summary>
@@ -544,7 +556,7 @@ function contact(event) {
           </div>
         </div>
 
-        <details class="estimate-details">
+        <details v-if="showPrices" class="estimate-details">
           <summary>{{ es ? 'Cuánto cuesta usar VendoAlgo' : 'VendoAlgo: plan and extra features' }}</summary>
           <p class="estimate-note">{{ es ? 'VendoAlgo es donde funciona tu tienda. Su precio se paga aparte de mi trabajo. Si no sabés qué opción elegir, dejalo sin definir y te ayudo.' : 'Paid to VendoAlgo separately from my services. If you are unsure what you need, I can help you choose.' }}</p>
           <label class="estimate-field">{{ es ? 'Opción de VendoAlgo' : 'Platform plan' }}
@@ -567,11 +579,11 @@ function contact(event) {
 
       <aside class="estimate-summary" aria-labelledby="estimate-summary-title">
         <p class="eyebrow">{{ es ? 'TU SELECCIÓN' : 'YOUR SELECTION' }}</p>
-        <h3 id="estimate-summary-title">{{ es ? 'Tu precio estimado' : 'Estimated summary' }}</h3>
-        <p v-if="!hasSelection" class="estimate-note">{{ es ? 'Elegí un servicio para ver el precio. Es solo una consulta.' : 'Choose at least one service to build your inquiry.' }}</p>
+        <h3 id="estimate-summary-title">{{ es ? (showPrices ? 'Tu rango de precio' : 'Tu consulta') : (showPrices ? 'Your price range' : 'Your inquiry') }}</h3>
+        <p v-if="!hasSelection" class="estimate-note">{{ es ? (showPrices ? 'Elegí un servicio para ver el rango. Es solo una consulta.' : 'Elegí lo que te interesa y contame qué necesitás.') : 'Choose what interests you and tell me what you need.' }}</p>
         <p v-if="hasSelection" class="estimate-selection-count">{{ selected.length }} {{ es ? 'servicios elegidos' : 'services in your proposal' }}</p>
 
-        <div class="estimate-totals" role="status" aria-live="polite" aria-atomic="true">
+        <div v-if="showPrices" class="estimate-totals" role="status" aria-live="polite" aria-atomic="true">
           <div><span>{{ es ? 'Mi trabajo · una sola vez' : 'My services · one-time' }}</span><strong>{{ onceLabel }}</strong></div>
           <div><span>{{ es ? 'Mi trabajo · cada mes' : 'My services · per month' }}</span><strong>{{ monthlyLabel }}</strong></div>
           <div class="estimate-platform-total"><span>{{ es ? 'VendoAlgo · cada mes, aparte' : 'VendoAlgo · per month, separate' }}</span><strong>{{ platformCost === null ? (es ? 'Te ayudo a elegir' : 'Plan to confirm') : money(platformCost) }}</strong></div>
@@ -580,16 +592,16 @@ function contact(event) {
           <summary><span>{{ es ? 'Ver lo que elegí' : 'View selection details' }}</span><span class="estimate-count">{{ selected.length }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
           <div class="estimate-detail-scroll" role="region" tabindex="0" :aria-label="es ? 'Servicios seleccionados y sus importes' : 'Selected services and fees'">
         <ul class="estimate-selected-list">
-          <li v-for="item in checkedBasics" :key="item.id"><span>{{ title(item) }}</span><strong>{{ money(item.price) }}</strong></li>
-          <li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}<small class="estimate-summary-mode">{{ modeLabel(item) }}</small></span><strong class="estimate-summary-fee">{{ itemFees(item) }}</strong></li>
-          <li v-if="sharedInitialSaving" class="estimate-saving"><span>{{ es ? 'Descuento por usar el mismo proveedor' : 'Shared setup · one source' }}</span><strong>−{{ money(sharedInitialSaving) }}</strong></li>
-          <li v-if="sharedMonthlySaving" class="estimate-saving"><span>{{ es ? 'Descuento en el cuidado mensual' : 'Shared monthly review' }}</span><strong>−{{ money(sharedMonthlySaving) }}/{{ es ? 'mes' : 'month' }}</strong></li>
+          <li v-for="item in checkedBasics" :key="item.id"><span>{{ title(item) }}</span><strong v-if="showPrices">{{ basicFees(item) }}</strong></li>
+          <li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}<small class="estimate-summary-mode">{{ modeLabel(item) }}</small></span><strong v-if="showPrices" class="estimate-summary-fee">{{ itemFees(item) }}</strong></li>
+          <li v-if="showPrices && sharedInitialSaving" class="estimate-saving"><span>{{ es ? 'Descuento por usar el mismo proveedor' : 'Shared setup · one source' }}</span><strong>−{{ money(sharedInitialSaving) }}</strong></li>
+          <li v-if="showPrices && sharedMonthlySaving" class="estimate-saving"><span>{{ es ? 'Descuento en el cuidado mensual' : 'Shared monthly review' }}</span><strong>−{{ money(sharedMonthlySaving) }}/{{ es ? 'mes' : 'month' }}</strong></li>
         </ul>
           </div>
         </details>
 
-        <p class="estimate-summary-footnote">{{ es ? 'Precios en pesos argentinos. Emito factura. Antes de empezar, confirmo qué incluye y cuánto cuesta.' : 'Estimate in ARS · Invoice provided · Scope and price confirmed before starting.' }}</p>
-        <details class="estimate-summary-detail estimate-conditions">
+        <p class="estimate-summary-footnote">{{ es ? (showPrices ? 'Rangos orientativos en pesos argentinos. Productos, proveedores y trabajo necesario pueden cambiar el precio. Te paso el presupuesto antes de empezar.' : 'Te paso un presupuesto según lo que necesites. Emito factura por mi trabajo.') : (showPrices ? 'Indicative ranges in ARS. Final price depends on your needs and is confirmed before starting.' : 'I provide a quote based on what you need and issue invoices for my work.') }}</p>
+        <details v-if="showPrices" class="estimate-summary-detail estimate-conditions">
           <summary><span>{{ es ? 'Cómo se calcula el precio' : 'Estimate scope and terms' }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
         <p v-if="hasSelection && !monthlyAmount && !pendingMonthly" class="estimate-note">{{ es ? 'Por los servicios que elegiste, no tenés que pagarme todos los meses.' : 'The selected services do not require a monthly service retainer.' }}</p>
         <p v-if="pendingOnce || pendingMonthly" class="estimate-note">{{ es ? 'Hay conceptos pendientes de cotizar. Los importes numéricos solo suman los conceptos con precio definido.' : 'Some services need a quote: the final total is pending. Numeric amounts only include items with a defined price.' }}</p>
@@ -771,4 +783,11 @@ function contact(event) {
 .estimate-category .estimate-package-select strong { font-size: 1rem; line-height: 1.4; }
 .estimate-option-copy strong { font-size: .96rem; }
 .estimate-option-copy > span { font-size: .86rem; line-height: 1.65; }
+
+.without-prices .estimate-package-heading { grid-template-columns: minmax(0, 1fr) 44px; }
+.without-prices .estimate-option { grid-template-columns: 22px minmax(0, 1fr); }
+.estimate-package-price { white-space: normal; max-width: 180px; line-height: 1.5; }
+.estimate-option-price { white-space: normal; text-align: right; }
+.estimate-summary .estimate-totals strong { max-width: 205px; line-height: 1.5; }
+@media (max-width: 500px) { .estimate-package-price { max-width: none; } }
 </style>
