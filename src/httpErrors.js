@@ -1,6 +1,6 @@
 export const HTTP_ERROR_CODES = Object.freeze([403, 404, 500, 503]);
 
-const publicRoutes = new Set(['home', 'projects', 'services', 'about', 'contact', 'precios', '/precios', 'services/precios']);
+const publicRoutes = new Set(['home', 'projects', 'services', 'about', 'contact', 'precios', '/precios', 'services/precios', 'emprendimientos']);
 
 export function resolveRouteStatus(route, projectSlugs = []) {
   if (publicRoutes.has(route)) return null;
