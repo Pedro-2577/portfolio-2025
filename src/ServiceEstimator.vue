@@ -186,7 +186,7 @@ const extras = [
     "mode": "once",
     "es": "Ayudarte a buscar personal",
     "en": "Help find and onboard staff",
-    "descEs": "Te ayudo a buscar y preparar a la persona que necesitás. Su sueldo u honorarios se pagan aparte.",
+    "descEs": "Te ayudo a buscar y preparar a la persona que necesitás. El pago de esa persona se acuerda y se paga aparte.",
     "descEn": "Designer, operator, salesperson or community manager. Agree on the search and onboarding; that person's fees or salary are separate."
   },
   {
@@ -416,18 +416,18 @@ const contextLines = computed(() => {
   const lines = [];
   const add = (labelEs, labelEn, value) => { if (String(value).trim()) lines.push((es.value ? labelEs : labelEn) + ': ' + String(value).trim()); };
   if (groupSelected('catalogue').length) {
-    if (['migration', 'more-products', 'catalog-order'].some(id => selected.value.includes(id))) add('Cantidad aproximada de productos', 'Approximate product count', details.value.productCount);
+    if (['migration', 'more-products', 'catalog-order'].some(id => selected.value.includes(id))) add('¿Cuántos productos tenés, más o menos?', 'Approximate product count', details.value.productCount);
     add('Cambios en catálogo o presentación', 'Catalog or presentation changes', details.value.catalogueNotes);
   }
   if (groupSelected('configuration').length) add('Configuración que necesito', 'Configuration needed', details.value.configurationNotes);
   if (selected.value.includes('maintenance')) add('Tareas o asistencia mensual', 'Monthly tasks or support', details.value.supportNotes);
   if (selected.value.includes('migration')) add('Tienda o catálogo de origen', 'Source store or catalog', details.value.source);
   if (groupSelected('automation').length) {
-    add('Proveedores o fuentes a usar', 'Suppliers or information sources', details.value.suppliers);
-    add('Frecuencia o reglas deseadas', 'Desired schedule or rules', details.value.frequency);
+    add('Proveedores, listas o páginas a usar', 'Suppliers or information sources', details.value.suppliers);
+    add('Cuándo actualizar y cómo calcular los precios', 'Desired schedule or rules', details.value.frequency);
   }
   if (selected.value.includes('team-training') || selected.value.includes('roles')) add('Personas a capacitar / organizar', 'People to train / organize', details.value.teamSize);
-  if (selected.value.includes('hiring') && details.value.roles.length) add('Perfiles que necesito', 'Staff roles needed', staffRoles.filter(role => details.value.roles.includes(role.id)).map(title).join(', '));
+  if (selected.value.includes('hiring') && details.value.roles.length) add('Personas que necesito', 'Staff roles needed', staffRoles.filter(role => details.value.roles.includes(role.id)).map(title).join(', '));
   if (selected.value.includes('technical-help')) add('Problema a resolver', 'Issue to resolve', details.value.issue);
   return lines.length ? ['', es.value ? 'Detalles de mi pedido:' : 'Request details:', ...lines] : [];
 });
@@ -441,8 +441,8 @@ const message = computed(() => {
     ...(sharedMonthlySaving.value ? [(es.value ? 'Descuento en el cuidado mensual: -' : 'Shared monthly review: -') + money(sharedMonthlySaving.value) + (es.value ? '/mes' : '/month')] : []),
     ...contextLines.value,
     '',
-    (es.value ? 'Honorarios por única vez: ' : 'One-time service fees: ') + onceLabel.value,
-    (es.value ? 'Honorarios mensuales: ' : 'Monthly service fees: ') + monthlyLabel.value,
+    (es.value ? 'Mi trabajo, una sola vez: ' : 'One-time service fees: ') + onceLabel.value,
+    (es.value ? 'Mi trabajo, cada mes: ' : 'Monthly service fees: ') + monthlyLabel.value,
     (es.value ? 'VendoAlgo mensual (se paga aparte): ' : 'VendoAlgo monthly (paid separately): ') + (platformCost.value === null ? (es.value ? 'plan por definir' : 'plan to be confirmed') : money(platformCost.value)),
     (es.value ? 'Plan: ' : 'Plan: ') + (effectivePlatform.value === 'unsure' ? (es.value ? 'necesito orientación' : 'I need advice') : effectivePlatform.value === 'pro' ? 'Pro' : (es.value ? 'Gratis (hasta 50 productos activos)' : 'Free (up to 50 active products)')),
     ...selectedModules.value.map(item => '- ' + item.name + ': ' + money(item.monthly) + (es.value ? '/mes' : '/month')),
@@ -451,7 +451,7 @@ const message = computed(() => {
     ...(inquiry.value.business.trim() ? [(es.value ? 'Negocio / web: ' : 'Business / website: ') + inquiry.value.business.trim()] : []),
     ...(inquiry.value.message.trim() ? ['', inquiry.value.message.trim()] : []),
     '',
-    es.value ? 'Estimación orientativa en ARS para los alcances base publicados. Importe final a confirmar según cantidad, fuentes y complejidad. Los ahorros de automatización suponen una única fuente compartida. VendoAlgo, módulos y otros servicios externos se abonan aparte.' : 'Indicative estimate in ARS for published base scopes. Final price depends on quantity, sources and complexity. Automation savings assume one shared source. Platform, module and other external service fees are separate.',
+    es.value ? 'Precio estimado en pesos argentinos para el trabajo indicado. Antes de empezar, confirmamos qué incluye y cuánto cuesta. Los descuentos en tareas automáticas son para tareas que usan el mismo proveedor. VendoAlgo y otros servicios pagos van aparte.' : 'Indicative estimate in ARS for published base scopes. Final price depends on quantity, sources and complexity. Automation savings assume one shared source. Platform, module and other external service fees are separate.',
   ];
   return lines.join('\n');
 });
@@ -525,11 +525,11 @@ function contact(event) {
           <details v-if="groupSelected(group.id).length" class="estimate-context estimate-context-disclosure">
             <summary>{{ es ? 'Contarme un poco más (opcional)' : 'Add context (optional)' }}</summary>
             <template v-if="group.id === 'catalogue'">
-              <label v-if="['migration', 'more-products', 'catalog-order'].some(id => selected.includes(id))" class="estimate-field">{{ es ? 'Cantidad aproximada de productos' : 'Approximate product count' }}<input v-model="details.productCount" inputmode="numeric" maxlength="40" :placeholder="es ? 'Ej.: 150 productos' : 'E.g. 150 products'"></label>
+              <label v-if="['migration', 'more-products', 'catalog-order'].some(id => selected.includes(id))" class="estimate-field">{{ es ? '¿Cuántos productos tenés, más o menos?' : 'Approximate product count' }}<input v-model="details.productCount" inputmode="numeric" maxlength="40" :placeholder="es ? 'Ej.: 150 productos' : 'E.g. 150 products'"></label>
               <label v-if="selected.includes('migration')" class="estimate-field">{{ es ? 'Web o catálogo de origen' : 'Source website or catalog' }}<input v-model="details.source" maxlength="300" :placeholder="es ? 'Link o nombre de la tienda anterior' : 'Previous store name or link'"></label>
               <label class="estimate-field">{{ es ? '¿Qué querés cambiar o preparar?' : 'What would you like to change or prepare?' }}<textarea v-model="details.catalogueNotes" rows="2" maxlength="400"></textarea></label>
             </template>
-            <label v-if="group.id === 'configuration'" class="estimate-field">{{ es ? '¿Qué necesitás configurar?' : 'What needs configuring?' }}<textarea v-model="details.configurationNotes" rows="2" maxlength="400" :placeholder="es ? 'Contame si ya tenés el módulo o qué reglas de entrega necesitás' : 'Tell me if you already have the module or which delivery rules you need'"></textarea></label>
+            <label v-if="group.id === 'configuration'" class="estimate-field">{{ es ? '¿Qué necesitás dejar funcionando?' : 'What needs configuring?' }}<textarea v-model="details.configurationNotes" rows="2" maxlength="400" :placeholder="es ? 'Ej.: conectar Mercado Libre o entregar en ciertas zonas' : 'Tell me if you already have the module or which delivery rules you need'"></textarea></label>
             <template v-if="group.id === 'automation'">
               <label class="estimate-field">{{ es ? '¿De dónde salen los precios y las cantidades?' : 'Suppliers or information sources' }}<input v-model="details.suppliers" maxlength="300" :placeholder="es ? 'Ej.: dos proveedores, sus webs o listas de precios' : 'E.g. two suppliers, their websites or price lists'"></label>
               <label class="estimate-field">{{ es ? '¿Cada cuánto querés actualizar? ¿Cómo calculás tus precios?' : 'How often, and using which rules?' }}<textarea v-model="details.frequency" rows="2" maxlength="500" :placeholder="es ? 'Ej.: cada mañana, con el margen de cada categoría' : 'E.g. every morning, using each category’s margin'"></textarea></label>
