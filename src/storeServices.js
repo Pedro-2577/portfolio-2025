@@ -116,7 +116,7 @@ export const storeServiceCopy = {
     "questions": [
       {
         "q": "¿Cuánto cuesta?",
-        "a": "Te presupuesto el trabajo según las tareas que quieras delegarme. Te detallo por separado la puesta en marcha, mi ayuda periódica si la necesitás y lo que debas contratar en VendoAlgo."
+        "a": "Podés seleccionar servicios y ver un estimado en esta página. Mis honorarios por única vez y mensuales se muestran separados de VendoAlgo. Los trabajos a cotizar quedan identificados. Confirmo con vos el alcance y el importe final antes de comenzar."
       },
       {
         "q": "¿Puedo empezar con una tarea puntual?",
