@@ -338,10 +338,9 @@ onUnmounted(() => {
             <p class="eyebrow">{{ servicePage.eyebrow }}</p>
             <h1>{{ servicePage.title }}</h1>
             <p class="buyer-lead">{{ servicePage.lead }}</p>
-            <p class="buyer-audience">{{ servicePage.audience }}</p>
             <div class="button-row">
-              <button type="button" class="button button-primary" @click="scrollToServiceSection('service-case')">{{ servicePage.seeCase }} ↓</button>
-              <button type="button" class="buyer-inline-link" @click="scrollToServiceSection('service-scope')">{{ servicePage.seeScope }} ↓</button>
+              <button type="button" class="button button-primary" @click="scrollToServiceSection('service-scope')">{{ language === 'es' ? 'Ver servicios y precios' : 'See services and pricing' }} ↓</button>
+              <button type="button" class="buyer-inline-link" @click="scrollToServiceSection('service-case')">{{ language === 'es' ? 'Ver un caso real' : 'See a real example' }} ↓</button>
             </div>
           </header>
 
@@ -352,7 +351,6 @@ onUnmounted(() => {
                 <h2 id="service-case-title">{{ servicePage.caseTitle }}</h2>
                 <p>{{ servicePage.caseIntro }}</p>
                 <a class="button button-secondary" :href="featuredStore.url" target="_blank" rel="noopener noreferrer">{{ servicePage.visit }} ↗</a>
-                <p class="buyer-small">{{ servicePage.explore }}</p>
               </header>
               <a class="buyer-store-preview" :href="featuredStore.url" :aria-label="servicePage.visit" target="_blank" rel="noopener noreferrer">
                 <img v-if="!failedServicePreviews.includes(featuredStore.id)" :src="featuredStore.preview" :alt="servicePage.previewAlt + ' ' + featuredStore.name" width="1100" height="532" loading="lazy" @error="onServicePreviewError(featuredStore.id)">
@@ -360,6 +358,8 @@ onUnmounted(() => {
                 <span class="buyer-domain">{{ featuredStore.domain }} ↗</span>
               </a>
             </div>
+            <details class="buyer-case-details">
+              <summary>{{ language === 'es' ? 'Qué hice en FumigAR' : 'What I did for FumigAR' }}</summary>
             <div class="buyer-work-grid">
               <article v-for="(group, index) in servicePage.caseGroups" :key="group.title" :class="{ 'buyer-work-featured': index === 2 }">
                 <span class="buyer-number">0{{ index + 1 }}</span>
@@ -368,15 +368,7 @@ onUnmounted(() => {
               </article>
             </div>
             <p class="buyer-small buyer-proof-note">{{ servicePage.publicNote }}</p>
-          </section>
-
-          <section class="buyer-section buyer-flow" aria-labelledby="service-automation-title">
-            <header class="buyer-section-heading">
-              <p class="eyebrow">{{ servicePage.automationEyebrow }}</p>
-              <h2 id="service-automation-title">{{ servicePage.automationTitle }}</h2>
-              <p>{{ servicePage.automationIntro }}</p>
-              <p>{{ servicePage.automationAgreement }}</p>
-            </header>
+            </details>
           </section>
 
           <section id="service-scope" class="buyer-section" tabindex="-1" aria-labelledby="service-scope-title">
@@ -401,21 +393,9 @@ onUnmounted(() => {
           <aside class="buyer-person">
             <img :src="assetBase + 'pedro-portrait.jpg'" alt="Pedro Méndez Carabán" width="88" height="108" loading="lazy">
             <div><h2>{{ servicePage.personTitle }}</h2><p>{{ servicePage.personText }}</p>
-              <div class="button-row"><a class="text-link" href="#about" @click.prevent="navigate('about')">{{ servicePage.profile }} →</a><a class="text-link" href="https://vendoalgo.com/" target="_blank" rel="noopener noreferrer">{{ servicePage.platform }} ↗</a></div>
+              <div class="button-row"><a class="text-link" href="#about" @click.prevent="navigate('about')">{{ servicePage.profile }} →</a></div>
             </div>
           </aside>
-
-          <section class="buyer-section" aria-labelledby="service-process-title">
-            <header class="buyer-section-heading"><h2 id="service-process-title">{{ servicePage.processTitle }}</h2></header>
-            <ol class="buyer-steps">
-              <li v-for="(step, index) in servicePage.steps" :key="step.title"><span class="buyer-number">0{{ index + 1 }}</span><h3>{{ step.title }}</h3><p>{{ step.body }}</p></li>
-            </ol>
-          </section>
-
-          <section class="buyer-section buyer-questions" aria-labelledby="service-questions-title">
-            <header class="buyer-section-heading"><h2 id="service-questions-title">{{ servicePage.questionsTitle }}</h2></header>
-            <details v-for="question in servicePage.questions" :key="question.q"><summary>{{ question.q }}</summary><p>{{ question.a }}</p></details>
-          </section>
 
           <section class="buyer-final">
             <div><p class="eyebrow">{{ servicePage.finalEyebrow }}</p><h2>{{ servicePage.finalTitle }}</h2><p>{{ servicePage.finalText }}</p></div>
