@@ -32,8 +32,15 @@ const hasSelection = computed(() => selected.value.length > 0);
 const amount = computed(() => checkedBasics.value.reduce((sum, item) => sum + item.price, 0));
 const pendingOnce = computed(() => checkedExtras.value.some(item => item.mode !== 'monthly'));
 const pendingMonthly = computed(() => checkedExtras.value.some(item => item.mode !== 'once'));
-const selectedModules = computed(() => storePlatformPricing.modules.filter(item => modules.value.includes(item.id)));
-const proRequired = computed(() => modules.value.length > 0 || selected.value.includes('team'));
+const requiredModuleIds = computed(() => [
+  ...(selected.value.includes('ml') ? ['mercadolibre'] : []),
+  ...(selected.value.includes('arca') ? ['invoicing'] : []),
+]);
+const selectedModules = computed(() => storePlatformPricing.modules.filter(item => modules.value.includes(item.id) || requiredModuleIds.value.includes(item.id)));
+const proRequired = computed(() => selectedModules.value.length > 0 || selected.value.includes('team'));
+function toggleModule(id, checked) {
+  modules.value = checked ? [...new Set([...modules.value, id])] : modules.value.filter(value => value !== id);
+}
 const effectivePlatform = computed(() => proRequired.value ? 'pro' : platform.value);
 const platformCost = computed(() => effectivePlatform.value === 'unsure' ? null : (effectivePlatform.value === 'pro' ? storePlatformPricing.plans.pro.monthly : 0) + selectedModules.value.reduce((sum, item) => sum + item.monthly, 0));
 const money = value => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(value);
@@ -119,15 +126,15 @@ function contact(event) {
           <summary>{{ es ? 'VendoAlgo: plan y funciones adicionales' : 'VendoAlgo: plan and extra features' }}</summary>
           <p class="estimate-note">{{ es ? 'Se paga a VendoAlgo, separado de mis servicios. Si todavía no sabés qué necesitás, lo definimos al conversar.' : 'Paid to VendoAlgo separately from my services. If you are unsure what you need, I can help you choose.' }}</p>
           <label class="estimate-field">{{ es ? 'Plan de la plataforma' : 'Platform plan' }}
-            <select v-model="platform" :disabled="proRequired">
+            <select :value="effectivePlatform" :disabled="proRequired" @change="platform = $event.target.value">
               <option value="unsure">{{ es ? 'No lo sé todavía' : 'Not sure yet' }}</option>
               <option value="free">{{ es ? 'Gratis · hasta 50 productos activos' : 'Free · up to 50 active products' }}</option>
               <option value="pro">Pro · {{ money(storePlatformPricing.plans.pro.monthly) }}/{{ es ? 'mes' : 'month' }}</option>
             </select>
           </label>
-          <p v-if="proRequired" class="estimate-note">{{ es ? 'Las funciones seleccionadas requieren Pro: se incluye en el costo de plataforma del resumen.' : 'The selected features require Pro, which is included in the platform cost in your summary.' }}</p>
+          <p v-if="proRequired" class="estimate-note">{{ es ? 'Las funciones seleccionadas requieren Pro. Mercado Libre y facturación también incluyen su módulo mensual en el resumen. Si ya los pagás, no son una suscripción adicional.' : 'The selected features require Pro. Mercado Libre and invoicing also include their monthly module in the summary. If you already pay for them, this is not an additional subscription.' }}</p>
           <fieldset class="estimate-modules"><legend>{{ es ? 'Módulos opcionales · requieren Pro' : 'Optional modules · require Pro' }}</legend>
-            <label v-for="item in storePlatformPricing.modules" :key="item.id" class="estimate-module"><input v-model="modules" type="checkbox" :value="item.id"><span>{{ item.name }}</span><strong>{{ money(item.monthly) }}/{{ es ? 'mes' : 'month' }}</strong></label>
+            <label v-for="item in storePlatformPricing.modules" :key="item.id" class="estimate-module"><input type="checkbox" :checked="selectedModules.some(module => module.id === item.id)" :disabled="requiredModuleIds.includes(item.id)" @change="toggleModule(item.id, $event.target.checked)"><span>{{ item.name }}</span><strong>{{ money(item.monthly) }}/{{ es ? 'mes' : 'month' }}</strong></label>
           </fieldset>
           <p class="estimate-note"><a :href="storePlatformPricing.sourceUrl" target="_blank" rel="noopener noreferrer">{{ es ? 'Consultar precios y condiciones de VendoAlgo' : 'See VendoAlgo pricing and terms' }} ↗</a></p>
           <p class="estimate-note">{{ es ? 'Las comisiones de cobro, el dominio y otros servicios externos, si corresponden, se abonan aparte.' : 'Payment processing fees, domain registration and other external services, where applicable, are separate.' }}</p>
