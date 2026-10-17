@@ -5,14 +5,14 @@ export const storeServiceCopy = {
     "book": "Agendar un Meet de 30 minutos",
     "contact": "Escribime por correo",
     "eyebrow": "TIENDAS EN VENDOALGO · SERVICIO PERSONALIZADO",
-    "title": "Tu tienda online, con gestión y automatizaciones a medida.",
-    "lead": "Te ayudo a poner en marcha tu tienda en VendoAlgo, mantenerla al día y automatizar tareas según tu operación.",
-    "audience": "Para negocios que quieren sumar un canal propio a Mercado Libre o mejorar la gestión de su tienda actual.",
+    "title": "Tu tienda online, lista para vender y al día.",
+    "lead": "Armo tu tienda en VendoAlgo y me ocupo de las tareas que me delegues: cargar productos, mantener precios y stock, preparar los cobros y envíos, y capacitar a las personas que trabajen con vos.",
+    "audience": "Si vendés por Mercado Libre, te ayudo a sumar una tienda propia. Si ya tenés una tienda, puedo ocuparme de una tarea puntual o de su gestión diaria.",
     "seeCase": "Ver el caso FumigAR",
     "seeScope": "Qué puedo resolver",
     "caseEyebrow": "UN CASO REAL · FUMIGAR",
-    "caseTitle": "De la tienda anterior a una operación acompañada.",
-    "caseIntro": "En FumigAR me encargué de la migración del catálogo, la configuración de la tienda y tareas de su operación diaria. Estas implementaciones ya están en funcionamiento.",
+    "caseTitle": "Mi trabajo en FumigAR: de la carga inicial al mantenimiento.",
+    "caseIntro": "Importé los productos de la tienda anterior, preparé la nueva tienda y configuré las tareas que el negocio necesitaba. Hoy continúo con su mantenimiento y asistencia.",
     "visit": "Recorrer FumigAR",
     "explore": "Podés recorrer el catálogo, abrir una ficha de producto y ver cómo se presenta la información de compra.",
     "caseGroups": [
@@ -48,33 +48,45 @@ export const storeServiceCopy = {
       }
     ],
     "publicNote": "El enlace abre la tienda pública. La facturación, los permisos y la actualización automática de precios corresponden a su operación interna, descrita en este caso.",
-    "scopeEyebrow": "QUÉ PODÉS DELEGAR",
-    "scopeTitle": "Empezamos por lo que necesita tu negocio.",
-    "scopeIntro": "Podés necesitar una puesta en marcha completa o una tarea puntual. El alcance se define según tu catálogo, tus proveedores y cómo trabajás.",
+    "scopeEyebrow": "MIS SERVICIOS",
+    "scopeTitle": "¿Qué necesitás para tu tienda?",
+    "scopeIntro": "Podés contratarme para una tarea puntual o para acompañarte en el trabajo diario. Te detallo qué puedo hacer:",
     "scope": [
       {
-        "title": "Puesta en marcha",
-        "body": "Estilos de la tienda, configuración de pagos y envíos, y preparación del catálogo."
+        "title": "Armo el diseño de tu tienda",
+        "body": "Configuro los estilos, colores y la presentación de la web según tu negocio."
       },
       {
-        "title": "Carga e importación de productos",
-        "body": "Migración de un catálogo anterior, carga inicial y ajustes de la información de los productos."
+        "title": "Cargo o migro tus productos",
+        "body": "Cargo el catálogo inicial o paso los productos de tu tienda anterior. Organizo sus datos y categorías."
       },
       {
-        "title": "Automatizaciones a medida",
-        "body": "Configuración y mantenimiento de tareas repetitivas según la información, las reglas y los horarios acordados para tu operación."
+        "title": "Preparo los cobros y los envíos",
+        "body": "Configuro las formas de pago y entrega que necesites para empezar a vender."
       },
       {
-        "title": "Configuraciones e integraciones",
-        "body": "Configuración de los módulos y funciones que necesites, incluidos Mercado Libre y facturación cuando corresponda."
+        "title": "Actualizo precios y stock",
+        "body": "Preparo y mantengo las actualizaciones automáticas según la información de tus proveedores y los horarios acordados."
       },
       {
-        "title": "Capacitación y permisos",
-        "body": "Acompañamiento para usar la plataforma y organización de los accesos de cada persona del equipo."
+        "title": "Mantengo al día productos y ofertas",
+        "body": "Preparo tareas para incorporar novedades, gestionar productos que el proveedor deja de ofrecer y aplicar ofertas según tus reglas."
       },
       {
-        "title": "Mantenimiento y asistencia",
-        "body": "Cambios en la tienda, atención de incidencias y seguimiento de los problemas que requieran intervención del equipo de VendoAlgo."
+        "title": "Configuro Mercado Libre y las facturas",
+        "body": "Te ayudo a configurar las funciones que contrates en VendoAlgo, como Mercado Libre y la facturación automática ante ARCA."
+      },
+      {
+        "title": "Capacito a tu equipo",
+        "body": "Enseño a usar la plataforma y preparo los roles y permisos que necesita cada persona."
+      },
+      {
+        "title": "Te ayudo a conseguir personal",
+        "body": "Te ayudo a buscar un diseñador, operario, vendedor o community manager y a preparar su incorporación al trabajo de la tienda."
+      },
+      {
+        "title": "Me ocupo del mantenimiento",
+        "body": "Hago ajustes, atiendo problemas y doy seguimiento a los que necesitan intervención del equipo de VendoAlgo."
       }
     ],
     "otherTitle": "Otras tiendas para explorar",
@@ -83,68 +95,68 @@ export const storeServiceCopy = {
     "previewAlt": "Vista previa de",
     "previewMissing": "La vista previa no está disponible. Podés abrir la tienda desde este enlace.",
     "personTitle": "Soy Pedro Méndez Carabán.",
-    "personText": "Trabajo en VendoAlgo y conozco la plataforma desde su configuración y su desarrollo técnico. Mi participación en cada negocio depende de las tareas acordadas.",
+    "personText": "Trabajo en VendoAlgo y conozco cómo configurar la tienda y resolver problemas de la plataforma. Me ocupo personalmente del trabajo que me contrates.",
     "platform": "Conocer VendoAlgo",
-    "processTitle": "Cómo sería trabajar juntos",
+    "processTitle": "Cómo trabajo con vos",
     "steps": [
       {
-        "title": "Revisamos tu operación",
-        "body": "En una charla vemos el catálogo, los proveedores y una tarea que quieras delegar. Identificamos qué información hace falta para evaluar el trabajo."
+        "title": "Escucho qué necesitás",
+        "body": "Me contás cómo vendés, qué productos tenés y qué tareas querés delegar. Reviso la información que haga falta para saber qué puedo resolver."
       },
       {
-        "title": "Definimos alcance y presupuesto",
-        "body": "Acordamos tareas, responsabilidades, accesos necesarios y qué incluye la propuesta. Si hay módulos o servicios adicionales, se identifican al presupuestar."
+        "title": "Te paso una propuesta",
+        "body": "Te detallo qué voy a hacer, cuánto cuesta y qué incluye. También te explico qué plan o funciones de VendoAlgo necesitás contratar."
       },
       {
-        "title": "Configuración y acompañamiento",
-        "body": "Implemento lo acordado y revisamos el funcionamiento. La capacitación, el mantenimiento y el soporte se definen según el alcance que necesites."
+        "title": "Me ocupo de ponerlo en marcha",
+        "body": "Hago el trabajo acordado y reviso con vos que funcione. Si contratás capacitación, mantenimiento o ayuda periódica, te aclaro qué incluye cada servicio."
       }
     ],
     "questionsTitle": "Lo que conviene saber antes de avanzar",
     "questions": [
       {
         "q": "¿Cuánto cuesta?",
-        "a": "El presupuesto depende del catálogo, las configuraciones y las tareas que quieras delegar. Se detallan el trabajo inicial, la gestión recurrente si la necesitás y los costos de plataforma, módulos o servicios externos que correspondan."
+        "a": "Podés seleccionar servicios y ver un estimado en esta página. Mis honorarios por única vez y mensuales se muestran separados de VendoAlgo. Los trabajos a cotizar quedan identificados. Confirmo con vos el alcance y el importe final antes de comenzar."
       },
       {
         "q": "¿Puedo empezar con una tarea puntual?",
-        "a": "Sí. Podemos evaluar primero una importación de catálogo, una configuración o una automatización concreta, y acordar ese alcance."
+        "a": "Sí. Puedo encargarme de una carga de productos, una configuración o una tarea automática concreta y presupuestarte ese trabajo."
       },
       {
         "q": "¿Cómo convive con Mercado Libre?",
-        "a": "La tienda puede sumar un canal propio. Las funciones del módulo de Mercado Libre y los datos que convenga compartir o actualizar se revisan según tu operación y el módulo contratado."
+        "a": "Podés sumar la tienda como un canal propio. Te explico qué funciones de Mercado Libre ofrece VendoAlgo y te ayudo a configurar las que contrates."
       },
       {
         "q": "¿Qué pasa si surge un problema?",
-        "a": "El soporte y el mantenimiento se acuerdan en la propuesta. Atiendo las incidencias dentro de ese alcance y doy seguimiento a las que requieren intervención del equipo de VendoAlgo."
+        "a": "Te aclaro qué mantenimiento o ayuda incluye mi propuesta. Atiendo los problemas dentro de ese alcance y doy seguimiento a los que debe resolver el equipo de VendoAlgo."
       },
       {
         "q": "¿Qué accesos y responsabilidades se definen?",
-        "a": "Antes de comenzar acordamos qué cuentas y permisos requiere la tarea, quién administra cada acceso y quién se ocupa de cada parte de la operación."
+        "a": "Antes de empezar te explico qué cuentas y permisos necesito, quién administra cada acceso y de qué tareas me voy a ocupar."
       }
     ],
     "finalEyebrow": "EL PRÓXIMO PASO",
-    "finalTitle": "Veamos qué tendría sentido resolver en tu negocio.",
-    "finalText": "En un Meet de 30 minutos revisamos tu catálogo y una tarea que quieras delegar. Con ese contexto podemos definir qué evaluar y qué hace falta para preparar una propuesta.",
+    "finalTitle": "Contame qué necesitás resolver.",
+    "finalText": "En un Meet de 30 minutos reviso con vos tu tienda o tu idea, respondo tus dudas y te explico qué trabajo puedo hacer por tu negocio.",
     "mailSubject": "Consulta sobre gestión de tienda en VendoAlgo",
-    "automationEyebrow": "AUTOMATIZACIONES A MEDIDA",
+    "automationEyebrow": "CAMBIOS QUE SE HACEN AUTOMÁTICAMENTE",
     "automationTitle": "Tu catálogo al día, sin ocuparte de cada cambio.",
     "automationIntro": "Configuro y mantengo automatizaciones para actualizar precios y stock, incorporar productos nuevos, gestionar productos que el proveedor deja de ofrecer y aplicar ofertas.",
-    "automationAgreement": "Acordamos qué información tomar, qué cambios realizar y en qué horarios. Me encargo de la implementación y del mantenimiento de las tareas acordadas."
+    "automationAgreement": "Me contás qué necesitás y defino con vos qué información usar, qué cambios hacer y en qué horarios. Me encargo de ponerlo en marcha y de mantener las tareas acordadas."
   },
   "en": {
     "profile": "View my profile",
     "book": "Book a 30-minute Meet",
     "contact": "Email me",
     "eyebrow": "VENDOALGO STORES · PERSONALIZED SERVICE",
-    "title": "Your online store, with management and automations tailored to your business.",
-    "lead": "I help you set up your VendoAlgo store, keep it up to date, and automate tasks around the way your business works.",
-    "audience": "For businesses adding a sales channel alongside Mercado Libre or improving the management of an existing store.",
+    "title": "Your online store, ready to sell and kept up to date.",
+    "lead": "I set up your VendoAlgo store and handle the tasks you delegate to me: uploading products, keeping prices and stock current, configuring payments and shipping, and training the people working with you.",
+    "audience": "If you sell on Mercado Libre, I can help you add your own store. If you already have a store, I can take on a specific task or its day-to-day management.",
     "seeCase": "Explore the FumigAR case",
     "seeScope": "What I can help with",
     "caseEyebrow": "A REAL IMPLEMENTATION · FUMIGAR",
-    "caseTitle": "From the previous store to supported daily operations.",
-    "caseIntro": "At FumigAR, I handled catalog migration, store configuration, and tasks within its daily operations. These implementations are already in use.",
+    "caseTitle": "My work at FumigAR: from the initial catalog to ongoing support.",
+    "caseIntro": "I imported products from the previous store, prepared the new one, and configured the tasks the business needed. I continue to provide maintenance and assistance.",
     "visit": "Explore FumigAR",
     "explore": "Browse the catalog, open a product page, and see how purchasing information is presented.",
     "caseGroups": [
@@ -180,33 +192,45 @@ export const storeServiceCopy = {
       }
     ],
     "publicNote": "The link opens the public store. Invoicing, employee permissions, and automatic price updates are part of the internal operations described in this case.",
-    "scopeEyebrow": "TASKS YOU CAN DELEGATE",
-    "scopeTitle": "Start with what your business needs.",
-    "scopeIntro": "You may need a complete store setup or one specific task. The scope depends on your catalog, suppliers, and current processes.",
+    "scopeEyebrow": "MY SERVICES",
+    "scopeTitle": "What do you need for your store?",
+    "scopeIntro": "You can hire me for a specific task or for help with daily work. Here is what I can do:",
     "scope": [
       {
-        "title": "Store setup",
-        "body": "Store styling, payment and shipping configuration, and catalog preparation."
+        "title": "I prepare your store’s design",
+        "body": "I configure the styling, colors, and presentation around your business."
       },
       {
-        "title": "Product uploads and imports",
-        "body": "Migrating an existing catalog, uploading initial products, and adjusting product information."
+        "title": "I upload or migrate your products",
+        "body": "I upload an initial catalog or import products from your previous store and organize their details and categories."
       },
       {
-        "title": "Tailored automations",
-        "body": "Configuration and maintenance of repetitive tasks based on the information, rules, and schedule agreed for your operation."
+        "title": "I configure payments and shipping",
+        "body": "I set up the payment and delivery options you need to start selling."
       },
       {
-        "title": "Configuration and integrations",
-        "body": "Configuring the modules and features you need, including Mercado Libre and invoicing where applicable."
+        "title": "I update prices and stock",
+        "body": "I set up and maintain automatic updates based on supplier information and the agreed schedule."
       },
       {
-        "title": "Training and permissions",
-        "body": "Guidance on using the platform and organizing access for each team member."
+        "title": "I keep products and offers up to date",
+        "body": "I prepare tasks to add new items, handle discontinued supplier products, and apply promotions according to your rules."
       },
       {
-        "title": "Maintenance and support",
-        "body": "Store changes, incident handling, and follow-up on issues requiring the VendoAlgo team."
+        "title": "I configure Mercado Libre and invoicing",
+        "body": "I help configure the VendoAlgo features you purchase, such as Mercado Libre and automatic ARCA invoicing."
+      },
+      {
+        "title": "I train your team",
+        "body": "I teach people how to use the platform and configure the roles and permissions each person needs."
+      },
+      {
+        "title": "I help you find staff",
+        "body": "I help you look for a designer, store operator, salesperson, or community manager and prepare their onboarding for store work."
+      },
+      {
+        "title": "I handle maintenance",
+        "body": "I make adjustments, address problems, and follow up on those requiring the VendoAlgo team."
       }
     ],
     "otherTitle": "More stores to explore",
@@ -215,54 +239,54 @@ export const storeServiceCopy = {
     "previewAlt": "Preview of",
     "previewMissing": "The preview is unavailable. You can open the store using this link.",
     "personTitle": "I’m Pedro Méndez Carabán.",
-    "personText": "I work at VendoAlgo and know the platform through both configuration and technical development. My role in each business depends on the agreed tasks.",
+    "personText": "I work at VendoAlgo and know how to configure stores and address platform issues. I personally handle the work you hire me to do.",
     "platform": "Explore VendoAlgo",
-    "processTitle": "How we would work together",
+    "processTitle": "How I work with you",
     "steps": [
       {
-        "title": "Review your operation",
-        "body": "We discuss your catalog, suppliers, and a task you want to delegate. We identify the information needed to assess the work."
+        "title": "I listen to what you need",
+        "body": "You explain how you sell, the products you have, and the tasks you want to delegate. I review the information needed to assess what I can do."
       },
       {
-        "title": "Agree on scope and pricing",
-        "body": "We define tasks, responsibilities, required access, and what the proposal includes. Additional modules or services are identified when pricing the work."
+        "title": "I send you a proposal",
+        "body": "I explain what I will do, what it costs, and what is included. I also identify the VendoAlgo plan or additional features you need."
       },
       {
-        "title": "Implementation and support",
-        "body": "I implement the agreed setup and we review how it works. Training, maintenance, and support depend on the scope you need."
+        "title": "I put the agreed work in place",
+        "body": "I carry out the agreed work and review it with you. If you hire me for training, maintenance, or recurring help, I specify what each service includes."
       }
     ],
     "questionsTitle": "What to know before proceeding",
     "questions": [
       {
         "q": "How much does it cost?",
-        "a": "Pricing depends on the catalog, configuration, and tasks you want to delegate. The proposal details the initial work, recurring management if needed, and applicable platform, module, or external-service costs."
+        "a": "I quote the tasks you want to delegate. I separately detail the initial work, my recurring help if needed, and the VendoAlgo features you need to purchase."
       },
       {
         "q": "Can we start with a single task?",
-        "a": "Yes. We can first evaluate a catalog import, a configuration, or a specific automation and agree on that scope."
+        "a": "Yes. I can handle a product upload, a configuration, or one specific automatic task and quote that work."
       },
       {
         "q": "How does it work alongside Mercado Libre?",
-        "a": "The store can add a sales channel. We review the Mercado Libre module’s features and which data should be shared or updated based on your operation and the purchased module."
+        "a": "You can add the store as your own sales channel. I explain which Mercado Libre features VendoAlgo provides and help configure the ones you purchase."
       },
       {
         "q": "What happens if something goes wrong?",
-        "a": "Support and maintenance are agreed in the proposal. I handle incidents within that scope and follow up on those requiring the VendoAlgo team."
+        "a": "I specify the maintenance or help included in my proposal. I address issues within that scope and follow up on those requiring the VendoAlgo team."
       },
       {
         "q": "What access and responsibilities are agreed?",
-        "a": "Before starting, we agree on the accounts and permissions required, who manages each access, and who is responsible for each part of the operation."
+        "a": "Before starting, I explain the accounts and permissions I need, who manages each access, and which tasks I will handle."
       }
     ],
     "finalEyebrow": "THE NEXT STEP",
-    "finalTitle": "Let’s see what makes sense for your business.",
-    "finalText": "In a 30-minute Meet, we review your catalog and a task you want to delegate. With that context, we can identify what to assess and what information a proposal needs.",
+    "finalTitle": "Tell me what you need to address.",
+    "finalText": "In a 30-minute Meet, I review your store or idea with you, answer your questions, and explain what I can do for your business.",
     "mailSubject": "Inquiry about VendoAlgo store management",
-    "automationEyebrow": "TAILORED AUTOMATIONS",
+    "automationEyebrow": "UPDATES THAT HAPPEN AUTOMATICALLY",
     "automationTitle": "Keep your catalog up to date without handling every change.",
     "automationIntro": "I configure and maintain automations to update prices and stock, add new products, manage products a supplier no longer offers, and apply promotions.",
-    "automationAgreement": "We agree on the information to use, the changes to make, and the schedule. I handle the implementation and maintenance of the agreed tasks."
+    "automationAgreement": "You tell me what you need, and I agree with you on the information to use, changes to make, and schedule. I put the agreed tasks in place and maintain them."
   }
 };
 
@@ -314,3 +338,58 @@ export const storeExamples = [
 ];
 
 export const bookingUrl = "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ32S-DKDk1irg5ODqUJGUMKz41FLTRoLJh0gwUDu18GhqYozyuLcLxKTE955yYV592Tg0iRFsMQ";
+
+// Public platform prices verified against the official site; Pedro’s fees are separate.
+export const storePlatformPricing = {
+  "currency": "ARS",
+  "verifiedOn": "2026-10-17",
+  "sourceUrl": "https://vendoalgo.com/",
+  "plans": {
+    "free": {
+      "monthly": 0,
+      "activeProducts": 50
+    },
+    "pro": {
+      "monthly": 49900,
+      "activeProducts": null
+    }
+  },
+  "modules": [
+    {
+      "id": "blog",
+      "name": "Blog",
+      "monthly": 12900
+    },
+    {
+      "id": "coupons",
+      "name": "Cupones",
+      "monthly": 16900
+    },
+    {
+      "id": "recovery",
+      "name": "Recuperación de ventas",
+      "monthly": 16900
+    },
+    {
+      "id": "shopping",
+      "name": "Google Shopping",
+      "monthly": 49900
+    },
+    {
+      "id": "mercadolibre",
+      "name": "Mercado Libre",
+      "monthly": 74900
+    },
+    {
+      "id": "ai",
+      "name": "Conexión IA",
+      "monthly": 27900
+    },
+    {
+      "id": "invoicing",
+      "name": "Facturación",
+      "monthly": 14900
+    }
+  ],
+  "modulesRequire": "pro"
+};

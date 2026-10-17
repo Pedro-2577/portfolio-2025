@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
 import { contact, projects } from './data';
 import { storeServiceCopy, storeExamples, bookingUrl } from './storeServices';
+import ServiceEstimator from './ServiceEstimator.vue';
 import { professionalProfile } from './profile';
 import { downloadResumePdf } from './resumePdf';
 import { technologyStyle } from './technologyColors';
@@ -368,14 +369,7 @@ onUnmounted(() => {
           </section>
 
           <section id="service-scope" class="buyer-section" tabindex="-1" aria-labelledby="service-scope-title">
-            <header class="buyer-section-heading">
-              <p class="eyebrow">{{ servicePage.scopeEyebrow }}</p>
-              <h2 id="service-scope-title">{{ servicePage.scopeTitle }}</h2>
-              <p>{{ servicePage.scopeIntro }}</p>
-            </header>
-            <div class="buyer-scope-grid">
-              <article v-for="item in servicePage.scope" :key="item.title"><h3>{{ item.title }}</h3><p>{{ item.body }}</p></article>
-            </div>
+            <ServiceEstimator :language="language" />
           </section>
 
           <details class="buyer-more buyer-section">
