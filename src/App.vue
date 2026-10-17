@@ -220,13 +220,17 @@ onUnmounted(() => {
   <div class="app-shell">
     <header class="site-header">
       <div v-if="currentRoute === 'services'" class="container buyer-header">
-        <a class="brand" href="#home" @click.prevent="navigate('home')">Pedro Méndez Carabán</a>
+        <div class="buyer-header-identity">
+          <a class="brand" href="#home" @click.prevent="navigate('home')">Pedro Méndez Carabán</a>
+          <a class="buyer-header-profile" href="#about" @click.prevent="navigate('about')">{{ servicePage.profile }} →</a>
+        </div>
         <nav :aria-label="t.services" class="buyer-header-links">
-          <a class="text-link" href="#about" @click.prevent="navigate('about')">{{ servicePage.profile }}</a>
           <a class="button button-primary" :href="bookingUrl" target="_blank" rel="noopener noreferrer">{{ servicePage.book }} ↗</a>
-          <button class="icon-button" type="button" :title="language === 'es' ? 'Switch to English' : 'Cambiar a español'" @click="toggleLanguage">{{ language === 'es' ? 'EN' : 'ES' }}</button>
-          <button class="icon-button" type="button" :title="darkMode ? 'Light mode' : 'Dark mode'" @click="toggleTheme">{{ darkMode ? '☀' : '☾' }}</button>
         </nav>
+        <div class="buyer-header-tools">
+          <button class="icon-button" type="button" :aria-label="language === 'es' ? 'Ver sitio en inglés' : 'View site in Spanish'" @click="toggleLanguage">{{ language === 'es' ? 'EN' : 'ES' }}</button>
+          <button class="icon-button" type="button" :aria-label="language === 'es' ? (darkMode ? 'Activar tema claro' : 'Activar tema oscuro') : (darkMode ? 'Switch to light theme' : 'Switch to dark theme')" :aria-pressed="darkMode" @click="toggleTheme">{{ darkMode ? '☀' : '☾' }}</button>
+        </div>
       </div>
       <div v-else class="container nav-wrap">
         <a class="brand" href="#home" @click.prevent="navigate('home')">Pedro Méndez Carabán</a>
