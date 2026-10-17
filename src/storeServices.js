@@ -2,52 +2,50 @@
 export const storeServiceCopy = {
   "es": {
     "profile": "Ver mi perfil",
-    "book": "Agendar un Meet de 30 minutos",
+    "book": "Agendar una charla de 30 minutos",
     "contact": "Escribime por correo",
-    "eyebrow": "TIENDAS EN VENDOALGO · SERVICIO PERSONALIZADO",
-    "title": "Tu tienda online, lista para vender y al día.",
-    "lead": "Armo tu tienda en VendoAlgo y me ocupo del catálogo, las actualizaciones y el soporte. Sumá un canal propio a Mercado Libre o delegá tareas de tu tienda actual.",
+    "eyebrow": "TU TIENDA EN VENDOALGO",
+    "title": "Tu tienda online, con alguien que se ocupe.",
+    "lead": "Te ayudo a crear tu tienda y a mantenerla al día: productos, precios, envíos y ayuda cuando la necesites. También podés contratarme para una sola tarea.",
     "audience": "Si vendés por Mercado Libre, te ayudo a sumar una tienda propia. Si ya tenés una tienda, puedo ocuparme de una tarea puntual o de su gestión diaria.",
     "seeCase": "Ver el caso FumigAR",
     "seeScope": "Qué puedo resolver",
     "caseEyebrow": "UN CASO REAL · FUMIGAR",
-    "caseTitle": "Un caso real: FumigAR.",
-    "caseIntro": "Migré su catálogo, configuré la tienda y automaticé la actualización de precios. Hoy continúo con su mantenimiento.",
+    "caseTitle": "Así trabajo con FumigAR.",
+    "caseIntro": "Pasé sus productos a la nueva tienda, preparé los envíos y dejé los precios actualizándose cada mañana. Hoy sigo ayudándolos con la tienda.",
     "visit": "Recorrer FumigAR",
     "explore": "Podés recorrer el catálogo, abrir una ficha de producto y ver cómo se presenta la información de compra.",
     "caseGroups": [
       {
-        "title": "Catálogo, estilos y envíos",
+        "title": "Productos y apariencia",
         "items": [
-          "Carga inicial de productos importados desde su tienda anterior.",
-          "Ajustes de los estilos de la web.",
-          "Configuración de envíos."
+          "Pasé los productos de su tienda anterior.",
+          "Preparé el aspecto de la web y las formas de envío."
         ]
       },
       {
-        "title": "Facturación y Mercado Libre",
+        "title": "Facturas y Mercado Libre",
         "items": [
-          "Configuración de ARCA para la emisión automatizada de facturas.",
-          "Asistencia en la configuración del módulo de Mercado Libre que adquirió el negocio."
+          "Dejé listas las facturas automáticas de ARCA.",
+          "Los ayudé a preparar la conexión con Mercado Libre."
         ]
       },
       {
-        "title": "Precios actualizados cada mañana",
+        "title": "Precios al día",
         "items": [
-          "Actualización automática a partir de los costos del proveedor de insumos.",
-          "Cálculo de los precios según los insumos que utiliza cada producto."
+          "Los precios se actualizan automáticamente cada mañana.",
+          "Se calculan con los costos de los insumos del proveedor."
         ]
       },
       {
-        "title": "Equipo y soporte continuo",
+        "title": "Personas y ayuda",
         "items": [
-          "Capacitación de los operarios y asignación de roles y permisos por empleado.",
-          "Mantenimiento y atención de problemas.",
-          "Resolución técnica o derivación al equipo de VendoAlgo, con seguimiento de la incidencia."
+          "Enseñé a los empleados a usar la tienda y definí qué puede hacer cada uno.",
+          "Sigo ayudando con los problemas y los pedidos de solución a VendoAlgo."
         ]
       }
     ],
-    "publicNote": "El enlace abre la tienda pública. La facturación, los permisos y la actualización automática de precios corresponden a su operación interna, descrita en este caso.",
+    "publicNote": "Podés visitar la tienda y ver sus productos. Las facturas, los accesos de los empleados y las actualizaciones de precios se manejan dentro del negocio.",
     "scopeEyebrow": "MIS SERVICIOS",
     "scopeTitle": "¿Qué necesitás para tu tienda?",
     "scopeIntro": "Podés contratarme para una tarea puntual o para acompañarte en el trabajo diario. Te detallo qué puedo hacer:",
@@ -95,7 +93,7 @@ export const storeServiceCopy = {
     "previewAlt": "Vista previa de",
     "previewMissing": "La vista previa no está disponible. Podés abrir la tienda desde este enlace.",
     "personTitle": "Soy Pedro Méndez Carabán.",
-    "personText": "Me ocupo personalmente de tu tienda: desde la configuración hasta las tareas que quieras delegar.",
+    "personText": "Soy quien hace el trabajo y responde tus consultas. Podés hablar directamente conmigo.",
     "platform": "Conocer VendoAlgo",
     "processTitle": "Cómo trabajo con vos",
     "steps": [
@@ -136,8 +134,8 @@ export const storeServiceCopy = {
       }
     ],
     "finalEyebrow": "CONTACTO",
-    "finalTitle": "¿Preferís que lo conversemos?",
-    "finalText": "Contame qué necesitás en una charla de 30 minutos.",
+    "finalTitle": "¿Querés que te ayude a elegir?",
+    "finalText": "Contame qué necesitás. No hace falta que sepas cómo hacerlo.",
     "mailSubject": "Consulta sobre gestión de tienda en VendoAlgo",
     "automationEyebrow": "CAMBIOS QUE SE HACEN AUTOMÁTICAMENTE",
     "automationTitle": "Tu catálogo al día, sin ocuparte de cada cambio.",
