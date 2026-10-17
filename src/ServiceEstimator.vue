@@ -731,4 +731,19 @@ function contact(event) {
   .estimate-toolbar-actions button { flex: 1; }
 }
 @media (prefers-reduced-motion: reduce) { .estimate-summary-detail summary svg { transition: none; } }
+
+.estimate-summary .estimate-summary-detail { padding: 0; }
+.estimate-summary > .eyebrow { margin-bottom: 6px; }
+.estimate-summary h3 { margin-bottom: 12px; }
+.estimate-summary .estimate-totals > div { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding-block: 9px; }
+.estimate-summary .estimate-totals strong { font-size: 1.08rem; text-align: right; }
+.estimate-summary .estimate-platform-total strong { font-size: .9rem; }
+.estimate-contact-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 8px; }
+.estimate-contact-form > :not(button) { grid-column: 1 / -1; }
+.estimate-summary .estimate-contact-form .button { padding: 10px 8px; font-size: .78rem; }
+@media (max-width: 380px) {
+  .estimate-contact-form > button { grid-column: 1 / -1; }
+  .estimate-summary .estimate-totals > div { grid-template-columns: 1fr; gap: 5px; }
+  .estimate-summary .estimate-totals strong { text-align: left; }
+}
 </style>
