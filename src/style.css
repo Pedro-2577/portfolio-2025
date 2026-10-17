@@ -65,7 +65,22 @@ button, input, select, textarea { font: inherit; }
   padding: .5rem;
   border-radius: .35rem;
 }
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease;
+}
 .icon-button:hover, .menu-button:hover { background: var(--soft); }
+.icon-button:hover { border-color: #91a763; }
+.icon-button:focus-visible { outline: 3px solid #749b2e; outline-offset: 3px; }
+.language-flag { display: block; width: 20px; height: 14px; border-radius: 2px; box-shadow: 0 0 0 1px rgb(0 0 0 / .12); }
+.theme-icon { display: block; width: 19px; height: 19px; }
+@media (prefers-reduced-motion: reduce) { .icon-button { transition: none; } }
 .menu-button { display: none; font-size: 1.15rem; }
 
 .hero { background: #172033; color: white; }
@@ -327,8 +342,7 @@ details p { color: var(--muted); line-height: 1.6; }
 .buyer-header-links { display: flex; min-width: 0; }
 .buyer-header-links .button { min-height: 46px; font-size: .85rem; text-align: center; border-radius: 8px; }
 .buyer-header-tools { display: flex; align-items: center; gap: 6px; }
-.buyer-header-tools .icon-button { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--soft); font-size: .85rem; line-height: 1; }
-.buyer-header-tools .icon-button:hover { border-color: #91a763; }
+.buyer-header-tools .icon-button { width: 44px; height: 44px; border-radius: 8px; background: var(--soft); }
 .buyer-header button:focus-visible { outline: 3px solid #749b2e; outline-offset: 3px; }
 @media (max-width: 900px) {
   .buyer-header { grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }

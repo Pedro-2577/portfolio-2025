@@ -253,8 +253,14 @@ onUnmounted(() => {
           <a class="button button-primary" :href="bookingUrl" target="_blank" rel="noopener noreferrer">{{ servicePage.book }} ↗</a>
         </nav>
         <div class="buyer-header-tools">
-          <button class="icon-button" type="button" :aria-label="language === 'es' ? 'Ver sitio en inglés' : 'View site in Spanish'" @click="toggleLanguage">{{ language === 'es' ? 'EN' : 'ES' }}</button>
-          <button class="icon-button" type="button" :aria-label="language === 'es' ? (darkMode ? 'Activar tema claro' : 'Activar tema oscuro') : (darkMode ? 'Switch to light theme' : 'Switch to dark theme')" :aria-pressed="darkMode" @click="toggleTheme">{{ darkMode ? '☀' : '☾' }}</button>
+          <button class="icon-button language-button" type="button" :aria-label="language === 'es' ? 'Cambiar idioma a inglés' : 'Switch language to Spanish'" :title="language === 'es' ? 'Cambiar idioma a inglés' : 'Switch language to Spanish'" @click="toggleLanguage">
+            <svg v-if="language === 'es'" class="language-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#1f3c88"/><path d="m0 0 24 16M24 0 0 16" stroke="#fff" stroke-width="4"/><path d="m0 0 24 16M24 0 0 16" stroke="#c8102e" stroke-width="1.5"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#c8102e" stroke-width="3" d="M12 0v16M0 8h24"/></svg>
+            <svg v-else class="language-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#75aadb"/><path fill="#fff" d="M0 5.33h24v5.34H0z"/><circle cx="12" cy="8" r="1.65" fill="#f6b40e"/><path stroke="#c89508" stroke-width=".45" d="M12 5.8v4.4M9.8 8h4.4m-.25-1.55-3.1 3.1m0-3.1 3.1 3.1"/></svg>
+          </button>
+          <button class="icon-button theme-button" type="button" :aria-label="language === 'es' ? (darkMode ? 'Activar tema claro' : 'Activar tema oscuro') : (darkMode ? 'Switch to light theme' : 'Switch to dark theme')" :title="language === 'es' ? (darkMode ? 'Activar tema claro' : 'Activar tema oscuro') : (darkMode ? 'Switch to light theme' : 'Switch to dark theme')" :aria-pressed="darkMode" @click="toggleTheme">
+            <svg v-if="darkMode" class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+            <svg v-else class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.1A8.7 8.7 0 0 1 8.9 3.8 8.8 8.8 0 1 0 20.2 15.1Z"/></svg>
+          </button>
         </div>
       </div>
       <div v-else class="container nav-wrap">
@@ -268,8 +274,14 @@ onUnmounted(() => {
           <a :class="{ active: currentRoute === 'contact' }" href="#contact" @click.prevent="navigate('contact')">{{ t.contact }}</a>
         </nav>
         <div class="nav-actions">
-          <button class="icon-button" type="button" :title="language === 'es' ? 'Switch to English' : 'Cambiar a español'" @click="toggleLanguage">{{ language === 'es' ? 'EN' : 'ES' }}</button>
-          <button class="icon-button" type="button" :title="darkMode ? 'Light mode' : 'Dark mode'" @click="toggleTheme">{{ darkMode ? '☀' : '☾' }}</button>
+          <button class="icon-button language-button" type="button" :aria-label="language === 'es' ? 'Cambiar idioma a inglés' : 'Switch language to Spanish'" :title="language === 'es' ? 'Cambiar idioma a inglés' : 'Switch language to Spanish'" @click="toggleLanguage">
+            <svg v-if="language === 'es'" class="language-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#1f3c88"/><path d="m0 0 24 16M24 0 0 16" stroke="#fff" stroke-width="4"/><path d="m0 0 24 16M24 0 0 16" stroke="#c8102e" stroke-width="1.5"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#c8102e" stroke-width="3" d="M12 0v16M0 8h24"/></svg>
+            <svg v-else class="language-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#75aadb"/><path fill="#fff" d="M0 5.33h24v5.34H0z"/><circle cx="12" cy="8" r="1.65" fill="#f6b40e"/><path stroke="#c89508" stroke-width=".45" d="M12 5.8v4.4M9.8 8h4.4m-.25-1.55-3.1 3.1m0-3.1 3.1 3.1"/></svg>
+          </button>
+          <button class="icon-button theme-button" type="button" :aria-label="darkMode ? 'Light mode' : 'Dark mode'" :title="darkMode ? 'Light mode' : 'Dark mode'" :aria-pressed="darkMode" @click="toggleTheme">
+            <svg v-if="darkMode" class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+            <svg v-else class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.1A8.7 8.7 0 0 1 8.9 3.8 8.8 8.8 0 1 0 20.2 15.1Z"/></svg>
+          </button>
         </div>
       </div>
     </header>
