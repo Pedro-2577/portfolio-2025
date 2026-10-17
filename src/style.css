@@ -557,3 +557,36 @@ details p { color: var(--muted); line-height: 1.6; }
 }
 
 .card-actions .project-current-site { order: -2; grid-column: 1 / -1; }
+
+/* Ventures: the label opens the overview; the chevron opens direct destinations. */
+.site-nav { gap: 18px; }
+.nav-ventures { position: relative; }
+.nav-ventures-heading { display: flex; align-items: center; gap: 3px; }
+.nav-ventures-heading > a { white-space: nowrap; }
+.nav-ventures-toggle { display: grid; place-items: center; width: 30px; height: 36px; padding: 0; border: 0; border-radius: 5px; background: none; color: var(--muted); cursor: pointer; }
+.nav-ventures-toggle:hover { color: var(--ink); background: var(--soft); }
+.nav-ventures-toggle svg { transition: transform .15s ease; }
+.nav-ventures-toggle svg.is-open { transform: rotate(180deg); }
+.nav-ventures-list { position: absolute; top: calc(100% + 10px); left: -14px; z-index: 30; width: 260px; padding: 8px; margin: 0; list-style: none; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 12px 28px rgb(0 0 0 / .09); }
+.site-nav .nav-ventures-list a, .nav-venture-locked { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px; min-height: 48px; border-radius: 5px; font-size: .86rem; line-height: 1.45; }
+.site-nav .nav-ventures-list a { color: var(--ink); }
+.site-nav .nav-ventures-list a:hover { background: var(--soft); }
+.nav-venture-locked { color: var(--muted); cursor: default; }
+.nav-venture-locked small { display: block; margin-top: 2px; font-size: .72rem; font-weight: 400; }
+.nav-venture-locked svg { width: 17px; height: 17px; flex-shrink: 0; }
+.nav-ventures :is(a, button):focus-visible { outline: 3px solid #749b2e; outline-offset: 3px; }
+.buyer-header-identity { display: grid; gap: 6px; }
+.buyer-ventures-back { width: fit-content; color: var(--muted); font-size: .75rem; line-height: 1.5; }
+.buyer-ventures-back:hover { color: var(--ink); }
+.buyer-store-locked:hover { border-color: var(--line); }
+.buyer-store-lock-label { display: inline-flex; align-items: center; gap: 7px; font-size: .85rem; color: var(--muted); }
+.buyer-store-lock-label svg { width: 16px; height: 16px; }
+@media (max-width: 960px) {
+  .site-nav { flex-direction: column; align-items: stretch; gap: 4px; max-height: calc(100dvh - 72px); overflow-y: auto; }
+  .site-nav > a { min-height: 44px; display: flex; align-items: center; }
+  .nav-ventures-heading { justify-content: space-between; }
+  .nav-ventures-heading > a { flex: 1; min-height: 44px; display: flex; align-items: center; }
+  .nav-ventures-toggle { width: 44px; height: 44px; }
+  .nav-ventures-list { position: static; width: 100%; margin: 4px 0 8px; box-shadow: none; background: var(--soft); }
+}
+@media (prefers-reduced-motion: reduce) { .nav-ventures-toggle svg { transition: none; } }
