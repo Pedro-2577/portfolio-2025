@@ -3,6 +3,7 @@ import { computed, onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
 import { contact, projects } from './data';
 import { storeServiceCopy, storeExamples, bookingUrl } from './storeServices';
 import ServiceEstimator from './ServiceEstimator.vue';
+import VenturesPage from './VenturesPage.vue';
 import PortfolioWorkbench from './PortfolioWorkbench.vue';
 import { vReveal, usePortfolioMotion } from './portfolioMotion';
 import HttpErrorPage from './HttpErrorPage.vue';
@@ -24,6 +25,7 @@ const search = ref('');
 const technology = ref('');
 const featuredOnly = ref(false);
 const mobileMenuOpen = ref(false);
+const venturesMenuOpen = ref(false);
 const form = ref({ name: '', email: '', subject: '', message: '' });
 const formError = ref('');
 const demoDialog = ref(null);
@@ -237,6 +239,7 @@ function removePreviewVersion() {
 }
 
 function navigate(route) {
+  venturesMenuOpen.value = false;
   removePreviewVersion();
   if (hostedNotFound) {
     window.location.assign(assetBase + '#' + route);
@@ -271,7 +274,15 @@ function submitContact() {
   window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(form.value.subject)}&body=${encodeURIComponent(body)}`;
 }
 
+function closeVenturesOnOutsideClick(event) {
+  if (!(event.target instanceof Element) || !event.target.closest('.nav-ventures')) venturesMenuOpen.value = false;
+}
+function closeVenturesOnFocusOut(event) {
+  if (!event.currentTarget.contains(event.relatedTarget)) venturesMenuOpen.value = false;
+}
+
 function onHashChange() {
+  venturesMenuOpen.value = false;
   currentRoute.value = window.location.hash.slice(1) || 'home';
 }
 
@@ -289,9 +300,11 @@ onMounted(() => {
   document.documentElement.lang = language.value;
   document.documentElement.classList.toggle('dark', darkMode.value);
   window.addEventListener('hashchange', onHashChange);
+  document.addEventListener('click', closeVenturesOnOutsideClick);
 });
 onUnmounted(() => {
   window.removeEventListener('hashchange', onHashChange);
+  document.removeEventListener('click', closeVenturesOnOutsideClick);
   if (pendingDemo.value) document.body.style.overflow = previousBodyOverflow;
 });
 </script>
@@ -302,6 +315,7 @@ onUnmounted(() => {
       <div v-if="isServiceRoute" class="container buyer-header">
         <div class="buyer-header-identity">
           <a class="brand" href="#home" @click.prevent="navigate('home')">Pedro Méndez Carabán</a>
+          <a class="buyer-ventures-back" href="#emprendimientos" @click.prevent="navigate('emprendimientos')">← {{ language === 'es' ? 'Mis emprendimientos' : 'My ventures' }}</a>
         </div>
         <nav :aria-label="t.services" class="buyer-header-links">
           <a class="button button-primary" :href="bookingUrl" target="_blank" rel="noopener noreferrer">{{ servicePage.book }} ↗</a>
@@ -323,7 +337,17 @@ onUnmounted(() => {
         <nav :class="{ 'is-open': mobileMenuOpen }" class="site-nav" aria-label="Navegación principal">
           <a :class="{ active: currentRoute === 'home' }" href="#home" @click.prevent="navigate('home')">{{ t.home }}</a>
           <a :class="{ active: currentRoute === 'projects' || currentRoute.startsWith('project/') }" href="#projects" @click.prevent="navigate('projects')">{{ t.projects }}</a>
-          <a :class="{ active: isServiceRoute }" href="#services" @click.prevent="navigate('services')">{{ t.services }}</a>
+          <div class="nav-ventures" @keydown.esc.stop.prevent="venturesMenuOpen = false" @focusout="closeVenturesOnFocusOut">
+            <div class="nav-ventures-heading">
+              <a :class="{ active: currentRoute === 'emprendimientos' || isServiceRoute }" href="#emprendimientos" @click.prevent="navigate('emprendimientos')">{{ language === 'es' ? 'Mis emprendimientos' : 'My ventures' }}</a>
+              <button type="button" class="nav-ventures-toggle" :aria-label="language === 'es' ? 'Ver mis emprendimientos' : 'Show my ventures'" :aria-expanded="venturesMenuOpen" aria-controls="ventures-navigation" @click="venturesMenuOpen = !venturesMenuOpen"><svg :class="{ 'is-open': venturesMenuOpen }" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+            </div>
+            <ul v-show="venturesMenuOpen" id="ventures-navigation" class="nav-ventures-list">
+              <li><a href="#services" @click.prevent="navigate('services')">{{ language === 'es' ? 'Gestión de tiendas' : 'Store management' }} <span aria-hidden="true">↗</span></a></li>
+              <li><span class="nav-venture-locked" role="link" aria-disabled="true"><span>citARme<small>{{ language === 'es' ? 'En desarrollo' : 'In development' }}</small></span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="8" width="12" height="9" rx="2"/><path d="M6.5 8V5.5a3.5 3.5 0 0 1 7 0V8"/></svg></span></li>
+              <li><span class="nav-venture-locked" role="link" aria-disabled="true"><span>TiendARG<small>{{ language === 'es' ? 'En desarrollo' : 'In development' }}</small></span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="8" width="12" height="9" rx="2"/><path d="M6.5 8V5.5a3.5 3.5 0 0 1 7 0V8"/></svg></span></li>
+            </ul>
+          </div>
           <a :class="{ active: currentRoute === 'about' }" href="#about" @click.prevent="navigate('about')">{{ t.about }}</a>
           <a :class="{ active: currentRoute === 'contact' }" href="#contact" @click.prevent="navigate('contact')">{{ t.contact }}</a>
         </nav>
@@ -394,6 +418,8 @@ onUnmounted(() => {
         <div class="container"><div class="section-heading section-heading-left" v-reveal><p class="eyebrow">03 / {{ t.projects }}</p><h1>{{ t.myProjects }}</h1><p>{{ t.projectsIntro }}</p></div><div class="filters"><input v-model="search" type="search" :aria-label="t.search" :placeholder="t.search"><select v-model="technology" :aria-label="t.allTechnologies"><option value="">{{ t.allTechnologies }}</option><option v-for="item in technologies" :key="item" :value="item">{{ item }}</option></select><label><input v-model="featuredOnly" type="checkbox"> {{ t.onlyFeatured }}</label><button v-if="search || technology || featuredOnly" class="text-button" type="button" @click="search = ''; technology = ''; featuredOnly = false">{{ t.clear }}</button></div><p class="result-count">{{ filteredProjects.length }} {{ t.results }}</p><h2 v-if="filteredProjects.some((project) => !project.academic)" class="category-divider">{{ t.professionalProjects }}</h2><div v-if="filteredProjects.length" class="project-grid"><article v-for="(project, index) in filteredProjects.filter((item) => !item.academic)" :key="project.id" class="project-card" v-reveal="(index % 3) * 55"><div class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">{{ projectNumber(index) }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div><div v-else class="empty-state"><h2>{{ t.noResults }}</h2><p>{{ t.adjust }}</p></div><h2 v-if="filteredProjects.some((project) => project.academic)" class="category-divider">{{ t.academicProjects }}</h2><div class="project-grid"><article v-for="(project, index) in filteredProjects.filter((item) => item.academic)" :key="project.id" class="project-card academic-card" v-reveal="(index % 3) * 55"><div v-if="project.preview" class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">{{ projectNumber(index) }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div></div>
       </section>
 
+      <VenturesPage v-else-if="currentRoute === 'emprendimientos'" :language="language" @navigate="navigate" />
+
       <section v-else-if="isServiceRoute" class="section page-section buyer-page">
         <div class="container">
           <header class="buyer-hero">
@@ -441,14 +467,14 @@ onUnmounted(() => {
             <summary>{{ servicePage.otherTitle }}</summary>
             <p>{{ servicePage.otherIntro }}</p>
             <div class="buyer-other-grid">
-              <a v-for="store in otherStores" :key="store.id" class="buyer-store-card" :href="store.url" target="_blank" rel="noopener noreferrer">
+              <component :is="store.id === 'tiendarg' ? 'div' : 'a'" v-for="store in otherStores" :key="store.id" class="buyer-store-card" :class="{ 'buyer-store-locked': store.id === 'tiendarg' }" :href="store.id === 'tiendarg' ? undefined : store.url" :aria-disabled="store.id === 'tiendarg' ? true : undefined" :target="store.id === 'tiendarg' ? undefined : '_blank'" rel="noopener noreferrer">
                 <div class="buyer-store-preview">
                   <img v-if="!failedServicePreviews.includes(store.id)" :src="assetBase + store.preview" :alt="servicePage.previewAlt + ' ' + store.name" width="1100" height="532" loading="lazy" @error="onServicePreviewError(store.id)">
                   <span v-else class="buyer-preview-fallback">{{ servicePage.previewMissing }}</span>
-                  <span class="buyer-domain">{{ store.domain }} ↗</span>
+                  <span class="buyer-domain">{{ store.id === 'tiendarg' ? (language === 'es' ? 'TiendARG · En desarrollo' : 'TiendARG · In development') : store.domain + ' ↗' }}</span>
                 </div>
-                <div class="buyer-store-caption"><h3>{{ store.name }}</h3><p>{{ store.description[language] }}</p><span class="text-link">{{ servicePage.visitStore }} ↗</span></div>
-              </a>
+                <div class="buyer-store-caption"><h3>{{ store.name }}</h3><p>{{ store.description[language] }}</p><span v-if="store.id === 'tiendarg'" class="buyer-store-lock-label"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="8" width="12" height="9" rx="2"/><path d="M6.5 8V5.5a3.5 3.5 0 0 1 7 0V8"/></svg>{{ language === 'es' ? 'En desarrollo' : 'In development' }}</span><span v-else class="text-link">{{ servicePage.visitStore }} ↗</span></div>
+              </component>
             </div>
           </details>
 
