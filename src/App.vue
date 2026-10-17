@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
 import { contact, projects } from './data';
+import { storeServiceCopy, storeExamples, bookingUrl } from './storeServices';
 import { professionalProfile } from './profile';
 import { downloadResumePdf } from './resumePdf';
 import { technologyStyle } from './technologyColors';
@@ -24,10 +25,6 @@ const text = {
   es: {
     demoEyebrow: 'Demo académica', demoTitle: 'Antes de abrir la demo', demoWait: 'La demo se activa cuando la visitás. La primera carga puede tardar alrededor de un minuto.', demoTime: 'Tiempo de activación', demoTimeValue: '≈ 1 min', demoData: 'Datos de prueba · Sin compras reales', demoContinue: 'Abrir demo', demoCancel: 'Volver', demoClose: 'Cerrar aviso',
     home: 'Inicio', projects: 'Proyectos', services: 'Gestión de tiendas', about: 'Sobre mí', contact: 'Contacto',
-    servicesEyebrow: 'SERVICIO PERSONALIZADO · VENDOALGO', servicesTitle: 'Tu tienda online, configurada para tu operación.', servicesLead: 'Trabajo con VendoAlgo en la implementación y gestión de tiendas online. Me sumo a lo que necesita cada negocio y realizo las configuraciones acordadas, desde el catálogo y los ajustes técnicos hasta las automatizaciones.', servicesIntro: 'El alcance se define según la operación y el pedido de cada negocio: revisamos las tareas, acordamos prioridades y avanzo con lo que necesitan.', servicesCta: 'Coordinar una charla de 30 minutos', servicesContact: 'Contame sobre tu operación',
-    serviceSetup: 'Puesta en marcha', serviceSetupText: 'Diseño y configuración de la tienda, carga e importación del catálogo, medios de pago, envíos y acompañamiento para empezar a usarla.', serviceManagement: 'Gestión y respaldo técnico', serviceManagementText: 'Altas y cambios de productos, mantenimiento, asistencia y seguimiento de incidencias para que la tienda siga al día.', serviceAutomation: 'Automatización del trabajo diario', serviceAutomationText: 'Flujos a medida para actualizar stock y precios, revisar novedades de proveedores y reducir tareas repetitivas, según los datos y sistemas disponibles.',
-    serviceProcessTitle: 'Empezamos por tu operación', serviceProcessIntro: 'Definimos el alcance con vos; los servicios se adaptan a las prioridades y los procesos de cada negocio.', serviceStepOne: 'Entender el trabajo', serviceStepOneText: 'Revisamos catálogo, proveedores, frecuencia de cambios y tareas que hoy llevan tiempo.', serviceStepTwo: 'Elegir prioridades', serviceStepTwoText: 'Acordamos qué resolver primero y qué información o accesos hacen falta.', serviceStepThree: 'Implementar y acompañar', serviceStepThreeText: 'Configuramos lo acordado, lo ponemos en marcha y ajustamos el trabajo según cómo funcione en la práctica.',
-    serviceExperienceTitle: 'Experiencia en VendoAlgo', serviceExperienceText: 'Formo parte del equipo que desarrolló la plataforma y sigue evolucionándola. Conozco su funcionamiento desde el producto y el lado técnico; eso me permite acompañar la configuración de la tienda y el seguimiento de problemas.', servicePlatformLink: 'Conocer VendoAlgo', serviceProjectLink: 'Ver mi experiencia en el portfolio', serviceDemoTitle: 'Una referencia visual', serviceDemoText: 'Kalua es una demo conceptual de tienda online que muestra una experiencia de catálogo y navegación. Es una referencia visual, no una tienda productiva ni un caso de resultados comerciales.', serviceDemoLink: 'Ver demo conceptual de Kalua', serviceFinalTitle: 'Cada tienda necesita una solución distinta', serviceFinalText: 'Contame cómo trabajan hoy y vemos qué tendría sentido resolver primero.', serviceGuideTitle: 'Una guía simple para encontrar qué delegar', serviceGuideIntro: 'En la primera conversación buscamos una tarea concreta y entendemos cómo se hace hoy, qué información usa y qué resultado necesitás.', serviceGuideOne: 'Qué productos y proveedores forman el catálogo', serviceGuideTwo: 'Cómo llegan hoy las novedades de stock y precios', serviceGuideThree: 'Qué tareas se repiten y cuánto tiempo llevan', serviceGuideFour: 'Qué sistemas, archivos o accesos requiere el proceso', serviceScopeTitle: 'Qué puedo hacer por tu tienda', serviceScopeIntro: 'La solución depende de lo que necesite cada negocio. Puedo acompañar la configuración inicial, preparar tareas operativas y dejar automatizaciones listas para el uso diario.', serviceScopeOne: 'Configuración y puesta en marcha de la tienda', serviceScopeTwo: 'Carga e importación de productos y catálogo', serviceScopeThree: 'Configuración de pagos, envíos y opciones de compra', serviceScopeFour: 'Preparación y configuración de bots para tareas concretas', serviceScopeFive: 'Automatización de stock, precios y novedades de proveedores', serviceScopeSix: 'Mantenimiento, ajustes y asistencia técnica', serviceStoresTitle: 'Tiendas en las que colaboré desde VendoAlgo', serviceStoresIntro: 'Mi participación cambia según lo que solicita cada negocio: puede incluir configurar bots, preparar una configuración o resolver otras tareas de los servicios de VendoAlgo.', serviceStoresNote: 'Algunas tiendas siguen en desarrollo o tienen configuraciones pendientes. Los enlaces muestran su estado actual; no implican que todos los catálogos o funciones estén terminados.', serviceStoreVisit: 'Visitar tienda', serviceStoreLabel: 'Tienda VendoAlgo', serviceDemoNotice: 'Proyecto de muestra · desarrollo de tienda', storeFumigar: 'FumigAR', storeFumigarDesc: 'Tienda online de productos para control de plagas.', storeCctv: 'CCTV Store', storeCctvDesc: 'Catálogo online de cámaras y soluciones de seguridad.', storeRedes: 'Redes para Balcón', storeRedesDesc: 'Tienda de redes de protección, redes deportivas y sogas.', storeTiendarg: 'TiendARG', storeTiendargDesc: 'Tienda online de productos de distintas categorías.',
     portraitRole: 'Desarrollador full stack · Buenos Aires', proofLabel: 'Trabajo actual', proofStatus: 'Plataforma de e-commerce en producción', proofCopy: 'Construcción desde cero y evolución continua dentro de un equipo.', proofPoints: ['Frontend, backend y APIs', 'Diseño, UX y producto', 'IA y automatización aplicadas'],
     greeting: 'Hola, soy', role: 'Desarrollador full stack · Seguridad · IA',
     hero: 'Soy desarrollador full stack en VendoAlgo, donde construí la plataforma desde cero junto a un equipo y sigo impulsando su evolución. Trabajo entre frontend, backend, APIs y experiencia de usuario; integro IA y automatización cuando resuelven una necesidad real, con una mirada atenta a la seguridad.',
@@ -64,10 +61,6 @@ const text = {
   en: {
     demoEyebrow: 'Academic demo', demoTitle: 'Before you open the demo', demoWait: 'The demo starts when you visit it. The first load may take about a minute.', demoTime: 'Startup time', demoTimeValue: '≈ 1 min', demoData: 'Sample data · No real purchases', demoContinue: 'Open demo', demoCancel: 'Go back', demoClose: 'Close notice',
     home: 'Home', projects: 'Projects', services: 'Store management', about: 'About me', contact: 'Contact',
-    servicesEyebrow: 'TAILORED SERVICE · VENDOALGO', servicesTitle: 'An online store configured for your operation.', servicesLead: 'I work with VendoAlgo on store implementation and management. I take on each business’s requested tasks, from catalog setup and technical adjustments to automations.', servicesIntro: 'The scope depends on each business and its needs: we review the tasks, agree on priorities, and I handle the requested work.', servicesCta: 'Book a 30-minute call', servicesContact: 'Tell me about your operation',
-    serviceSetup: 'Store setup', serviceSetupText: 'Store design and configuration, catalog upload and import, payment methods, shipping, and guidance to get started.', serviceManagement: 'Ongoing management and technical support', serviceManagementText: 'Product additions and changes, maintenance, assistance, and issue follow-up to keep the store up to date.', serviceAutomation: 'Daily operations automation', serviceAutomationText: 'Custom workflows to update stock and prices, review supplier updates, and reduce repetitive work, based on the available data and systems.',
-    serviceProcessTitle: 'Start with your operation', serviceProcessIntro: 'We define the scope together; services adapt to each business’s priorities and processes.', serviceStepOne: 'Understand the work', serviceStepOneText: 'We review your catalog, suppliers, update frequency, and the tasks that take time today.', serviceStepTwo: 'Choose priorities', serviceStepTwoText: 'We agree what to solve first and what information or access is needed.', serviceStepThree: 'Implement and support', serviceStepThreeText: 'I configure what we agreed on, launch it, and adjust based on how it works in practice.',
-    serviceExperienceTitle: 'Experience at VendoAlgo', serviceExperienceText: 'I am part of the team that built the platform and continues to evolve it. I know how it works from both product and technical perspectives, which helps me support store setup and issue follow-up.', servicePlatformLink: 'Explore VendoAlgo', serviceProjectLink: 'View my portfolio experience', serviceDemoTitle: 'A visual reference', serviceDemoText: 'Kalua is a conceptual online store demo showing a catalog and browsing experience. It is a visual reference, not a live store or a commercial-results case study.', serviceDemoLink: 'View the Kalua concept demo', serviceFinalTitle: 'Every store needs a different solution', serviceFinalText: 'Tell me how your business works today and we can decide what makes sense to solve first.', serviceGuideTitle: 'A simple way to find what to delegate', serviceGuideIntro: 'In our first conversation, we identify one concrete task and understand how it works today, what information it uses, and what result you need.', serviceGuideOne: 'Which products and suppliers make up the catalog', serviceGuideTwo: 'How stock and price updates arrive today', serviceGuideThree: 'Which tasks repeat and how much time they take', serviceGuideFour: 'Which systems, files, or access the process requires', serviceScopeTitle: 'Ways I can support your store', serviceScopeIntro: 'The right solution depends on each business. I can help with initial setup, prepare operational workflows, and configure automations for day-to-day work.', serviceScopeOne: 'Store configuration and launch setup', serviceScopeTwo: 'Product and catalog uploads or imports', serviceScopeThree: 'Payment, shipping, and checkout configuration', serviceScopeFour: 'Preparing and configuring bots for specific tasks', serviceScopeFive: 'Automating stock, prices, and supplier updates', serviceScopeSix: 'Maintenance, adjustments, and technical support', serviceStoresTitle: 'Stores I have supported through VendoAlgo', serviceStoresIntro: 'My role varies with each business request. It may include configuring bots, preparing a setup, or handling other tasks included in VendoAlgo services.', serviceStoresNote: 'Some stores are still being developed or have pending configuration. The links show their current state; they do not imply that every catalog or feature is complete.', serviceStoreVisit: 'Visit store', serviceStoreLabel: 'VendoAlgo store', serviceDemoNotice: 'Sample project · store development', storeFumigar: 'FumigAR', storeFumigarDesc: 'Online store for pest-control products.', storeCctv: 'CCTV Store', storeCctvDesc: 'Online catalog for cameras and security solutions.', storeRedes: 'Redes para Balcón', storeRedesDesc: 'Online store for safety nets, sports nets, and ropes.', storeTiendarg: 'TiendARG', storeTiendargDesc: 'Online store with products across several categories.',
     portraitRole: 'Full-stack developer · Buenos Aires', proofLabel: 'Current role', proofStatus: 'E-commerce platform in production', proofCopy: 'Built from scratch and continuously evolved as part of a team.', proofPoints: ['Frontend, backend and APIs', 'Design, UX and product', 'Applied AI and automation'],
     greeting: "Hi, I'm", role: 'Full-stack developer · Security · AI',
     hero: 'I am a full-stack developer at VendoAlgo, where I helped build the platform from scratch as part of a team and continue to evolve it. I work across frontend, backend, APIs and user experience, adding AI and automation when they solve a real need, with security in mind.',
@@ -104,6 +97,18 @@ const text = {
 };
 
 const t = computed(() => text[language.value]);
+const servicePage = computed(() => storeServiceCopy[language.value]);
+const featuredStore = storeExamples[0];
+const otherStores = storeExamples.slice(1);
+const failedServicePreviews = ref([]);
+function onServicePreviewError(id) {
+  if (!failedServicePreviews.value.includes(id)) failedServicePreviews.value.push(id);
+}
+function scrollToServiceSection(id) {
+  const element = document.getElementById(id);
+  element?.focus({ preventScroll: true });
+  element?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
 const profile = computed(() => professionalProfile[language.value]);
 const routeParts = computed(() => currentRoute.value.split('/').filter(Boolean));
 const selectedProject = computed(() => projects.find((project) => project.slug === routeParts.value[1]));
@@ -214,7 +219,16 @@ onUnmounted(() => {
 <template>
   <div class="app-shell">
     <header class="site-header">
-      <div class="container nav-wrap">
+      <div v-if="currentRoute === 'services'" class="container buyer-header">
+        <a class="brand" href="#home" @click.prevent="navigate('home')">Pedro Méndez Carabán</a>
+        <nav :aria-label="t.services" class="buyer-header-links">
+          <a class="text-link" href="#about" @click.prevent="navigate('about')">{{ servicePage.profile }}</a>
+          <a class="button button-primary" :href="bookingUrl" target="_blank" rel="noopener noreferrer">{{ servicePage.book }} ↗</a>
+          <button class="icon-button" type="button" :title="language === 'es' ? 'Switch to English' : 'Cambiar a español'" @click="toggleLanguage">{{ language === 'es' ? 'EN' : 'ES' }}</button>
+          <button class="icon-button" type="button" :title="darkMode ? 'Light mode' : 'Dark mode'" @click="toggleTheme">{{ darkMode ? '☀' : '☾' }}</button>
+        </nav>
+      </div>
+      <div v-else class="container nav-wrap">
         <a class="brand" href="#home" @click.prevent="navigate('home')">Pedro Méndez Carabán</a>
         <button class="menu-button" type="button" aria-label="Abrir menú de navegación" :aria-expanded="mobileMenuOpen" @click="mobileMenuOpen = !mobileMenuOpen">☰</button>
         <nav :class="{ 'is-open': mobileMenuOpen }" class="site-nav" aria-label="Navegación principal">
@@ -277,81 +291,99 @@ onUnmounted(() => {
         <div class="container"><div class="section-heading section-heading-left"><p class="eyebrow">03 / {{ t.projects }}</p><h1>{{ t.myProjects }}</h1><p>{{ t.projectsIntro }}</p></div><div class="filters"><input v-model="search" type="search" :placeholder="t.search"><select v-model="technology"><option value="">{{ t.allTechnologies }}</option><option v-for="item in technologies" :key="item" :value="item">{{ item }}</option></select><label><input v-model="featuredOnly" type="checkbox"> {{ t.onlyFeatured }}</label><button v-if="search || technology || featuredOnly" class="text-button" type="button" @click="search = ''; technology = ''; featuredOnly = false">{{ t.clear }}</button></div><p class="result-count">{{ filteredProjects.length }} {{ t.results }}</p><div v-if="filteredProjects.some((project) => !project.academic)" class="category-divider"><span>{{ t.professionalProjects }}</span></div><div v-if="filteredProjects.length" class="project-grid"><article v-for="project in filteredProjects.filter((item) => !item.academic)" :key="project.id" class="project-card"><div class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">0{{ project.id }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="t.repository" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div><div v-else class="empty-state"><h2>{{ t.noResults }}</h2><p>{{ t.adjust }}</p></div><div v-if="filteredProjects.some((project) => project.academic)" class="category-divider"><span>{{ t.academicProjects }}</span></div><div class="project-grid"><article v-for="project in filteredProjects.filter((item) => item.academic)" :key="project.id" class="project-card academic-card"><div v-if="project.preview" class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">0{{ project.id }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="t.repository" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div></div>
       </section>
 
-      <section v-else-if="currentRoute === 'services'" class="section page-section services-page">
+      <section v-else-if="currentRoute === 'services'" class="section page-section buyer-page">
         <div class="container">
-          <header class="services-hero">
-            <p class="eyebrow">{{ t.servicesEyebrow }}</p>
-            <h1>{{ t.servicesTitle }}</h1>
-            <p class="services-lead">{{ t.servicesLead }}</p>
-            <p class="services-intro">{{ t.servicesIntro }}</p>
+          <header class="buyer-hero">
+            <p class="eyebrow">{{ servicePage.eyebrow }}</p>
+            <h1>{{ servicePage.title }}</h1>
+            <p class="buyer-lead">{{ servicePage.lead }}</p>
+            <p class="buyer-audience">{{ servicePage.audience }}</p>
             <div class="button-row">
-              <a class="button button-primary" href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ32S-DKDk1irg5ODqUJGUMKz41FLTRoLJh0gwUDu18GhqYozyuLcLxKTE955yYV592Tg0iRFsMQ" target="_blank" rel="noopener noreferrer">{{ t.servicesCta }} ↗</a>
-              <a class="button button-secondary" href="#contact" @click.prevent="navigate('contact')">{{ t.servicesContact }}</a>
+              <button type="button" class="button button-primary" @click="scrollToServiceSection('service-case')">{{ servicePage.seeCase }} ↓</button>
+              <button type="button" class="buyer-inline-link" @click="scrollToServiceSection('service-scope')">{{ servicePage.seeScope }} ↓</button>
             </div>
           </header>
 
-          <section class="service-offerings"  :aria-label="t.services">
-            <article class="service-card"><span class="service-number">01</span><h2>{{ t.serviceSetup }}</h2><p>{{ t.serviceSetupText }}</p></article>
-            <article class="service-card"><span class="service-number">02</span><h2>{{ t.serviceManagement }}</h2><p>{{ t.serviceManagementText }}</p></article>
-            <article class="service-card"><span class="service-number">03</span><h2>{{ t.serviceAutomation }}</h2><p>{{ t.serviceAutomationText }}</p></article>
+          <section id="service-case" class="buyer-case buyer-section" tabindex="-1" aria-labelledby="service-case-title">
+            <div class="buyer-case-top">
+              <header>
+                <p class="eyebrow">{{ servicePage.caseEyebrow }}</p>
+                <h2 id="service-case-title">{{ servicePage.caseTitle }}</h2>
+                <p>{{ servicePage.caseIntro }}</p>
+                <a class="button button-secondary" :href="featuredStore.url" target="_blank" rel="noopener noreferrer">{{ servicePage.visit }} ↗</a>
+                <p class="buyer-small">{{ servicePage.explore }}</p>
+              </header>
+              <a class="buyer-store-preview" :href="featuredStore.url" :aria-label="servicePage.visit" target="_blank" rel="noopener noreferrer">
+                <img v-if="!failedServicePreviews.includes(featuredStore.id)" :src="featuredStore.preview" :alt="servicePage.previewAlt + ' ' + featuredStore.name" width="1100" height="532" loading="lazy" @error="onServicePreviewError(featuredStore.id)">
+                <span v-else class="buyer-preview-fallback">{{ servicePage.previewMissing }}</span>
+                <span class="buyer-domain">{{ featuredStore.domain }} ↗</span>
+              </a>
+            </div>
+            <div class="buyer-work-grid">
+              <article v-for="(group, index) in servicePage.caseGroups" :key="group.title" :class="{ 'buyer-work-featured': index === 2 }">
+                <span class="buyer-number">0{{ index + 1 }}</span>
+                <h3>{{ group.title }}</h3>
+                <ul><li v-for="item in group.items" :key="item">{{ item }}</li></ul>
+              </article>
+            </div>
+            <div class="buyer-flow">
+              <p class="eyebrow">{{ servicePage.flowLabel }}</p>
+              <ol><li v-for="item in servicePage.flow" :key="item">{{ item }}</li></ol>
+            </div>
+            <p class="buyer-small buyer-proof-note">{{ servicePage.publicNote }}</p>
           </section>
 
-          <section class="service-process">
-            <div class="section-heading section-heading-left"><p class="eyebrow">01 / {{ t.serviceProcessTitle }}</p><h2>{{ t.serviceProcessTitle }}</h2><p>{{ t.serviceProcessIntro }}</p></div>
-            <div class="service-steps">
-              <article><span class="service-number">01</span><h3>{{ t.serviceStepOne }}</h3><p>{{ t.serviceStepOneText }}</p></article>
-              <article><span class="service-number">02</span><h3>{{ t.serviceStepTwo }}</h3><p>{{ t.serviceStepTwoText }}</p></article>
-              <article><span class="service-number">03</span><h3>{{ t.serviceStepThree }}</h3><p>{{ t.serviceStepThreeText }}</p></article>
+          <section id="service-scope" class="buyer-section" tabindex="-1" aria-labelledby="service-scope-title">
+            <header class="buyer-section-heading">
+              <p class="eyebrow">{{ servicePage.scopeEyebrow }}</p>
+              <h2 id="service-scope-title">{{ servicePage.scopeTitle }}</h2>
+              <p>{{ servicePage.scopeIntro }}</p>
+            </header>
+            <div class="buyer-scope-grid">
+              <article v-for="item in servicePage.scope" :key="item.title"><h3>{{ item.title }}</h3><p>{{ item.body }}</p></article>
             </div>
           </section>
 
-          <section class="service-guide">
-            <header><p class="eyebrow">GUÍA DE TRABAJO</p><h2>{{ t.serviceGuideTitle }}</h2><p>{{ t.serviceGuideIntro }}</p></header>
-            <ol>
-              <li>{{ t.serviceGuideOne }}</li><li>{{ t.serviceGuideTwo }}</li>
-              <li>{{ t.serviceGuideThree }}</li><li>{{ t.serviceGuideFour }}</li>
+          <details class="buyer-more buyer-section">
+            <summary>{{ servicePage.otherTitle }}</summary>
+            <p>{{ servicePage.otherIntro }}</p>
+            <div class="buyer-other-grid">
+              <a v-for="store in otherStores" :key="store.id" class="buyer-store-card" :href="store.url" target="_blank" rel="noopener noreferrer">
+                <div class="buyer-store-preview">
+                  <img v-if="!failedServicePreviews.includes(store.id)" :src="store.preview" :alt="servicePage.previewAlt + ' ' + store.name" width="1100" height="532" loading="lazy" @error="onServicePreviewError(store.id)">
+                  <span v-else class="buyer-preview-fallback">{{ servicePage.previewMissing }}</span>
+                  <span class="buyer-domain">{{ store.domain }} ↗</span>
+                </div>
+                <div class="buyer-store-caption"><h3>{{ store.name }}</h3><p>{{ store.description[language] }}</p><span class="text-link">{{ servicePage.visitStore }} ↗</span></div>
+              </a>
+            </div>
+          </details>
+
+          <aside class="buyer-person">
+            <img :src="assetBase + 'pedro-portrait.jpg'" alt="Pedro Méndez Carabán" width="88" height="108" loading="lazy">
+            <div><h2>{{ servicePage.personTitle }}</h2><p>{{ servicePage.personText }}</p>
+              <div class="button-row"><a class="text-link" href="#about" @click.prevent="navigate('about')">{{ servicePage.profile }} →</a><a class="text-link" href="https://vendoalgo.com/" target="_blank" rel="noopener noreferrer">{{ servicePage.platform }} ↗</a></div>
+            </div>
+          </aside>
+
+          <section class="buyer-section" aria-labelledby="service-process-title">
+            <header class="buyer-section-heading"><h2 id="service-process-title">{{ servicePage.processTitle }}</h2></header>
+            <ol class="buyer-steps">
+              <li v-for="(step, index) in servicePage.steps" :key="step.title"><span class="buyer-number">0{{ index + 1 }}</span><h3>{{ step.title }}</h3><p>{{ step.body }}</p></li>
             </ol>
           </section>
 
-          <section class="service-scope">
-            <div class="section-heading section-heading-left"><p class="eyebrow">02 / {{ t.services }}</p><h2>{{ t.serviceScopeTitle }}</h2><p>{{ t.serviceScopeIntro }}</p></div>
-            <ul class="service-scope-list">
-              <li>{{ t.serviceScopeOne }}</li><li>{{ t.serviceScopeTwo }}</li><li>{{ t.serviceScopeThree }}</li>
-              <li>{{ t.serviceScopeFour }}</li><li>{{ t.serviceScopeFive }}</li><li>{{ t.serviceScopeSix }}</li>
-            </ul>
+          <section class="buyer-section buyer-questions" aria-labelledby="service-questions-title">
+            <header class="buyer-section-heading"><h2 id="service-questions-title">{{ servicePage.questionsTitle }}</h2></header>
+            <details v-for="question in servicePage.questions" :key="question.q"><summary>{{ question.q }}</summary><p>{{ question.a }}</p></details>
           </section>
 
-          <section class="service-stores">
-            <header class="service-stores-heading"><p class="eyebrow">VENDOALGO · E-COMMERCE</p><h2>{{ t.serviceStoresTitle }}</h2><p>{{ t.serviceStoresIntro }}</p></header>
-            <div class="service-store-grid">
-              <a class="service-store-card" href="https://fumig.ar/" target="_blank" rel="noopener noreferrer">
-                <div class="service-store-image"><img src="https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://fumig.ar/" alt="Vista previa de FumigAR" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">fumig.ar</span></div>
-                <div class="service-store-copy"><p class="eyebrow">{{ t.serviceStoreLabel }}</p><h3>{{ t.storeFumigar }}</h3><p>{{ t.storeFumigarDesc }}</p><span class="text-link">{{ t.serviceStoreVisit }} ↗</span></div>
-              </a>
-              <a class="service-store-card" href="https://cctvstore.vendoalgo.com/" target="_blank" rel="noopener noreferrer">
-                <div class="service-store-image"><img src="https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://cctvstore.vendoalgo.com/" alt="Vista previa de CCTV Store" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">cctvstore.vendoalgo.com</span></div>
-                <div class="service-store-copy"><p class="eyebrow">{{ t.serviceStoreLabel }}</p><h3>{{ t.storeCctv }}</h3><p>{{ t.storeCctvDesc }}</p><span class="text-link">{{ t.serviceStoreVisit }} ↗</span></div>
-              </a>
-              <a class="service-store-card" href="https://redesparabalcon.com.ar/" target="_blank" rel="noopener noreferrer">
-                <div class="service-store-image"><img src="https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://redesparabalcon.com.ar/" alt="Vista previa de Redes para Balcón" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">redesparabalcon.com.ar</span></div>
-                <div class="service-store-copy"><p class="eyebrow">{{ t.serviceStoreLabel }}</p><h3>{{ t.storeRedes }}</h3><p>{{ t.storeRedesDesc }}</p><span class="text-link">{{ t.serviceStoreVisit }} ↗</span></div>
-              </a>
-              <a class="service-store-card" href="https://tiendarg.com.ar/" target="_blank" rel="noopener noreferrer">
-                <div class="service-store-image"><img src="https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://tiendarg.com.ar/" alt="Vista previa de TiendARG" loading="lazy" @error="$event.target.style.display='none'"><span class="service-store-domain">tiendarg.com.ar</span></div>
-                <div class="service-store-copy"><p class="eyebrow">{{ t.serviceStoreLabel }}</p><h3>{{ t.storeTiendarg }}</h3><p>{{ t.storeTiendargDesc }}</p><span class="text-link">{{ t.serviceStoreVisit }} ↗</span></div>
-              </a>
+          <section class="buyer-final">
+            <div><p class="eyebrow">{{ servicePage.finalEyebrow }}</p><h2>{{ servicePage.finalTitle }}</h2><p>{{ servicePage.finalText }}</p></div>
+            <div class="buyer-final-actions">
+              <a class="button button-light" :href="bookingUrl" target="_blank" rel="noopener noreferrer">{{ servicePage.book }} ↗</a>
+              <a class="buyer-inline-link" :href="'mailto:' + contact.email + '?subject=' + encodeURIComponent(servicePage.mailSubject)">{{ servicePage.contact }} →</a>
             </div>
-            <p class="service-stores-note">{{ t.serviceStoresNote }}</p>
-          </section>
-
-          <section class="service-evidence">
-            <article class="service-evidence-card"><p class="eyebrow">VENDOALGO</p><h2>{{ t.serviceExperienceTitle }}</h2><p>{{ t.serviceExperienceText }}</p><div class="button-row"><a class="text-link" href="https://vendoalgo.com/" target="_blank" rel="noopener noreferrer">{{ t.servicePlatformLink }} ↗</a><a class="text-link" href="#project/vendoalgo" @click.prevent="navigate('project/vendoalgo')">{{ t.serviceProjectLink }} →</a></div></article>
-            <article class="service-evidence-card service-demo-card"><p class="eyebrow">DEMO CONCEPTUAL</p><h2>{{ t.serviceDemoTitle }}</h2><p>{{ t.serviceDemoText }}</p><a class="text-link" href="https://pedro-2577.github.io/Kalua/" target="_blank" rel="noopener noreferrer">{{ t.serviceDemoLink }} ↗</a></article>
-          </section>
-
-          <section class="service-final">
-            <div><p class="eyebrow">{{ t.services }}</p><h2>{{ t.serviceFinalTitle }}</h2><p>{{ t.serviceFinalText }}</p></div>
-            <a class="button button-light" href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ32S-DKDk1irg5ODqUJGUMKz41FLTRoLJh0gwUDu18GhqYozyuLcLxKTE955yYV592Tg0iRFsMQ" target="_blank" rel="noopener noreferrer">{{ t.servicesCta }} ↗</a>
           </section>
         </div>
       </section>
@@ -465,6 +497,6 @@ onUnmounted(() => {
       </div>
     </dialog>
 
-    <footer class="site-footer"><div class="container footer-inner"><div><strong>{{ t.footer }}</strong><p>Vue · Vite · GitHub Pages</p></div><div class="footer-links"><a :href="contact.github" target="_blank" rel="noopener noreferrer">GitHub</a><a :href="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a><a :href="`mailto:${contact.email}`">Email</a></div></div></footer>
+    <footer class="site-footer"><div class="container footer-inner"><div><strong>{{ t.footer }}</strong><p v-if="currentRoute !== 'services'">Vue · Vite · GitHub Pages</p></div><div class="footer-links"><a :href="contact.github" target="_blank" rel="noopener noreferrer">GitHub</a><a :href="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a><a :href="`mailto:${contact.email}`">Email</a></div></div></footer>
   </div>
 </template>
