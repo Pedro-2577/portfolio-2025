@@ -14,6 +14,8 @@ const assetBase = import.meta.env.BASE_URL;
 const language = ref(localStorage.getItem('language') || 'es');
 const darkMode = ref(localStorage.getItem('darkMode') === 'true');
 const currentRoute = ref(window.location.hash.slice(1) || 'home');
+const showServicePrices = computed(() => ['precios', '/precios', 'services/precios'].includes(currentRoute.value));
+const isServiceRoute = computed(() => currentRoute.value === 'services' || showServicePrices.value);
 usePortfolioMotion(currentRoute);
 const search = ref('');
 const technology = ref('');
@@ -248,7 +250,7 @@ onUnmounted(() => {
 <template>
   <div class="app-shell">
     <header class="site-header">
-      <div v-if="currentRoute === 'services'" class="container buyer-header">
+      <div v-if="isServiceRoute" class="container buyer-header">
         <div class="buyer-header-identity">
           <a class="brand" href="#home" @click.prevent="navigate('home')">Pedro Méndez Carabán</a>
         </div>
@@ -272,7 +274,7 @@ onUnmounted(() => {
         <nav :class="{ 'is-open': mobileMenuOpen }" class="site-nav" aria-label="Navegación principal">
           <a :class="{ active: currentRoute === 'home' }" href="#home" @click.prevent="navigate('home')">{{ t.home }}</a>
           <a :class="{ active: currentRoute === 'projects' || currentRoute.startsWith('project/') }" href="#projects" @click.prevent="navigate('projects')">{{ t.projects }}</a>
-          <a :class="{ active: currentRoute === 'services' }" href="#services" @click.prevent="navigate('services')">{{ t.services }}</a>
+          <a :class="{ active: isServiceRoute }" href="#services" @click.prevent="navigate('services')">{{ t.services }}</a>
           <a :class="{ active: currentRoute === 'about' }" href="#about" @click.prevent="navigate('about')">{{ t.about }}</a>
           <a :class="{ active: currentRoute === 'contact' }" href="#contact" @click.prevent="navigate('contact')">{{ t.contact }}</a>
         </nav>
@@ -337,14 +339,14 @@ onUnmounted(() => {
         <div class="container"><div class="section-heading section-heading-left" v-reveal><p class="eyebrow">03 / {{ t.projects }}</p><h1>{{ t.myProjects }}</h1><p>{{ t.projectsIntro }}</p></div><div class="filters"><input v-model="search" type="search" :aria-label="t.search" :placeholder="t.search"><select v-model="technology" :aria-label="t.allTechnologies"><option value="">{{ t.allTechnologies }}</option><option v-for="item in technologies" :key="item" :value="item">{{ item }}</option></select><label><input v-model="featuredOnly" type="checkbox"> {{ t.onlyFeatured }}</label><button v-if="search || technology || featuredOnly" class="text-button" type="button" @click="search = ''; technology = ''; featuredOnly = false">{{ t.clear }}</button></div><p class="result-count">{{ filteredProjects.length }} {{ t.results }}</p><h2 v-if="filteredProjects.some((project) => !project.academic)" class="category-divider">{{ t.professionalProjects }}</h2><div v-if="filteredProjects.length" class="project-grid"><article v-for="(project, index) in filteredProjects.filter((item) => !item.academic)" :key="project.id" class="project-card" v-reveal="(index % 3) * 55"><div class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">{{ projectNumber(index) }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div><div v-else class="empty-state"><h2>{{ t.noResults }}</h2><p>{{ t.adjust }}</p></div><h2 v-if="filteredProjects.some((project) => project.academic)" class="category-divider">{{ t.academicProjects }}</h2><div class="project-grid"><article v-for="(project, index) in filteredProjects.filter((item) => item.academic)" :key="project.id" class="project-card academic-card" v-reveal="(index % 3) * 55"><div v-if="project.preview" class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">{{ projectNumber(index) }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div></div>
       </section>
 
-      <section v-else-if="currentRoute === 'services'" class="section page-section buyer-page">
+      <section v-else-if="isServiceRoute" class="section page-section buyer-page">
         <div class="container">
           <header class="buyer-hero">
             <p class="eyebrow">{{ servicePage.eyebrow }}</p>
             <h1>{{ servicePage.title }}</h1>
             <p class="buyer-lead">{{ servicePage.lead }}</p>
             <div class="button-row">
-              <button type="button" class="button button-primary" @click="scrollToSection('service-scope')">{{ language === 'es' ? 'Ver servicios y precios' : 'See services and pricing' }} ↓</button>
+              <button type="button" class="button button-primary" @click="scrollToSection('service-scope')">{{ language === 'es' ? (showServicePrices ? 'Ver servicios y rangos' : 'Ver servicios') : (showServicePrices ? 'See services and price ranges' : 'See services') }} ↓</button>
               <button type="button" class="buyer-inline-link" @click="scrollToSection('service-case')">{{ language === 'es' ? 'Ver un caso real' : 'See a real example' }} ↓</button>
             </div>
           </header>
@@ -377,7 +379,7 @@ onUnmounted(() => {
           </section>
 
           <section id="service-scope" class="buyer-section" tabindex="-1" aria-labelledby="service-scope-title">
-            <ServiceEstimator :language="language" />
+            <ServiceEstimator :language="language" :show-prices="showServicePrices" />
           </section>
 
           <details class="buyer-more buyer-section">
@@ -521,6 +523,6 @@ onUnmounted(() => {
       </div>
     </dialog>
 
-    <footer class="site-footer"><div class="container footer-inner"><div><strong>{{ t.footer }}</strong><p v-if="currentRoute !== 'services'">Vue · Vite · GitHub Pages</p></div><div class="footer-links"><a :href="contact.github" target="_blank" rel="noopener noreferrer">GitHub</a><a :href="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a><a :href="`mailto:${contact.email}`">Email</a></div></div></footer>
+    <footer class="site-footer"><div class="container footer-inner"><div><strong>{{ t.footer }}</strong><p v-if="!isServiceRoute">Vue · Vite · GitHub Pages</p></div><div class="footer-links"><a :href="contact.github" target="_blank" rel="noopener noreferrer">GitHub</a><a :href="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a><a :href="`mailto:${contact.email}`">Email</a></div></div></footer>
   </div>
 </template>
