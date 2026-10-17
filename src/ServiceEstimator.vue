@@ -405,6 +405,15 @@ function toggleBasics(event) {
   const basicIds = options.map(item => item.id);
   selected.value = event.target.checked ? [...new Set([...selected.value.filter(id => !['migration', 'visual-changes'].includes(id)), ...basicIds])] : selected.value.filter(id => !basicIds.includes(id));
 }
+// Bulk selection keeps the launch defaults; migration and visual changes are alternatives.
+const bulkServiceIds = [...options.map(item => item.id), ...pricedExtras.filter(item => !['migration', 'visual-changes'].includes(item.id)).map(item => item.id)];
+const allServicesSelected = computed(() => bulkServiceIds.every(id => selected.value.includes(id)));
+function selectAllServices() { selected.value = [...bulkServiceIds]; }
+function clearServices() {
+  selected.value = [];
+  modules.value = [];
+  platform.value = 'unsure';
+}
 const contextLines = computed(() => {
   const lines = [];
   const add = (labelEs, labelEn, value) => { if (String(value).trim()) lines.push((es.value ? labelEs : labelEn) + ': ' + String(value).trim()); };
@@ -466,6 +475,14 @@ function contact(event) {
       <h2 id="service-scope-title">{{ es ? 'Armá tu propuesta' : 'Build your proposal' }}</h2>
       <p>{{ es ? 'Seleccioná servicios por separado o marcá la puesta en marcha completa. Podés ajustar cada detalle antes de consultarme.' : 'Choose individual services or select the complete launch setup. Adjust the details before getting in touch.' }}</p>
     </header>
+    <div class="estimate-toolbar" aria-label="Selección de servicios">
+      <span class="estimate-toolbar-count" role="status" aria-live="polite">{{ selected.length }} {{ es ? 'servicios seleccionados' : 'services selected' }}</span>
+      <div class="estimate-toolbar-actions">
+        <button type="button" @click="selectAllServices" :disabled="allServicesSelected">{{ es ? 'Seleccionar todo' : 'Select all' }}</button>
+        <button type="button" @click="clearServices" :disabled="!hasSelection && !modules.length && platform === 'unsure'">{{ es ? 'Quitar todo' : 'Clear all' }}</button>
+      </div>
+    </div>
+    <p class="estimate-toolbar-hint">{{ es ? 'Las alternativas que se reemplazan entre sí se eligen por separado.' : 'Mutually exclusive alternatives can be chosen individually.' }}</p>
     <div class="estimate-layout">
       <div class="estimate-choices">
         <div class="estimate-package" :class="{ 'is-selected': checkedBasics.length }">
@@ -550,29 +567,41 @@ function contact(event) {
         <p class="eyebrow">{{ es ? 'TU SELECCIÓN' : 'YOUR SELECTION' }}</p>
         <h3 id="estimate-summary-title">{{ es ? 'Resumen estimado' : 'Estimated summary' }}</h3>
         <p v-if="!hasSelection" class="estimate-note">{{ es ? 'Elegí al menos un servicio para armar tu consulta.' : 'Choose at least one service to build your inquiry.' }}</p>
-        <ul v-else class="estimate-selected-list">
-          <li v-for="item in checkedBasics" :key="item.id"><span>{{ title(item) }}</span><strong>{{ money(item.price) }}</strong></li>
-          <li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}<small class="estimate-summary-mode">{{ modeLabel(item) }}</small></span><strong class="estimate-summary-fee">{{ itemFees(item) }}</strong></li>
-          <li v-if="sharedInitialSaving" class="estimate-saving"><span>{{ es ? 'Preparación compartida · una fuente' : 'Shared setup · one source' }}</span><strong>−{{ money(sharedInitialSaving) }}</strong></li>
-          <li v-if="sharedMonthlySaving" class="estimate-saving"><span>{{ es ? 'Revisión mensual compartida' : 'Shared monthly review' }}</span><strong>−{{ money(sharedMonthlySaving) }}/{{ es ? 'mes' : 'month' }}</strong></li>
-        </ul>
+        <p v-if="hasSelection" class="estimate-selection-count">{{ selected.length }} {{ es ? 'servicios en tu propuesta' : 'services in your proposal' }}</p>
+
         <div class="estimate-totals" role="status" aria-live="polite" aria-atomic="true">
           <div><span>{{ es ? 'Mis servicios · por única vez' : 'My services · one-time' }}</span><strong>{{ onceLabel }}</strong></div>
           <div><span>{{ es ? 'Mis servicios · por mes' : 'My services · per month' }}</span><strong>{{ monthlyLabel }}</strong></div>
           <div class="estimate-platform-total"><span>{{ es ? 'VendoAlgo · por mes, aparte' : 'VendoAlgo · per month, separate' }}</span><strong>{{ platformCost === null ? (es ? 'Plan por definir' : 'Plan to confirm') : money(platformCost) }}</strong></div>
         </div>
+        <details v-if="hasSelection" class="estimate-summary-detail">
+          <summary><span>{{ es ? 'Ver detalle de la selección' : 'View selection details' }}</span><span class="estimate-count">{{ selected.length }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+          <div class="estimate-detail-scroll" role="region" tabindex="0" :aria-label="es ? 'Servicios seleccionados y sus importes' : 'Selected services and fees'">
+        <ul class="estimate-selected-list">
+          <li v-for="item in checkedBasics" :key="item.id"><span>{{ title(item) }}</span><strong>{{ money(item.price) }}</strong></li>
+          <li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}<small class="estimate-summary-mode">{{ modeLabel(item) }}</small></span><strong class="estimate-summary-fee">{{ itemFees(item) }}</strong></li>
+          <li v-if="sharedInitialSaving" class="estimate-saving"><span>{{ es ? 'Preparación compartida · una fuente' : 'Shared setup · one source' }}</span><strong>−{{ money(sharedInitialSaving) }}</strong></li>
+          <li v-if="sharedMonthlySaving" class="estimate-saving"><span>{{ es ? 'Revisión mensual compartida' : 'Shared monthly review' }}</span><strong>−{{ money(sharedMonthlySaving) }}/{{ es ? 'mes' : 'month' }}</strong></li>
+        </ul>
+          </div>
+        </details>
+
+        <p class="estimate-summary-footnote">{{ es ? 'Estimado en ARS · Emito factura · Confirmo el alcance y el precio antes de comenzar.' : 'Estimate in ARS · Invoice provided · Scope and price confirmed before starting.' }}</p>
+        <details class="estimate-summary-detail estimate-conditions">
+          <summary><span>{{ es ? 'Alcance y condiciones del estimado' : 'Estimate scope and terms' }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
         <p v-if="hasSelection && !monthlyAmount && !pendingMonthly" class="estimate-note">{{ es ? 'Los servicios seleccionados no requieren contratarme un abono mensual.' : 'The selected services do not require a monthly service retainer.' }}</p>
         <p v-if="pendingOnce || pendingMonthly" class="estimate-note">{{ es ? 'Hay conceptos pendientes de cotizar. Los importes numéricos solo suman los conceptos con precio definido.' : 'Some services need a quote: the final total is pending. Numeric amounts only include items with a defined price.' }}</p>
         <p v-if="automationCount" class="estimate-note">{{ es ? 'Automatizaciones: estimado para una fuente compartida, hasta 100 productos y una actualización diaria. Más fuentes, mayor volumen, reglas especiales o consumo de servicios externos pueden cambiar el importe.' : 'Automations: estimate for one shared source, up to 100 products and one daily update. Extra sources, higher volumes, special rules or external service usage may change the price.' }}</p>
-        <p class="estimate-invoice">{{ es ? 'Emito factura por mis servicios.' : 'I issue invoices for my services.' }}</p>
-        <p class="estimate-note">{{ es ? 'Valores orientativos en pesos argentinos. Confirmo con vos el alcance y el importe final antes de comenzar.' : 'Indicative amounts in Argentine pesos. I confirm the scope and final price with you before starting.' }}</p>
-        <form @submit.prevent="contact">
-          <label class="estimate-field">{{ es ? 'Tu nombre' : 'Your name' }}<input v-model="inquiry.name" autocomplete="name" required maxlength="100"></label>
-          <label class="estimate-field">{{ es ? 'Negocio o web (opcional)' : 'Business or website (optional)' }}<input v-model="inquiry.business" maxlength="200"></label>
-          <label class="estimate-field">{{ es ? 'Contame qué necesitás (opcional)' : 'Tell me what you need (optional)' }}<textarea v-model="inquiry.message" rows="3" maxlength="1200"></textarea></label>
+
+          <p class="estimate-note">{{ es ? 'VendoAlgo, sus módulos, comisiones de cobro y servicios externos se pagan aparte. El resumen que me envíes incluye el listado completo, aunque lo tengas plegado.' : 'VendoAlgo, its modules, payment fees and external services are separate. Your inquiry includes the full list even when it is collapsed here.' }}</p>
+        </details>
+        <form class="estimate-contact-form" @submit.prevent="contact">
+          <div class="estimate-contact-row"><label class="estimate-field">{{ es ? 'Tu nombre' : 'Your name' }}<input v-model="inquiry.name" autocomplete="name" required maxlength="100"></label>
+          <label class="estimate-field">{{ es ? 'Negocio o web (opcional)' : 'Business or website (optional)' }}<input v-model="inquiry.business" maxlength="200"></label></div>
+          <label class="estimate-field">{{ es ? 'Contame qué necesitás (opcional)' : 'Tell me what you need (optional)' }}<textarea v-model="inquiry.message" rows="2" maxlength="1200"></textarea></label>
           <button class="button button-primary" type="submit" value="whatsapp" :disabled="!hasSelection">{{ es ? 'Consultar por WhatsApp' : 'Ask via WhatsApp' }} ↗</button>
           <button class="button button-secondary" type="submit" value="email" :disabled="!hasSelection">{{ es ? 'Consultar por correo' : 'Ask via email' }} ↗</button>
-          <p class="estimate-note">{{ es ? 'Se abre WhatsApp o tu aplicación de correo con el resumen y tu mensaje. Revisalo y envialo desde ahí; no se envía automáticamente.' : 'WhatsApp or your email app opens with your summary and message. Review and send it there; nothing is sent automatically.' }}</p>
+          <p class="estimate-note">{{ es ? 'Revisá y enviá tu consulta desde WhatsApp o tu correo. No se envía automáticamente.' : 'Review and send your inquiry in WhatsApp or your email app. Nothing is sent automatically.' }}</p>
         </form>
       </aside>
     </div>
@@ -673,4 +702,33 @@ function contact(event) {
 .estimate-selected-list .estimate-summary-fee { flex-shrink: 1; flex-basis: 45%; text-align: right; font-size: .73rem; min-width: 0; }
 .estimate-saving { color: var(--muted); }
 @media (max-width: 500px) { .estimate-category-price { text-align: left; } }
+
+.estimate-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 14px 16px; margin: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--soft); }
+.estimate-toolbar-count { font-size: .85rem; font-weight: 600; }
+.estimate-toolbar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.estimate-toolbar-actions button { min-height: 42px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); font-size: .8rem; font-weight: 600; cursor: pointer; }
+.estimate-toolbar-actions button:first-child { border-color: #819444; }
+.estimate-toolbar-hint { font-size: .75rem; color: var(--muted); margin: 8px 0 20px; line-height: 1.5; }
+.estimate-selection-count { margin: -8px 0 14px; font-size: .8rem; color: var(--muted); }
+.estimate-summary-detail { margin-top: 14px; border-bottom: 1px solid var(--line); }
+.estimate-summary-detail summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; padding: 10px 0; font-size: .8rem; font-weight: 600; }
+.estimate-summary-detail summary::-webkit-details-marker { display: none; }
+.estimate-summary-detail summary svg { margin-left: auto; flex-shrink: 0; transition: transform .2s; }
+.estimate-summary-detail[open] summary svg { transform: rotate(180deg); }
+.estimate-detail-scroll { max-height: 300px; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding-right: 8px; }
+.estimate-detail-scroll .estimate-selected-list { margin-bottom: 8px; }
+.estimate-summary-footnote { margin: 14px 0 8px; font-size: .76rem; line-height: 1.6; color: var(--muted); }
+.estimate-conditions { margin-top: 0; }
+.estimate-conditions summary { font-weight: 500; color: var(--muted); }
+.estimate-contact-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.estimate-contact-form .estimate-field { margin: 12px 0; }
+.estimate-contact-form .estimate-contact-row .estimate-field { margin-bottom: 0; }
+.estimate-contact-form > .estimate-note { margin-bottom: 0; font-size: .74rem; }
+@media (max-width: 380px) {
+  .estimate-contact-row { grid-template-columns: 1fr; gap: 0; }
+  .estimate-toolbar { padding: 12px; }
+  .estimate-toolbar-actions { width: 100%; }
+  .estimate-toolbar-actions button { flex: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .estimate-summary-detail summary svg { transition: none; } }
 </style>
