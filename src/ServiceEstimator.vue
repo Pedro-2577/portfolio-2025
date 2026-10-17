@@ -10,44 +10,44 @@ const platform = ref('unsure');
 const modules = ref([]);
 const inquiry = ref({ name: '', business: '', message: '' });
 const options = [
-  { id: 'design', price: 60000, es: 'Diseño y configuración visual', en: 'Store design and visual setup', descEs: 'Colores, portada, navegación y páginas básicas con tu logo y contenido. Configuración sobre VendoAlgo; un diseño a medida se cotiza aparte.', descEn: 'Colors, homepage, navigation and basic pages using your logo and content. Setup on VendoAlgo; custom development is quoted separately.' },
-  { id: 'catalog', price: 40000, es: 'Carga inicial de hasta 40 productos', en: 'Initial upload of up to 40 products', descEs: 'Con fotos, precios y datos completos y ordenados que me entregues. Catálogos más grandes, variantes complejas o migraciones requieren revisión.', descEn: 'Using complete, organized photos, prices and data you provide. Larger catalogs, complex variants and migrations require review.' },
-  { id: 'payments', price: 15000, es: 'Configuración de cobros', en: 'Payment setup', descEs: 'Medios de cobro habituales disponibles en la plataforma, con tus cuentas y datos. Las comisiones del medio de pago se abonan aparte.', descEn: 'Standard payment methods available on the platform, using your accounts and details. Payment processing fees are separate.' },
-  { id: 'shipping', price: 20000, es: 'Configuración de envíos y retiro', en: 'Shipping and pickup setup', descEs: 'Configuración básica de entrega y retiro según las opciones disponibles y tus tarifas. Reglas especiales se revisan antes de confirmar.', descEn: 'Basic delivery and pickup setup using available options and your rates. Special rules are reviewed before confirmation.' },
-  { id: 'training', price: 15000, es: 'Capacitación inicial · 1 hora', en: 'Initial training · 1 hour', descEs: 'Una sesión para aprender las tareas habituales de tu tienda. Capacitación adicional y preparación de equipos se cotizan aparte.', descEn: 'One session covering everyday store tasks. Additional training and team onboarding are quoted separately.' },
+  { id: 'design', price: 60000, es: 'Diseño de la tienda', en: 'Store design and visual setup', descEs: 'Preparo la portada, los colores y las páginas básicas con tu logo y tus textos. Los diseños especiales se presupuestan aparte.', descEn: 'Colors, homepage, navigation and basic pages using your logo and content. Setup on VendoAlgo; custom development is quoted separately.' },
+  { id: 'catalog', price: 40000, es: 'Cargar hasta 40 productos', en: 'Initial upload of up to 40 products', descEs: 'Con las fotos, los precios y la información ordenada que me entregues. Más productos, muchas opciones como talles o colores, o productos de otra tienda se revisan aparte.', descEn: 'Using complete, organized photos, prices and data you provide. Larger catalogs, complex variants and migrations require review.' },
+  { id: 'payments', price: 15000, es: 'Dejar listos los medios de pago', en: 'Payment setup', descEs: 'Dejo listas las opciones disponibles para que tus clientes puedan pagar. Las comisiones del medio de pago se cobran aparte.', descEn: 'Standard payment methods available on the platform, using your accounts and details. Payment processing fees are separate.' },
+  { id: 'shipping', price: 20000, es: 'Dejar listos los envíos y el retiro', en: 'Shipping and pickup setup', descEs: 'Preparo las opciones básicas de envío y retiro, con tus precios de entrega. Los casos especiales se revisan antes de confirmar.', descEn: 'Basic delivery and pickup setup using available options and your rates. Special rules are reviewed before confirmation.' },
+  { id: 'training', price: 15000, es: 'Aprender a usar la tienda · 1 hora', en: 'Initial training · 1 hour', descEs: 'Una hora para aprender las tareas de todos los días. Podés pedir más clases o ayuda para tus empleados si lo necesitás.', descEn: 'One session covering everyday store tasks. Additional training and team onboarding are quoted separately.' },
 ];
 const serviceGroups = [
   {
     "id": "catalogue",
-    "es": "Catálogo y presentación",
+    "es": "Productos y diseño",
     "en": "Catalog and presentation",
     "introEs": "Para ampliar o reorganizar una tienda que ya existe.",
     "introEn": "Expand or reorganize an existing store."
   },
   {
     "id": "automation",
-    "es": "Tareas automáticas",
+    "es": "Precios y productos al día",
     "en": "Automated tasks",
     "introEs": "Elegí qué querés mantener al día. Si varias tareas comparten proveedor o información, las evalúo juntas para evitar trabajo duplicado.",
     "introEn": "Choose what to keep up to date. Tasks sharing a supplier or information are assessed together to avoid duplicate work."
   },
   {
     "id": "configuration",
-    "es": "Configuraciones adicionales",
+    "es": "Mercado Libre, facturas y envíos",
     "en": "Additional configuration",
     "introEs": "Funciones que podés sumar según cómo trabaja tu negocio.",
     "introEn": "Features to add based on how your business operates."
   },
   {
     "id": "team",
-    "es": "Equipo y capacitación",
+    "es": "Tu equipo de trabajo",
     "en": "Team and training",
     "introEs": "Ayuda para organizar a las personas que trabajan con tu tienda.",
     "introEn": "Help organizing the people who work with your store."
   },
   {
     "id": "support",
-    "es": "Mantenimiento y asistencia",
+    "es": "Ayuda con tu tienda",
     "en": "Maintenance and support",
     "introEs": "Podés pedirme resolver algo puntual o acompañarte cada mes.",
     "introEn": "Ask for a specific fix or ongoing monthly support."
@@ -58,153 +58,153 @@ const extras = [
     "id": "migration",
     "group": "catalogue",
     "mode": "once",
-    "es": "Migrar productos de otra tienda",
+    "es": "Pasar productos de otra tienda",
     "en": "Migrate products from another store",
-    "descEs": "Reviso el catálogo de origen e importo los productos y datos acordados. Es una alternativa a la carga inicial: no cobro dos veces por los mismos productos.",
+    "descEs": "Paso los productos y sus datos desde tu tienda anterior. Esta opción reemplaza la carga inicial de esos mismos productos.",
     "descEn": "I review the source catalog and import the agreed products and data. An alternative to initial upload: the same products are not charged twice."
   },
   {
     "id": "more-products",
     "group": "catalogue",
     "mode": "once",
-    "es": "Cargar productos adicionales",
+    "es": "Agregar más productos",
     "en": "Upload additional products",
-    "descEs": "Para ampliar el catálogo existente o superar los 40 productos de la carga inicial. Indico en la propuesta la cantidad adicional y el trabajo incluido.",
+    "descEs": "Cargo productos nuevos en una tienda que ya existe o sumo más de los 40 incluidos al empezar.",
     "descEn": "Expand an existing catalog or go beyond the initial 40 products. The quote specifies the additional quantity and included work."
   },
   {
     "id": "catalog-order",
     "group": "catalogue",
     "mode": "once",
-    "es": "Organizar categorías, variantes y fichas",
+    "es": "Ordenar los productos",
     "en": "Organize categories, variants and listings",
-    "descEs": "Reordeno el catálogo existente y ajusto la información que me entregues para que sea más fácil encontrar y elegir productos.",
+    "descEs": "Organizo las secciones y la información de tus productos, incluidos talles, colores u otras opciones.",
     "descEn": "Reorganize your existing catalog and adjust the information you supply to make products easier to find and choose."
   },
   {
     "id": "visual-changes",
     "group": "catalogue",
     "mode": "once",
-    "es": "Ajustar el diseño de una tienda existente",
+    "es": "Mejorar el diseño de tu tienda actual",
     "en": "Adjust the design of an existing store",
-    "descEs": "Cambios en estilos, portada, secciones y contenido con el material que me entregues. Para una tienda nueva, elegí el diseño de puesta en marcha.",
+    "descEs": "Ajusto la portada, los colores y las secciones con los textos y las imágenes que me entregues.",
     "descEn": "Adjust styles, homepage, sections and content using your materials. For a new store, choose the launch design service."
   },
   {
     "id": "auto-prices",
     "group": "automation",
     "mode": "both",
-    "es": "Actualizar precios automáticamente",
+    "es": "Actualizar los precios automáticamente",
     "en": "Update prices automatically",
-    "descEs": "Según los costos de tus proveedores y las reglas que acordemos. Puede incluir cálculos por insumos o márgenes según tu negocio.",
+    "descEs": "Los precios se actualizan con los costos de tu proveedor y los cálculos que acordemos.",
     "descEn": "Based on supplier costs and agreed rules, including input cost or margin calculations where needed."
   },
   {
     "id": "auto-stock",
     "group": "automation",
     "mode": "both",
-    "es": "Actualizar stock automáticamente",
+    "es": "Actualizar las cantidades disponibles",
     "en": "Update stock automatically",
-    "descEs": "Mantengo las existencias al día con las fuentes de información y la frecuencia que acordemos.",
+    "descEs": "La cantidad de cada producto se actualiza con la información que acordemos usar.",
     "descEn": "Keep stock up to date using agreed information sources and schedule."
   },
   {
     "id": "auto-new",
     "group": "automation",
     "mode": "both",
-    "es": "Incorporar novedades de proveedores",
+    "es": "Agregar productos nuevos del proveedor",
     "en": "Add new supplier products",
-    "descEs": "Preparo la incorporación de productos nuevos según las categorías, datos y criterios que definas.",
+    "descEs": "Preparo la incorporación de los productos nuevos que quieras vender.",
     "descEn": "Set up new product additions using your categories, information and criteria."
   },
   {
     "id": "auto-discontinued",
     "group": "automation",
     "mode": "both",
-    "es": "Gestionar productos que dejan de ofrecerse",
+    "es": "Actualizar productos que el proveedor deja de vender",
     "en": "Handle discontinued products",
-    "descEs": "Definimos qué hacer cuando un proveedor deja de ofrecer un producto: actualizar su disponibilidad o desactivarlo según tus reglas.",
+    "descEs": "Acordamos si deben dejar de mostrarse o aparecer como no disponibles.",
     "descEn": "Agree how to handle products a supplier stops offering: update availability or deactivate them according to your rules."
   },
   {
     "id": "auto-offers",
     "group": "automation",
     "mode": "both",
-    "es": "Actualizar ofertas automáticamente",
+    "es": "Actualizar las ofertas automáticamente",
     "en": "Update offers automatically",
-    "descEs": "Preparo los cambios de precios promocionales según la información, las condiciones y los horarios que acordemos.",
+    "descEs": "Las ofertas cambian con los precios, las fechas y las condiciones que acordemos.",
     "descEn": "Set up promotional price changes based on agreed information, conditions and schedule."
   },
   {
     "id": "ml",
     "group": "configuration",
     "mode": "once",
-    "es": "Configurar Mercado Libre",
+    "es": "Conectar Mercado Libre con tu tienda",
     "en": "Set up Mercado Libre",
-    "descEs": "Te ayudo a conectar y configurar el módulo que contrates en VendoAlgo. La suscripción del módulo se muestra aparte.",
+    "descEs": "Te ayudo a dejar funcionando la conexión disponible en VendoAlgo. Esa función tiene un costo mensual aparte.",
     "descEn": "Help connect and configure the VendoAlgo module you subscribe to. The module subscription is shown separately."
   },
   {
     "id": "arca",
     "group": "configuration",
     "mode": "once",
-    "es": "Configurar facturación automática ARCA",
+    "es": "Preparar las facturas automáticas (ARCA)",
     "en": "Set up automatic ARCA invoicing",
-    "descEs": "Preparo la configuración del módulo con los datos y accesos que correspondan. Su suscripción mensual se muestra aparte.",
+    "descEs": "Dejo lista la opción para que la tienda emita las facturas automáticamente. Esa función tiene un costo mensual aparte.",
     "descEn": "Configure the module using the required details and access. Its monthly subscription is shown separately."
   },
   {
     "id": "shipping-rules",
     "group": "configuration",
     "mode": "once",
-    "es": "Preparar reglas especiales de entrega",
+    "es": "Preparar entregas con condiciones especiales",
     "en": "Set up special delivery rules",
-    "descEs": "Reviso zonas, tarifas y condiciones adicionales que no entren en la configuración básica de envíos.",
+    "descEs": "Organizo zonas, precios y condiciones de entrega que no entren en la preparación básica.",
     "descEn": "Review extra delivery zones, rates and conditions outside basic shipping setup."
   },
   {
     "id": "team-training",
     "group": "team",
     "mode": "once",
-    "es": "Capacitar al equipo según cada puesto",
+    "es": "Enseñar a tu equipo a usar la tienda",
     "en": "Train staff for their roles",
-    "descEs": "Enseño las tareas que necesita cada persona: catálogo, pedidos, ventas u operación. Definimos participantes y sesiones.",
+    "descEs": "Cada persona aprende las tareas que necesita hacer: cargar productos, atender ventas o preparar pedidos.",
     "descEn": "Teach the tasks each person needs: catalog, orders, sales or operations. Participants and sessions are agreed."
   },
   {
     "id": "roles",
     "group": "team",
     "mode": "once",
-    "es": "Asignar roles y permisos",
+    "es": "Elegir qué puede hacer cada empleado",
     "en": "Set staff roles and permissions",
-    "descEs": "Configuro qué puede ver y hacer cada empleado en la tienda. Esta función requiere el plan Pro de VendoAlgo.",
+    "descEs": "Dejo definido qué puede ver y cambiar cada persona. Esta opción necesita el plan Pro de VendoAlgo.",
     "descEn": "Configure what each employee can see and do in the store. Requires the VendoAlgo Pro plan."
   },
   {
     "id": "hiring",
     "group": "team",
     "mode": "once",
-    "es": "Ayudarte a conseguir e incorporar personal",
+    "es": "Ayudarte a buscar personal",
     "en": "Help find and onboard staff",
-    "descEs": "Diseñador, operario, vendedor o community manager. Acordamos la búsqueda y su incorporación; los honorarios o sueldos de esa persona son aparte.",
+    "descEs": "Te ayudo a buscar y preparar a la persona que necesitás. Su sueldo u honorarios se pagan aparte.",
     "descEn": "Designer, operator, salesperson or community manager. Agree on the search and onboarding; that person's fees or salary are separate."
   },
   {
     "id": "maintenance",
     "group": "support",
     "mode": "monthly",
-    "es": "Mantenimiento y asistencia mensual",
+    "es": "Ayuda y mantenimiento cada mes",
     "en": "Monthly maintenance and support",
-    "descEs": "Cambios y atención de problemas dentro del alcance que acordemos. Doy seguimiento a las incidencias que necesiten intervención del equipo de VendoAlgo.",
+    "descEs": "Me ocupo de los cambios y problemas que acordemos. Si algo depende de VendoAlgo, sigo el pedido de solución.",
     "descEn": "Changes and issue handling within the agreed scope. I follow up on incidents requiring the VendoAlgo team's involvement."
   },
   {
     "id": "technical-help",
     "group": "support",
     "mode": "once",
-    "es": "Resolver un problema puntual",
+    "es": "Ayuda con un problema de la tienda",
     "en": "Resolve a specific issue",
-    "descEs": "Reviso qué está pasando y te propongo cómo abordarlo. Si depende de la plataforma, elevo el reclamo y le doy seguimiento.",
+    "descEs": "Reviso qué está pasando y qué se puede hacer. Si hace falta más trabajo, te aviso antes de continuar.",
     "descEn": "Review the issue and propose an approach. If it depends on the platform, I escalate it and follow up."
   }
 ];
@@ -213,7 +213,7 @@ const staffRoles = [
   { id: 'designer', es: 'Diseñador', en: 'Designer' },
   { id: 'operator', es: 'Operario', en: 'Operator' },
   { id: 'sales', es: 'Vendedor', en: 'Salesperson' },
-  { id: 'cm', es: 'Community manager', en: 'Community manager' },
+  { id: 'cm', es: 'Persona para manejar tus redes sociales', en: 'Community manager' },
 ];
 // Proposed service estimates, 2026-10-17. These are Pedro's scoped rates,
 // informed by published comparable services, not competitor quotes for each item.
@@ -224,103 +224,103 @@ const extraRates = {
   "migration": {
     "initial": 60000,
     "monthly": 0,
-    "scopeEs": "Base: hasta 100 productos desde un archivo exportado y ordenado de una tienda.",
+    "scopeEs": "Hasta 100 productos desde un archivo ordenado de tu tienda anterior.",
     "scopeEn": "Base: up to 100 products from an organized store export."
   },
   "more-products": {
     "initial": 15000,
     "monthly": 0,
-    "scopeEs": "Base: una tanda de hasta 10 productos adicionales con material completo.",
+    "scopeEs": "Una tanda de hasta 10 productos con fotos y datos completos.",
     "scopeEn": "Base: one batch of up to 10 extra products with complete materials."
   },
   "catalog-order": {
     "initial": 20000,
     "monthly": 0,
-    "scopeEs": "Base: revisión de hasta 50 productos y 10 categorías.",
+    "scopeEs": "Hasta 50 productos y 10 secciones del catálogo.",
     "scopeEn": "Base: review of up to 50 products and 10 categories."
   },
   "visual-changes": {
     "initial": 35000,
     "monthly": 0,
-    "scopeEs": "Base: ajustes en hasta 2 secciones con tu material.",
+    "scopeEs": "Cambios en hasta 2 secciones, con tus textos e imágenes.",
     "scopeEn": "Base: adjustments to up to 2 sections using your materials."
   },
   "auto-prices": {
     "initial": 120000,
     "monthly": 25000,
-    "scopeEs": "Base: un proveedor o fuente, hasta 100 productos, una actualización diaria y reglas simples. El abono cubre revisión mensual y hasta una hora de ajustes menores de esta tarea. Si combinás tareas sobre la misma fuente, la preparación y revisión comunes se cuentan una sola vez.",
+    "scopeEs": "Un proveedor, hasta 100 productos y una actualización al día con cálculos sencillos. Incluye una revisión al mes y hasta una hora para pequeños ajustes de esta tarea. Si varias tareas usan el mismo proveedor, descuento la preparación y revisión que comparten.",
     "scopeEn": "Base: one supplier or source, up to 100 products, one daily update and simple rules. The monthly fee covers a monthly review and up to one hour of minor task adjustments. Shared setup and review for tasks using the same source are counted once."
   },
   "auto-stock": {
     "initial": 110000,
     "monthly": 20000,
-    "scopeEs": "Base: un proveedor o fuente, hasta 100 productos, una actualización diaria y reglas simples. El abono cubre revisión mensual y hasta una hora de ajustes menores de esta tarea. Si combinás tareas sobre la misma fuente, la preparación y revisión comunes se cuentan una sola vez.",
+    "scopeEs": "Un proveedor, hasta 100 productos y una actualización al día con cálculos sencillos. Incluye una revisión al mes y hasta una hora para pequeños ajustes de esta tarea. Si varias tareas usan el mismo proveedor, descuento la preparación y revisión que comparten.",
     "scopeEn": "Base: one supplier or source, up to 100 products, one daily update and simple rules. The monthly fee covers a monthly review and up to one hour of minor task adjustments. Shared setup and review for tasks using the same source are counted once."
   },
   "auto-new": {
     "initial": 130000,
     "monthly": 25000,
-    "scopeEs": "Base: un proveedor o fuente, hasta 100 productos, una actualización diaria y reglas simples. El abono cubre revisión mensual y hasta una hora de ajustes menores de esta tarea. Si combinás tareas sobre la misma fuente, la preparación y revisión comunes se cuentan una sola vez.",
+    "scopeEs": "Un proveedor, hasta 100 productos y una actualización al día con cálculos sencillos. Incluye una revisión al mes y hasta una hora para pequeños ajustes de esta tarea. Si varias tareas usan el mismo proveedor, descuento la preparación y revisión que comparten.",
     "scopeEn": "Base: one supplier or source, up to 100 products, one daily update and simple rules. The monthly fee covers a monthly review and up to one hour of minor task adjustments. Shared setup and review for tasks using the same source are counted once."
   },
   "auto-discontinued": {
     "initial": 100000,
     "monthly": 18000,
-    "scopeEs": "Base: un proveedor o fuente, hasta 100 productos, una actualización diaria y reglas simples. El abono cubre revisión mensual y hasta una hora de ajustes menores de esta tarea. Si combinás tareas sobre la misma fuente, la preparación y revisión comunes se cuentan una sola vez.",
+    "scopeEs": "Un proveedor, hasta 100 productos y una actualización al día con cálculos sencillos. Incluye una revisión al mes y hasta una hora para pequeños ajustes de esta tarea. Si varias tareas usan el mismo proveedor, descuento la preparación y revisión que comparten.",
     "scopeEn": "Base: one supplier or source, up to 100 products, one daily update and simple rules. The monthly fee covers a monthly review and up to one hour of minor task adjustments. Shared setup and review for tasks using the same source are counted once."
   },
   "auto-offers": {
     "initial": 100000,
     "monthly": 18000,
-    "scopeEs": "Base: un proveedor o fuente, hasta 100 productos, una actualización diaria y reglas simples. El abono cubre revisión mensual y hasta una hora de ajustes menores de esta tarea. Si combinás tareas sobre la misma fuente, la preparación y revisión comunes se cuentan una sola vez.",
+    "scopeEs": "Un proveedor, hasta 100 productos y una actualización al día con cálculos sencillos. Incluye una revisión al mes y hasta una hora para pequeños ajustes de esta tarea. Si varias tareas usan el mismo proveedor, descuento la preparación y revisión que comparten.",
     "scopeEn": "Base: one supplier or source, up to 100 products, one daily update and simple rules. The monthly fee covers a monthly review and up to one hour of minor task adjustments. Shared setup and review for tasks using the same source are counted once."
   },
   "ml": {
     "initial": 30000,
     "monthly": 0,
-    "scopeEs": "Base: una cuenta y vinculación inicial de hasta 50 productos.",
+    "scopeEs": "Una cuenta de Mercado Libre y conexión inicial de hasta 50 productos.",
     "scopeEn": "Base: one account and initial linking of up to 50 products."
   },
   "arca": {
     "initial": 20000,
     "monthly": 0,
-    "scopeEs": "Base: configuración técnica para un CUIT con datos y autorizaciones disponibles.",
+    "scopeEs": "Preparación para un CUIT, con los datos y las autorizaciones necesarias.",
     "scopeEn": "Base: technical setup for one tax ID with the required details and authorization."
   },
   "shipping-rules": {
     "initial": 25000,
     "monthly": 0,
-    "scopeEs": "Base: hasta 5 zonas con una tarifa definida por zona.",
+    "scopeEs": "Hasta 5 zonas, con un precio de entrega definido para cada una.",
     "scopeEn": "Base: up to 5 zones with one defined rate per zone."
   },
   "team-training": {
     "initial": 30000,
     "monthly": 0,
-    "scopeEs": "Base: 2 horas de capacitación para hasta 5 personas.",
+    "scopeEs": "2 horas de clase para un grupo de hasta 5 personas.",
     "scopeEn": "Base: 2 hours of training for up to 5 people."
   },
   "roles": {
     "initial": 15000,
     "monthly": 0,
-    "scopeEs": "Base: hasta 5 empleados y 3 perfiles de permisos.",
+    "scopeEs": "Hasta 5 empleados y 3 grupos con distintas tareas permitidas.",
     "scopeEn": "Base: up to 5 employees and 3 permission profiles."
   },
   "hiring": {
     "initial": 90000,
     "monthly": 0,
-    "scopeEs": "Base: un perfil, revisión de hasta 10 postulaciones, coordinación de hasta 2 entrevistas y una hora de incorporación. Publicaciones pagas, sueldos y honorarios del personal aparte.",
+    "scopeEs": "Ayuda para un puesto: revisar hasta 10 postulaciones, coordinar hasta 2 entrevistas y una hora para preparar a la persona elegida. Avisos pagos y sueldo se pagan aparte.",
     "scopeEn": "Base: one role, review of up to 10 applications, coordination of up to 2 interviews and one onboarding hour. Paid job ads and staff fees or salaries are separate."
   },
   "maintenance": {
     "initial": 0,
     "monthly": 45000,
-    "scopeEs": "Base: hasta 2 horas al mes para consultas y cambios en la tienda. El mantenimiento de automatizaciones se detalla en sus propios servicios.",
+    "scopeEs": "Hasta 2 horas al mes para consultas y cambios en la tienda. El cuidado de las tareas automáticas tiene su propio precio.",
     "scopeEn": "Base: up to 2 hours per month for store questions and changes. Automation maintenance is listed with those services."
   },
   "technical-help": {
     "initial": 15000,
     "monthly": 0,
-    "scopeEs": "Base: una hora de revisión y asistencia. Si hace falta más trabajo, te paso el alcance antes de continuar.",
+    "scopeEs": "Una hora de revisión y ayuda. Si se necesita más tiempo, te lo presupuesto antes de seguir.",
     "scopeEn": "Base: one hour of review and assistance. Additional work is scoped before continuing."
   }
 };
@@ -338,7 +338,7 @@ function toggleGroup(group, checked) {
 const groupCaption = group => {
   const count = groupOptions(group).length;
   return count + (es.value ? ' servicios' : ' services');
-};const modeLabel = item => item.mode === 'both' ? (es.value ? 'Implementación + mantenimiento mensual' : 'Setup + monthly maintenance') : item.mode === 'monthly' ? (es.value ? 'Servicio mensual' : 'Monthly service') : (es.value ? 'Trabajo por única vez' : 'One-time service');
+};const modeLabel = item => item.mode === 'both' ? (es.value ? 'Preparación inicial + cuidado mensual' : 'Setup + monthly maintenance') : item.mode === 'monthly' ? (es.value ? 'Servicio mensual' : 'Monthly service') : (es.value ? 'Se paga una sola vez' : 'One-time service');
 function toggleExtra(item, checked) {
   selected.value = checked ? [...new Set([...selected.value, item.id])] : selected.value.filter(id => id !== item.id);
   // Migration replaces the basic product upload; a visual adjustment replaces a new-store design.
@@ -390,6 +390,7 @@ const itemFees = item => {
   return parts.join(' · ') || quote.value;
 };
 const itemScope = item => es.value ? item.scopeEs : item.scopeEn;
+const platformFeatureName = item => !es.value ? item.name : ({ blog: 'Publicar artículos y noticias', coupons: 'Cupones de descuento', recovery: 'Recordar compras que quedaron sin terminar', shopping: 'Mostrar productos en Google', mercadolibre: 'Conectar Mercado Libre', ai: 'Herramientas extra de inteligencia artificial', invoicing: 'Emitir facturas automáticamente' })[item.id] || item.name;
 const groupEstimate = group => {
   const items = groupSelected(group).length ? groupSelected(group) : groupOptions(group);
   const commonCount = group === 'automation' ? Math.max(0, items.length - 1) : 0;
@@ -437,7 +438,7 @@ const message = computed(() => {
     ...checkedBasics.value.map(item => '- ' + title(item) + ': ' + money(item.price) + (es.value ? ' por única vez' : ' one-time')),
     ...checkedExtras.value.map(item => '- ' + title(item) + ': ' + itemFees(item)),
     ...(sharedInitialSaving.value ? [(es.value ? 'Preparación compartida (una fuente): -' : 'Shared setup (one source): -') + money(sharedInitialSaving.value)] : []),
-    ...(sharedMonthlySaving.value ? [(es.value ? 'Revisión mensual compartida: -' : 'Shared monthly review: -') + money(sharedMonthlySaving.value) + (es.value ? '/mes' : '/month')] : []),
+    ...(sharedMonthlySaving.value ? [(es.value ? 'Descuento en el cuidado mensual: -' : 'Shared monthly review: -') + money(sharedMonthlySaving.value) + (es.value ? '/mes' : '/month')] : []),
     ...contextLines.value,
     '',
     (es.value ? 'Honorarios por única vez: ' : 'One-time service fees: ') + onceLabel.value,
@@ -469,8 +470,8 @@ function contact(event) {
   <div class="service-estimator">
     <header class="buyer-section-heading">
       <p class="eyebrow">{{ es ? 'ELEGÍ LO QUE NECESITÁS' : 'CHOOSE WHAT YOU NEED' }}</p>
-      <h2 id="service-scope-title">{{ es ? 'Servicios y precios' : 'Services and pricing' }}</h2>
-      <p>{{ es ? 'Elegí qué querés delegar y mirá el estimado.' : 'Choose what to delegate and see your estimate.' }}</p>
+      <h2 id="service-scope-title">{{ es ? '¿En qué te puedo ayudar?' : 'How can I help?' }}</h2>
+      <p>{{ es ? 'Marcá lo que te interesa. Abrí la flecha para ver cada servicio y su precio.' : 'Choose what to delegate and see your estimate.' }}</p>
     </header>
     <div class="estimate-toolbar" aria-label="Selección de servicios">
       <span class="estimate-toolbar-count" role="status" aria-live="polite">{{ selected.length }} {{ es ? 'servicios seleccionados' : 'services selected' }}</span>
@@ -485,7 +486,7 @@ function contact(event) {
           <div class="estimate-package-heading">
             <label class="estimate-package-select">
               <input type="checkbox" :checked="allBasics" :indeterminate.prop="partialBasics" @change="toggleBasics">
-              <span><strong>{{ es ? 'Puesta en marcha' : 'Store launch setup' }}</strong><span class="estimate-caption">{{ es ? '5 servicios · pago por única vez' : '5 services · one-time payment' }}</span></span>
+              <span><strong>{{ es ? 'Crear mi tienda' : 'Store launch setup' }}</strong><span class="estimate-caption">{{ es ? '5 servicios · se paga una sola vez' : '5 services · one-time payment' }}</span></span>
             </label>
             <strong class="estimate-package-price">{{ money(partialBasics ? basicAmount : 150000) }}</strong>
             <button type="button" class="estimate-expand" :aria-expanded="expanded" aria-controls="launch-service-options" :aria-label="es ? 'Ver o editar los servicios de puesta en marcha' : 'View or edit launch services'" @click="expanded = !expanded"><svg :class="{ 'is-open': expanded }" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
@@ -522,7 +523,7 @@ function contact(event) {
             </details>
           </div>
           <details v-if="groupSelected(group.id).length" class="estimate-context estimate-context-disclosure">
-            <summary>{{ es ? 'Agregar contexto (opcional)' : 'Add context (optional)' }}</summary>
+            <summary>{{ es ? 'Contarme un poco más (opcional)' : 'Add context (optional)' }}</summary>
             <template v-if="group.id === 'catalogue'">
               <label v-if="['migration', 'more-products', 'catalog-order'].some(id => selected.includes(id))" class="estimate-field">{{ es ? 'Cantidad aproximada de productos' : 'Approximate product count' }}<input v-model="details.productCount" inputmode="numeric" maxlength="40" :placeholder="es ? 'Ej.: 150 productos' : 'E.g. 150 products'"></label>
               <label v-if="selected.includes('migration')" class="estimate-field">{{ es ? 'Web o catálogo de origen' : 'Source website or catalog' }}<input v-model="details.source" maxlength="300" :placeholder="es ? 'Link o nombre de la tienda anterior' : 'Previous store name or link'"></label>
@@ -530,8 +531,8 @@ function contact(event) {
             </template>
             <label v-if="group.id === 'configuration'" class="estimate-field">{{ es ? '¿Qué necesitás configurar?' : 'What needs configuring?' }}<textarea v-model="details.configurationNotes" rows="2" maxlength="400" :placeholder="es ? 'Contame si ya tenés el módulo o qué reglas de entrega necesitás' : 'Tell me if you already have the module or which delivery rules you need'"></textarea></label>
             <template v-if="group.id === 'automation'">
-              <label class="estimate-field">{{ es ? 'Proveedores o fuentes de información' : 'Suppliers or information sources' }}<input v-model="details.suppliers" maxlength="300" :placeholder="es ? 'Ej.: dos proveedores, sus webs o listas de precios' : 'E.g. two suppliers, their websites or price lists'"></label>
-              <label class="estimate-field">{{ es ? '¿Cada cuánto y con qué reglas?' : 'How often, and using which rules?' }}<textarea v-model="details.frequency" rows="2" maxlength="500" :placeholder="es ? 'Ej.: cada mañana, con el margen de cada categoría' : 'E.g. every morning, using each category’s margin'"></textarea></label>
+              <label class="estimate-field">{{ es ? '¿De dónde salen los precios y las cantidades?' : 'Suppliers or information sources' }}<input v-model="details.suppliers" maxlength="300" :placeholder="es ? 'Ej.: dos proveedores, sus webs o listas de precios' : 'E.g. two suppliers, their websites or price lists'"></label>
+              <label class="estimate-field">{{ es ? '¿Cada cuánto querés actualizar? ¿Cómo calculás tus precios?' : 'How often, and using which rules?' }}<textarea v-model="details.frequency" rows="2" maxlength="500" :placeholder="es ? 'Ej.: cada mañana, con el margen de cada categoría' : 'E.g. every morning, using each category’s margin'"></textarea></label>
             </template>
             <template v-if="group.id === 'team'">
               <label v-if="selected.includes('team-training') || selected.includes('roles')" class="estimate-field">{{ es ? '¿Cuántas personas y qué tareas hacen?' : 'How many people, and what do they do?' }}<input v-model="details.teamSize" maxlength="200" :placeholder="es ? 'Ej.: tres personas que cargan productos y preparan pedidos' : 'E.g. three people handling products and orders'"></label>
@@ -544,55 +545,57 @@ function contact(event) {
         </div>
 
         <details class="estimate-details">
-          <summary>{{ es ? 'VendoAlgo: plan y funciones adicionales' : 'VendoAlgo: plan and extra features' }}</summary>
-          <p class="estimate-note">{{ es ? 'Se paga a VendoAlgo, separado de mis servicios. Si todavía no sabés qué necesitás, lo definimos al conversar.' : 'Paid to VendoAlgo separately from my services. If you are unsure what you need, I can help you choose.' }}</p>
-          <label class="estimate-field">{{ es ? 'Plan de la plataforma' : 'Platform plan' }}
+          <summary>{{ es ? 'Cuánto cuesta usar VendoAlgo' : 'VendoAlgo: plan and extra features' }}</summary>
+          <p class="estimate-note">{{ es ? 'VendoAlgo es donde funciona tu tienda. Su precio se paga aparte de mi trabajo. Si no sabés qué opción elegir, dejalo sin definir y te ayudo.' : 'Paid to VendoAlgo separately from my services. If you are unsure what you need, I can help you choose.' }}</p>
+          <label class="estimate-field">{{ es ? 'Opción de VendoAlgo' : 'Platform plan' }}
             <select :value="effectivePlatform" :disabled="proRequired" @change="platform = $event.target.value">
               <option value="unsure">{{ es ? 'No lo sé todavía' : 'Not sure yet' }}</option>
               <option value="free">{{ es ? 'Gratis · hasta 50 productos activos' : 'Free · up to 50 active products' }}</option>
               <option value="pro">Pro · {{ money(storePlatformPricing.plans.pro.monthly) }}/{{ es ? 'mes' : 'month' }}</option>
             </select>
           </label>
-          <p v-if="proRequired" class="estimate-note">{{ es ? 'Las funciones seleccionadas requieren Pro. Mercado Libre y facturación también incluyen su módulo mensual en el resumen. Si ya los pagás, no son una suscripción adicional.' : 'The selected features require Pro. Mercado Libre and invoicing also include their monthly module in the summary. If you already pay for them, this is not an additional subscription.' }}</p>
-          <fieldset class="estimate-modules"><legend>{{ es ? 'Módulos opcionales · requieren Pro' : 'Optional modules · require Pro' }}</legend>
-            <label v-for="item in storePlatformPricing.modules" :key="item.id" class="estimate-module"><input type="checkbox" :checked="selectedModules.some(module => module.id === item.id)" :disabled="requiredModuleIds.includes(item.id)" @change="toggleModule(item.id, $event.target.checked)"><span>{{ item.name }}</span><strong>{{ money(item.monthly) }}/{{ es ? 'mes' : 'month' }}</strong></label>
+          <p v-if="proRequired" class="estimate-note">{{ es ? 'Lo que elegiste necesita el plan Pro. La conexión con Mercado Libre y las facturas tienen un precio mensual extra, que ya aparece en el resumen. Si ya los pagás, no se cobran dos veces.' : 'The selected features require Pro. Mercado Libre and invoicing also include their monthly module in the summary. If you already pay for them, this is not an additional subscription.' }}</p>
+          <fieldset class="estimate-modules"><legend>{{ es ? 'Funciones extra · necesitan el plan Pro' : 'Optional modules · require Pro' }}</legend>
+            <label v-for="item in storePlatformPricing.modules" :key="item.id" class="estimate-module"><input type="checkbox" :checked="selectedModules.some(module => module.id === item.id)" :disabled="requiredModuleIds.includes(item.id)" @change="toggleModule(item.id, $event.target.checked)"><span>{{ platformFeatureName(item) }}</span><strong>{{ money(item.monthly) }}/{{ es ? 'mes' : 'month' }}</strong></label>
           </fieldset>
           <p class="estimate-note"><a :href="storePlatformPricing.sourceUrl" target="_blank" rel="noopener noreferrer">{{ es ? 'Consultar precios y condiciones de VendoAlgo' : 'See VendoAlgo pricing and terms' }} ↗</a></p>
-          <p class="estimate-note">{{ es ? 'Las comisiones de cobro, el dominio y otros servicios externos, si corresponden, se abonan aparte.' : 'Payment processing fees, domain registration and other external services, where applicable, are separate.' }}</p>
+          <p class="estimate-note">{{ es ? 'Las comisiones por cobrar una venta, la dirección web propia y otros servicios que contrates se pagan aparte.' : 'Payment processing fees, domain registration and other external services, where applicable, are separate.' }}</p>
         </details>
+        <p class="estimate-help">{{ es ? '¿No sabés qué elegir?' : 'Not sure what to choose?' }} <a :href="'https://wa.me/5491158471048?text=' + encodeURIComponent(es ? 'Hola Pedro, necesito ayuda para saber qué servicios me convienen para mi tienda.' : 'Hi Pedro, I would like help choosing services for my store.')" target="_blank" rel="noopener noreferrer">{{ es ? 'Escribime y te ayudo' : 'Message me for help' }} ↗</a></p>
+
       </div>
 
       <aside class="estimate-summary" aria-labelledby="estimate-summary-title">
         <p class="eyebrow">{{ es ? 'TU SELECCIÓN' : 'YOUR SELECTION' }}</p>
-        <h3 id="estimate-summary-title">{{ es ? 'Resumen estimado' : 'Estimated summary' }}</h3>
-        <p v-if="!hasSelection" class="estimate-note">{{ es ? 'Elegí al menos un servicio para armar tu consulta.' : 'Choose at least one service to build your inquiry.' }}</p>
-        <p v-if="hasSelection" class="estimate-selection-count">{{ selected.length }} {{ es ? 'servicios en tu propuesta' : 'services in your proposal' }}</p>
+        <h3 id="estimate-summary-title">{{ es ? 'Tu precio estimado' : 'Estimated summary' }}</h3>
+        <p v-if="!hasSelection" class="estimate-note">{{ es ? 'Elegí un servicio para ver el precio. Es solo una consulta.' : 'Choose at least one service to build your inquiry.' }}</p>
+        <p v-if="hasSelection" class="estimate-selection-count">{{ selected.length }} {{ es ? 'servicios elegidos' : 'services in your proposal' }}</p>
 
         <div class="estimate-totals" role="status" aria-live="polite" aria-atomic="true">
-          <div><span>{{ es ? 'Mis servicios · por única vez' : 'My services · one-time' }}</span><strong>{{ onceLabel }}</strong></div>
-          <div><span>{{ es ? 'Mis servicios · por mes' : 'My services · per month' }}</span><strong>{{ monthlyLabel }}</strong></div>
-          <div class="estimate-platform-total"><span>{{ es ? 'VendoAlgo · por mes, aparte' : 'VendoAlgo · per month, separate' }}</span><strong>{{ platformCost === null ? (es ? 'Plan por definir' : 'Plan to confirm') : money(platformCost) }}</strong></div>
+          <div><span>{{ es ? 'Mi trabajo · una sola vez' : 'My services · one-time' }}</span><strong>{{ onceLabel }}</strong></div>
+          <div><span>{{ es ? 'Mi trabajo · cada mes' : 'My services · per month' }}</span><strong>{{ monthlyLabel }}</strong></div>
+          <div class="estimate-platform-total"><span>{{ es ? 'VendoAlgo · cada mes, aparte' : 'VendoAlgo · per month, separate' }}</span><strong>{{ platformCost === null ? (es ? 'Te ayudo a elegir' : 'Plan to confirm') : money(platformCost) }}</strong></div>
         </div>
         <details v-if="hasSelection" class="estimate-summary-detail">
-          <summary><span>{{ es ? 'Ver detalle de la selección' : 'View selection details' }}</span><span class="estimate-count">{{ selected.length }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+          <summary><span>{{ es ? 'Ver lo que elegí' : 'View selection details' }}</span><span class="estimate-count">{{ selected.length }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
           <div class="estimate-detail-scroll" role="region" tabindex="0" :aria-label="es ? 'Servicios seleccionados y sus importes' : 'Selected services and fees'">
         <ul class="estimate-selected-list">
           <li v-for="item in checkedBasics" :key="item.id"><span>{{ title(item) }}</span><strong>{{ money(item.price) }}</strong></li>
           <li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}<small class="estimate-summary-mode">{{ modeLabel(item) }}</small></span><strong class="estimate-summary-fee">{{ itemFees(item) }}</strong></li>
-          <li v-if="sharedInitialSaving" class="estimate-saving"><span>{{ es ? 'Preparación compartida · una fuente' : 'Shared setup · one source' }}</span><strong>−{{ money(sharedInitialSaving) }}</strong></li>
-          <li v-if="sharedMonthlySaving" class="estimate-saving"><span>{{ es ? 'Revisión mensual compartida' : 'Shared monthly review' }}</span><strong>−{{ money(sharedMonthlySaving) }}/{{ es ? 'mes' : 'month' }}</strong></li>
+          <li v-if="sharedInitialSaving" class="estimate-saving"><span>{{ es ? 'Descuento por usar el mismo proveedor' : 'Shared setup · one source' }}</span><strong>−{{ money(sharedInitialSaving) }}</strong></li>
+          <li v-if="sharedMonthlySaving" class="estimate-saving"><span>{{ es ? 'Descuento en el cuidado mensual' : 'Shared monthly review' }}</span><strong>−{{ money(sharedMonthlySaving) }}/{{ es ? 'mes' : 'month' }}</strong></li>
         </ul>
           </div>
         </details>
 
-        <p class="estimate-summary-footnote">{{ es ? 'Estimado en ARS · Emito factura · Confirmo el alcance y el precio antes de comenzar.' : 'Estimate in ARS · Invoice provided · Scope and price confirmed before starting.' }}</p>
+        <p class="estimate-summary-footnote">{{ es ? 'Precios en pesos argentinos. Emito factura. Antes de empezar, confirmo qué incluye y cuánto cuesta.' : 'Estimate in ARS · Invoice provided · Scope and price confirmed before starting.' }}</p>
         <details class="estimate-summary-detail estimate-conditions">
-          <summary><span>{{ es ? 'Alcance y condiciones del estimado' : 'Estimate scope and terms' }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
-        <p v-if="hasSelection && !monthlyAmount && !pendingMonthly" class="estimate-note">{{ es ? 'Los servicios seleccionados no requieren contratarme un abono mensual.' : 'The selected services do not require a monthly service retainer.' }}</p>
+          <summary><span>{{ es ? 'Cómo se calcula el precio' : 'Estimate scope and terms' }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+        <p v-if="hasSelection && !monthlyAmount && !pendingMonthly" class="estimate-note">{{ es ? 'Por los servicios que elegiste, no tenés que pagarme todos los meses.' : 'The selected services do not require a monthly service retainer.' }}</p>
         <p v-if="pendingOnce || pendingMonthly" class="estimate-note">{{ es ? 'Hay conceptos pendientes de cotizar. Los importes numéricos solo suman los conceptos con precio definido.' : 'Some services need a quote: the final total is pending. Numeric amounts only include items with a defined price.' }}</p>
-        <p v-if="automationCount" class="estimate-note">{{ es ? 'Automatizaciones: estimado para una fuente compartida, hasta 100 productos y una actualización diaria. Más fuentes, mayor volumen, reglas especiales o consumo de servicios externos pueden cambiar el importe.' : 'Automations: estimate for one shared source, up to 100 products and one daily update. Extra sources, higher volumes, special rules or external service usage may change the price.' }}</p>
+        <p v-if="automationCount" class="estimate-note">{{ es ? 'Las actualizaciones automáticas se calculan para un proveedor, hasta 100 productos y una actualización al día. Si necesitás más, te paso el precio antes de empezar. Otros servicios pagos que hagan falta se suman aparte.' : 'Automations: estimate for one shared source, up to 100 products and one daily update. Extra sources, higher volumes, special rules or external service usage may change the price.' }}</p>
 
-          <p class="estimate-note">{{ es ? 'VendoAlgo, sus módulos, comisiones de cobro y servicios externos se pagan aparte. El resumen que me envíes incluye el listado completo, aunque lo tengas plegado.' : 'VendoAlgo, its modules, payment fees and external services are separate. Your inquiry includes the full list even when it is collapsed here.' }}</p>
+          <p class="estimate-note">{{ es ? 'VendoAlgo y sus funciones extra se pagan aparte de mi trabajo. También se pagan aparte las comisiones por venta y otros servicios que contrates. Tu mensaje incluye todo lo elegido, aunque el detalle esté cerrado.' : 'VendoAlgo, its modules, payment fees and external services are separate. Your inquiry includes the full list even when it is collapsed here.' }}</p>
         </details>
         <form class="estimate-contact-form" @submit.prevent="contact">
           <label class="estimate-field">{{ es ? 'Tu nombre' : 'Your name' }}<input v-model="inquiry.name" autocomplete="name" required maxlength="100"></label>
@@ -761,4 +764,11 @@ function contact(event) {
 .estimate-category-options .estimate-context-disclosure { padding: 12px 0; border-bottom: 0; }
 .estimate-context-disclosure > summary { padding: 4px 0; font-size: .8rem; color: var(--muted); cursor: pointer; }
 @media(max-width: 500px) { .estimate-package-heading { padding: 12px; } }
+
+.estimate-help { font-size: .88rem; line-height: 1.65; color: var(--muted); margin: 20px 0 0; }
+.estimate-help a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.estimate-item-details p { font-size: .88rem; line-height: 1.7; }
+.estimate-category .estimate-package-select strong { font-size: 1rem; line-height: 1.4; }
+.estimate-option-copy strong { font-size: .96rem; }
+.estimate-option-copy > span { font-size: .86rem; line-height: 1.65; }
 </style>
