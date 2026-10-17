@@ -260,6 +260,11 @@ function downloadResume() {
   downloadResumePdf({ language: language.value, profile: profile.value, text: t.value, contact, projects: resumeProjects.value });
 }
 
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  document.querySelector('.brand')?.focus({ preventScroll: true });
+}
+
 function toggleTheme() {
   darkMode.value = !darkMode.value;
 }
@@ -311,6 +316,11 @@ onUnmounted(() => {
 
 <template>
   <div class="app-shell">
+    <div class="cursor-aura" aria-hidden="true">
+      <div class="cursor-aura-glow"></div>
+      <div class="cursor-aura-ring"></div>
+      <div class="cursor-aura-point"></div>
+    </div>
     <header class="site-header">
       <div v-if="isServiceRoute" class="container buyer-header">
         <div class="buyer-header-identity">
@@ -604,6 +614,11 @@ onUnmounted(() => {
         </div>
       </div>
     </dialog>
+
+    <button v-if="!isServiceRoute && !pageError" class="back-to-top" type="button" :aria-label="language === 'es' ? 'Volver arriba' : 'Back to top'" :title="language === 'es' ? 'Volver arriba' : 'Back to top'" @click="scrollToTop">
+      <svg class="back-to-top-progress" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle class="progress-track" cx="24" cy="24" r="20" stroke-width="1.5"/><circle class="progress-value" cx="24" cy="24" r="20" pathLength="100" stroke-width="1.8"/></svg>
+      <svg class="back-to-top-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg>
+    </button>
 
     <footer class="site-footer"><div class="container footer-inner"><div><strong>{{ t.footer }}</strong><p v-if="!isServiceRoute">Vue · Vite · GitHub Pages</p></div><div class="footer-links"><a :href="contact.github" target="_blank" rel="noopener noreferrer">GitHub</a><a :href="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a><a :href="`mailto:${contact.email}`">Email</a></div></div></footer>
   </div>
