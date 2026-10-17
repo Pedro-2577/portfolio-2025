@@ -21,7 +21,7 @@ function custom404Page() {
             const html = index
                 .replace('<html lang="es">', '<html lang="es" data-http-status="404">')
                 .replace('<title>Pedro Méndez Carabán | Portfolio</title>', '<title>404 | Pedro Méndez Carabán</title>')
-                .replace('</head>', '<meta name="robots" content="noindex">' + fallbackStyle + '</head>')
+                .replace('</head>', '<base href="' + base + '"><meta name="robots" content="noindex">' + fallbackStyle + '</head>')
                 .replace('href="./favicon.svg"', 'href="' + base + 'favicon.svg"')
                 .replace('<div id="app"></div>', '<div id="app">' + fallback + '</div>');
             await writeFile(resolve(outputDirectory, '404.html'), html);
