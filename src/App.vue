@@ -194,7 +194,15 @@ function onDemoBackdrop(event) {
 
 
 
+function removePreviewVersion() {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has('v')) return;
+  url.searchParams.delete('v');
+  window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+}
+
 function navigate(route) {
+  removePreviewVersion();
   window.location.hash = route;
   currentRoute.value = route;
   mobileMenuOpen.value = false;
@@ -237,6 +245,7 @@ watch(darkMode, (value) => {
 });
 
 onMounted(() => {
+  removePreviewVersion();
   document.documentElement.lang = language.value;
   document.documentElement.classList.toggle('dark', darkMode.value);
   window.addEventListener('hashchange', onHashChange);
