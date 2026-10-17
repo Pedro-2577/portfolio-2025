@@ -5,6 +5,9 @@ import { storeServiceCopy, storeExamples, bookingUrl } from './storeServices';
 import ServiceEstimator from './ServiceEstimator.vue';
 import PortfolioWorkbench from './PortfolioWorkbench.vue';
 import { vReveal, usePortfolioMotion } from './portfolioMotion';
+import HttpErrorPage from './HttpErrorPage.vue';
+import { resolveRouteStatus } from './httpErrors';
+import { appFailure } from './appFailure';
 import { professionalProfile } from './profile';
 import { downloadResumePdf } from './resumePdf';
 import { technologyStyle } from './technologyColors';
@@ -132,6 +135,38 @@ const selectedProject = computed(() => {
   const project = projects.find((item) => item.slug === routeParts.value[1]);
   return project ? localizedProject(project) : undefined;
 });
+const hostedNotFound = document.documentElement.dataset.httpStatus === '404';
+const pageError = computed(() => {
+  if (appFailure.value) return 500;
+  if (hostedNotFound) return 404;
+  return resolveRouteStatus(currentRoute.value, projects.map((project) => project.slug));
+});
+const errorPreview = computed(() => !hostedNotFound && !appFailure.value && routeParts.value[0] === 'error');
+
+watch([pageError, language], async ([status]) => {
+  document.title = status ? status + ' | Pedro Méndez Carabán' : 'Pedro Méndez Carabán | Portfolio';
+  let robots = document.querySelector('meta[data-portfolio-error]');
+  if (status && !robots) {
+    robots = document.createElement('meta');
+    robots.name = 'robots';
+    robots.content = 'noindex';
+    robots.dataset.portfolioError = '';
+    document.head.append(robots);
+  } else if (!status) robots?.remove();
+  if (status) {
+    if (pendingDemo.value) {
+      closeDemoDialog();
+      onDemoDialogClose();
+    }
+    await nextTick();
+    document.getElementById('http-error-title')?.focus({ preventScroll: true });
+  }
+}, { immediate: true });
+
+function retryPage() {
+  window.location.reload();
+}
+
 const technologies = computed(() => [...new Set(projects.flatMap((project) => project.technologies))].sort());
 const filteredProjects = computed(() => projects.filter((project) => {
   const query = search.value.toLowerCase().trim();
@@ -203,6 +238,11 @@ function removePreviewVersion() {
 
 function navigate(route) {
   removePreviewVersion();
+  if (hostedNotFound) {
+    window.location.assign(assetBase + '#' + route);
+    return;
+  }
+  appFailure.value = false;
   window.location.hash = route;
   currentRoute.value = route;
   mobileMenuOpen.value = false;
@@ -301,6 +341,8 @@ onUnmounted(() => {
     </header>
 
     <main :key="currentRoute" class="route-view">
+      <HttpErrorPage v-if="pageError" :status="pageError" :language="language" :preview="errorPreview" @navigate="navigate" @retry="retryPage" />
+      <template v-else>
       <section v-if="currentRoute === 'home'" class="hero">
         <div class="container hero-content">
         <div class="hero-layout">
@@ -505,6 +547,7 @@ onUnmounted(() => {
       </section>
 
       <section v-else-if="routeParts[0] === 'project' && selectedProject" class="section page-section"><div class="container project-detail"><div class="detail-main"><p class="eyebrow">{{ selectedProject.category }} · {{ selectedProject.startDate }}</p><h1>{{ selectedProject.title }}</h1><p class="lead">{{ selectedProject.shortDescription }}</p><img v-if="!selectedProject.academic || selectedProject.preview" :src="selectedProject.image" :alt="selectedProject.title"><h2>{{ t.projectDescription }}</h2><p>{{ selectedProject.description }}</p><div v-if="selectedProject.role || selectedProject.highlights || selectedProject.outcome" class="case-study"><div v-if="selectedProject.role"><p class="eyebrow">{{ t.roleLabel }}</p><p>{{ language === 'es' ? selectedProject.role : selectedProject.roleEn }}</p></div><div v-if="selectedProject.highlights"><p class="eyebrow">{{ t.highlightsLabel }}</p><ul><li v-for="highlight in (language === 'es' ? selectedProject.highlights : selectedProject.highlightsEn)" :key="highlight">{{ highlight }}</li></ul></div><div v-if="selectedProject.outcome"><p class="eyebrow">{{ t.outcomeLabel }}</p><p>{{ language === 'es' ? selectedProject.outcome : selectedProject.outcomeEn }}</p></div></div></div><aside class="info-panel"><h2>{{ t.projectDetails }}</h2><div class="tag-row large-tags"><span v-for="item in selectedProject.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><a v-if="selectedProject.github && !selectedProject.private" class="button button-secondary full-width" :href="selectedProject.github" target="_blank" rel="noopener noreferrer">{{ t.sourceCode }} ↗</a><a v-if="selectedProject.live" class="button button-primary full-width" :href="selectedProject.live" @click="confirmDemoStart($event, selectedProject)" :target="selectedProject.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ t.liveDemo }} ↗</a><div v-if="selectedProject.demoType === 'development'" class="project-notice"><strong>{{ t.inDevelopment }}</strong>{{ t.developmentNotice }}</div><div v-else-if="selectedProject.currentSite" class="project-notice">{{ t.currentSite }}</div><div v-else-if="selectedProject.demoType === 'private'" class="project-notice">{{ t.privateDemo }}<span>{{ t.privateCode }}</span></div><div v-else-if="selectedProject.demoType === 'php'" class="project-notice project-notice-warning">{{ t.phpWarning }}</div><div v-else-if="!selectedProject.live && selectedProject.demoType === 'node'" class="project-notice project-notice-warning">{{ t.nodeWarning }}</div><div v-else-if="!selectedProject.live" class="project-notice">{{ t.noDemo }}</div><a class="text-link back-link" href="#projects" @click.prevent="navigate('projects')">← {{ t.back }}</a></aside></div></section>
+      </template>
     </main>
 
 
