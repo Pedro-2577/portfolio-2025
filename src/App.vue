@@ -248,7 +248,6 @@ onUnmounted(() => {
       <div v-if="currentRoute === 'services'" class="container buyer-header">
         <div class="buyer-header-identity">
           <a class="brand" href="#home" @click.prevent="navigate('home')">Pedro Méndez Carabán</a>
-          <a class="buyer-header-profile" href="#about" @click.prevent="navigate('about')">{{ servicePage.profile }} →</a>
         </div>
         <nav :aria-label="t.services" class="buyer-header-links">
           <a class="button button-primary" :href="bookingUrl" target="_blank" rel="noopener noreferrer">{{ servicePage.book }} ↗</a>

@@ -323,10 +323,7 @@ details p { color: var(--muted); line-height: 1.6; }
 
 /* Store services: buyer-facing case, scope, and next steps. */
 .buyer-header { min-height: 80px; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 12px 24px; padding-block: 12px; }
-.buyer-header-identity { display: grid; justify-items: start; gap: 4px; min-width: 0; }
 .buyer-header .brand { font-size: .95rem; line-height: 1.3; letter-spacing: -.03em; }
-.buyer-header-profile { color: var(--muted); font-size: .78rem; line-height: 1.4; text-decoration: underline; text-underline-offset: 3px; }
-.buyer-header-profile:hover { color: var(--ink); }
 .buyer-header-links { display: flex; min-width: 0; }
 .buyer-header-links .button { min-height: 46px; font-size: .85rem; text-align: center; border-radius: 8px; }
 .buyer-header-tools { display: flex; align-items: center; gap: 6px; }
