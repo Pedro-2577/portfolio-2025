@@ -8,6 +8,7 @@ function custom404Page() {
     let base;
     return {
         name: 'portfolio-custom-404',
+        apply: 'build',
         configResolved(config) {
             outputDirectory = resolve(config.root, config.build.outDir);
             base = config.base;
