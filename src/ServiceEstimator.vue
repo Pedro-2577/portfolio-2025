@@ -208,7 +208,7 @@ const extras = [
     "descEn": "Review the issue and propose an approach. If it depends on the platform, I escalate it and follow up."
   }
 ];
-const details = ref({ productCount: '', source: '', suppliers: '', frequency: '', teamSize: '', roles: [], issue: '' });
+const details = ref({ productCount: '', source: '', suppliers: '', frequency: '', teamSize: '', roles: [], issue: '', catalogueNotes: '', configurationNotes: '', supportNotes: '' });
 const staffRoles = [
   { id: 'designer', es: 'Diseñador', en: 'Designer' },
   { id: 'operator', es: 'Operario', en: 'Operator' },
@@ -260,7 +260,12 @@ function toggleBasics(event) {
 const contextLines = computed(() => {
   const lines = [];
   const add = (labelEs, labelEn, value) => { if (String(value).trim()) lines.push((es.value ? labelEs : labelEn) + ': ' + String(value).trim()); };
-  if (groupSelected('catalogue').length) add('Cantidad aproximada de productos', 'Approximate product count', details.value.productCount);
+  if (groupSelected('catalogue').length) {
+    if (['migration', 'more-products', 'catalog-order'].some(id => selected.value.includes(id))) add('Cantidad aproximada de productos', 'Approximate product count', details.value.productCount);
+    add('Cambios en catálogo o presentación', 'Catalog or presentation changes', details.value.catalogueNotes);
+  }
+  if (groupSelected('configuration').length) add('Configuración que necesito', 'Configuration needed', details.value.configurationNotes);
+  if (selected.value.includes('maintenance')) add('Tareas o asistencia mensual', 'Monthly tasks or support', details.value.supportNotes);
   if (selected.value.includes('migration')) add('Tienda o catálogo de origen', 'Source store or catalog', details.value.source);
   if (groupSelected('automation').length) {
     add('Proveedores o fuentes a usar', 'Suppliers or information sources', details.value.suppliers);
@@ -346,9 +351,11 @@ function contact(event) {
           <div v-if="groupSelected(group.id).length" class="estimate-context">
             <p class="estimate-context-title">{{ es ? 'Si querés, sumá un poco de contexto' : 'Add some context if you like' }}</p>
             <template v-if="group.id === 'catalogue'">
-              <label class="estimate-field">{{ es ? 'Cantidad aproximada de productos' : 'Approximate product count' }}<input v-model="details.productCount" inputmode="numeric" maxlength="40" :placeholder="es ? 'Ej.: 150 productos' : 'E.g. 150 products'"></label>
+              <label v-if="['migration', 'more-products', 'catalog-order'].some(id => selected.includes(id))" class="estimate-field">{{ es ? 'Cantidad aproximada de productos' : 'Approximate product count' }}<input v-model="details.productCount" inputmode="numeric" maxlength="40" :placeholder="es ? 'Ej.: 150 productos' : 'E.g. 150 products'"></label>
               <label v-if="selected.includes('migration')" class="estimate-field">{{ es ? 'Web o catálogo de origen' : 'Source website or catalog' }}<input v-model="details.source" maxlength="300" :placeholder="es ? 'Link o nombre de la tienda anterior' : 'Previous store name or link'"></label>
+              <label class="estimate-field">{{ es ? '¿Qué querés cambiar o preparar?' : 'What would you like to change or prepare?' }}<textarea v-model="details.catalogueNotes" rows="2" maxlength="400"></textarea></label>
             </template>
+            <label v-if="group.id === 'configuration'" class="estimate-field">{{ es ? '¿Qué necesitás configurar?' : 'What needs configuring?' }}<textarea v-model="details.configurationNotes" rows="2" maxlength="400" :placeholder="es ? 'Contame si ya tenés el módulo o qué reglas de entrega necesitás' : 'Tell me if you already have the module or which delivery rules you need'"></textarea></label>
             <template v-if="group.id === 'automation'">
               <label class="estimate-field">{{ es ? 'Proveedores o fuentes de información' : 'Suppliers or information sources' }}<input v-model="details.suppliers" maxlength="300" :placeholder="es ? 'Ej.: dos proveedores, sus webs o listas de precios' : 'E.g. two suppliers, their websites or price lists'"></label>
               <label class="estimate-field">{{ es ? '¿Cada cuánto y con qué reglas?' : 'How often, and using which rules?' }}<textarea v-model="details.frequency" rows="2" maxlength="500" :placeholder="es ? 'Ej.: cada mañana, con el margen de cada categoría' : 'E.g. every morning, using each category’s margin'"></textarea></label>
@@ -357,6 +364,7 @@ function contact(event) {
               <label v-if="selected.includes('team-training') || selected.includes('roles')" class="estimate-field">{{ es ? '¿Cuántas personas y qué tareas hacen?' : 'How many people, and what do they do?' }}<input v-model="details.teamSize" maxlength="200" :placeholder="es ? 'Ej.: tres personas que cargan productos y preparan pedidos' : 'E.g. three people handling products and orders'"></label>
               <fieldset v-if="selected.includes('hiring')" class="estimate-staff-roles"><legend>{{ es ? '¿Qué perfiles te interesan?' : 'Which roles do you need?' }}</legend><label v-for="role in staffRoles" :key="role.id"><input v-model="details.roles" type="checkbox" :value="role.id"><span>{{ title(role) }}</span></label></fieldset>
             </template>
+            <label v-if="group.id === 'support' && selected.includes('maintenance')" class="estimate-field">{{ es ? '¿Qué tareas querés delegar cada mes?' : 'What tasks would you like to delegate each month?' }}<textarea v-model="details.supportNotes" rows="2" maxlength="400"></textarea></label>
             <label v-if="group.id === 'support' && selected.includes('technical-help')" class="estimate-field">{{ es ? '¿Qué está pasando?' : 'What is happening?' }}<textarea v-model="details.issue" rows="2" maxlength="500"></textarea></label>
             <p class="estimate-note">{{ es ? 'Estos servicios requieren una cotización según el alcance. Si combinás tareas, reviso qué trabajo comparten antes de presupuestarlas.' : 'These services require a scope-based quote. When you combine tasks, I review shared work before quoting.' }}</p>
           </div>
