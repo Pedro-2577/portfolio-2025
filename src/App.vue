@@ -297,13 +297,17 @@ onUnmounted(() => {
         <div class="hero-layout">
           <div class="hero-main">
           <p class="eyebrow">{{ t.role }} <span class="eyebrow-dot"></span> Buenos Aires</p>
-          <h1 class="hero-heading"><span class="hero-greeting">{{ t.greeting }}</span><span class="visually-hidden">Pedro.</span><span class="hero-name" aria-hidden="true"><span v-for="(letter, index) in 'Pedro.'" :key="index" class="hero-letter" :style="{ '--letter-index': index }" aria-hidden="true">{{ letter }}</span></span><em>{{ t.tagline }}</em></h1>
-          <p class="hero-copy">{{ t.hero }}</p>
+          <div class="hero-intro">
+            <h1 class="hero-heading"><span class="hero-greeting">{{ t.greeting }}</span><span class="visually-hidden">Pedro.</span><span class="hero-name" aria-hidden="true"><span v-for="(letter, index) in 'Pedro.'" :key="index" class="hero-letter" :style="{ '--letter-index': index }" aria-hidden="true">{{ letter }}</span></span><em>{{ t.tagline }}</em></h1>
+            <img class="hero-mobile-portrait" :src="assetBase + 'pedro-portrait.jpg'" alt="Pedro Martín Méndez Carabán" width="106" height="120" decoding="async">
+          </div>
+          <p class="hero-copy"><span class="hero-desktop-only">{{ t.hero }}</span><span class="hero-mobile-only">{{ language === 'es' ? 'Desarrollo productos web de punta a punta. En VendoAlgo construí la plataforma desde cero junto al equipo y hoy sigo trabajando en su evolución.' : 'I build web products end to end. At VendoAlgo, I built the platform from scratch with the team and continue to develop it today.' }}</span></p>
           <div class="button-row">
-            <button class="button button-download" type="button" @click="downloadResume">{{ t.resumeDownload }}</button>
+            <button class="button button-download" type="button" :aria-label="t.resumeDownload" @click="downloadResume"><span class="hero-desktop-only">{{ t.resumeDownload }}</span><span class="hero-mobile-only">CV (PDF) <span aria-hidden="true">↓</span></span></button>
             <a class="button button-light" href="#projects" @click.prevent="navigate('projects')">{{ t.viewProjects }}</a>
             <a class="button button-outline" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a>
           </div>
+          <a class="hero-mobile-work" href="#project/vendoalgo" @click.prevent="navigate('project/vendoalgo')"><span>{{ t.proofLabel }}</span><strong>VendoAlgo</strong><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12"/></svg></a>
           </div>
           <aside class="hero-person">
             <figure class="hero-portrait">
