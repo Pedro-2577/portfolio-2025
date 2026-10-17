@@ -204,3 +204,5 @@
   .hero-intro { grid-template-columns: minmax(0, 1fr) 90px; column-gap: 14px; }
   .hero .hero-mobile-portrait { width: 90px; height: 106px; }
 }
+
+.dark .eyebrow { color: var(--accent); }
