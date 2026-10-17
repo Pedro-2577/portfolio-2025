@@ -3,6 +3,8 @@ import { computed, onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
 import { contact, projects } from './data';
 import { storeServiceCopy, storeExamples, bookingUrl } from './storeServices';
 import ServiceEstimator from './ServiceEstimator.vue';
+import PortfolioWorkbench from './PortfolioWorkbench.vue';
+import { vReveal, usePortfolioMotion } from './portfolioMotion';
 import { professionalProfile } from './profile';
 import { downloadResumePdf } from './resumePdf';
 import { technologyStyle } from './technologyColors';
@@ -12,6 +14,7 @@ const assetBase = import.meta.env.BASE_URL;
 const language = ref(localStorage.getItem('language') || 'es');
 const darkMode = ref(localStorage.getItem('darkMode') === 'true');
 const currentRoute = ref(window.location.hash.slice(1) || 'home');
+usePortfolioMotion(currentRoute);
 const search = ref('');
 const technology = ref('');
 const featuredOnly = ref(false);
@@ -105,7 +108,7 @@ const failedServicePreviews = ref([]);
 function onServicePreviewError(id) {
   if (!failedServicePreviews.value.includes(id)) failedServicePreviews.value.push(id);
 }
-function scrollToServiceSection(id) {
+function scrollToSection(id) {
   const element = document.getElementById(id);
   element?.focus({ preventScroll: true });
   element?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
@@ -193,7 +196,7 @@ function navigate(route) {
   window.location.hash = route;
   currentRoute.value = route;
   mobileMenuOpen.value = false;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 }
 
 function toggleLanguage() {
@@ -286,13 +289,13 @@ onUnmounted(() => {
       </div>
     </header>
 
-    <main>
+    <main :key="currentRoute" class="route-view">
       <section v-if="currentRoute === 'home'" class="hero">
         <div class="container hero-content">
         <div class="hero-layout">
           <div class="hero-main">
           <p class="eyebrow">{{ t.role }} <span class="eyebrow-dot"></span> Buenos Aires</p>
-          <h1>{{ t.greeting }} <span>Pedro.</span><br><em>{{ t.tagline }}</em></h1>
+          <h1 class="hero-heading"><span class="hero-greeting">{{ t.greeting }}</span><span class="visually-hidden">Pedro.</span><span class="hero-name" aria-hidden="true"><span v-for="(letter, index) in 'Pedro.'" :key="index" class="hero-letter" :style="{ '--letter-index': index }" aria-hidden="true">{{ letter }}</span></span><em>{{ t.tagline }}</em></h1>
           <p class="hero-copy">{{ t.hero }}</p>
           <div class="button-row">
             <button class="button button-download" type="button" @click="downloadResume">{{ t.resumeDownload }}</button>
@@ -309,27 +312,29 @@ onUnmounted(() => {
           </aside>
         </div>
           <div class="hero-meta"><span>{{ projects.length }} {{ t.projectCount }}</span><span>{{ projects.filter((project) => project.live).length }} {{ t.publicEvidence }}</span><span>{{ t.stackLabel }}: {{ t.stackText }}</span></div>
+          <a class="hero-explore" href="#portfolio-playground" @click.prevent="scrollToSection('portfolio-playground')"><span>{{ language === 'es' ? 'Explorá cómo trabajo' : 'Explore how I work' }}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6"/></svg></a>
         </div>
       </section>
 
       <template v-if="currentRoute === 'home'">
+        <PortfolioWorkbench :language="language" v-reveal />
         <section class="section">
           <div class="container">
-            <div class="section-heading section-heading-left"><p class="eyebrow">01 / {{ t.skills }}</p><h2>{{ t.skills }}</h2><p>{{ t.skillsIntro }}</p></div>
+            <div class="section-heading section-heading-left" v-reveal><p class="eyebrow">01 / {{ t.skills }}</p><h2>{{ t.skills }}</h2><p>{{ t.skillsIntro }}</p></div>
             <div class="skill-grid">
-              <div v-for="area in profile.skills.slice(0, 4)" :key="area.title" class="skill-card"><strong>{{ area.title }}</strong><span>{{ (area.homeItems || area.items.slice(0, 3)).join(' · ') }}</span><small v-if="area.focus">{{ area.focus }}</small></div>
+              <div v-for="(area, index) in profile.skills.slice(0, 4)" :key="area.title" class="skill-card" v-reveal="index * 50"><span class="skill-number" aria-hidden="true">0{{ index + 1 }}</span><strong>{{ area.title }}</strong><span>{{ (area.homeItems || area.items.slice(0, 3)).join(' · ') }}</span><small v-if="area.focus">{{ area.focus }}</small></div>
             </div>
           </div>
         </section>
         <section class="section section-muted">
-          <div class="container"><div class="section-heading section-heading-left"><p class="eyebrow">02 / {{ t.featured }}</p><h2>{{ t.featured }}</h2><p>{{ t.featuredIntro }}</p></div><div class="project-grid"><article v-for="(project, index) in featuredProjects" :key="project.id" class="project-card" :class="{ 'project-card-lead': project.id === 1 }"><div class="project-image"><img :src="project.image" :alt="project.title"><span class="project-number">{{ projectNumber(index) }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div><div class="center"><a class="button button-primary" href="#projects" @click.prevent="navigate('projects')">{{ t.allProjects }}</a></div></div>
+          <div class="container"><div class="section-heading section-heading-left" v-reveal><p class="eyebrow">02 / {{ t.featured }}</p><h2>{{ t.featured }}</h2><p>{{ t.featuredIntro }}</p></div><div class="project-grid"><article v-for="(project, index) in featuredProjects" :key="project.id" class="project-card" v-reveal="(index % 3) * 55" :class="{ 'project-card-lead': project.id === 1 }"><div class="project-image"><img :src="project.image" :alt="project.title"><span class="project-number">{{ projectNumber(index) }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div><div class="center"><a class="button button-primary" href="#projects" @click.prevent="navigate('projects')">{{ t.allProjects }}</a></div></div>
         </section>
-        <section class="section academic-preview"><div class="container"><h2 class="category-divider">{{ t.academicProjects }}</h2><div class="project-grid"><article v-for="(project, index) in academicProjects.slice(0, 3)" :key="project.id" class="project-card academic-card"><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="card-actions"><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }} →</a></div></div></article></div></div></section>
-        <section class="availability"><div class="container availability-inner"><div><p class="eyebrow">{{ t.availability }}</p><h2>{{ t.availability }}</h2><p>{{ t.availabilityText }}</p></div><a class="button button-light" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a></div></section>
+        <section class="section academic-preview"><div class="container"><h2 class="category-divider">{{ t.academicProjects }}</h2><div class="project-grid"><article v-for="(project, index) in academicProjects.slice(0, 3)" :key="project.id" class="project-card academic-card" v-reveal="(index % 3) * 55"><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="card-actions"><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }} →</a></div></div></article></div></div></section>
+        <section class="availability"><div class="container availability-inner" v-reveal><div><p class="eyebrow">{{ t.availability }}</p><h2>{{ t.availability }}</h2><p>{{ t.availabilityText }}</p></div><a class="button button-light" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a></div></section>
       </template>
 
       <section v-else-if="currentRoute === 'projects'" class="section page-section">
-        <div class="container"><div class="section-heading section-heading-left"><p class="eyebrow">03 / {{ t.projects }}</p><h1>{{ t.myProjects }}</h1><p>{{ t.projectsIntro }}</p></div><div class="filters"><input v-model="search" type="search" :aria-label="t.search" :placeholder="t.search"><select v-model="technology" :aria-label="t.allTechnologies"><option value="">{{ t.allTechnologies }}</option><option v-for="item in technologies" :key="item" :value="item">{{ item }}</option></select><label><input v-model="featuredOnly" type="checkbox"> {{ t.onlyFeatured }}</label><button v-if="search || technology || featuredOnly" class="text-button" type="button" @click="search = ''; technology = ''; featuredOnly = false">{{ t.clear }}</button></div><p class="result-count">{{ filteredProjects.length }} {{ t.results }}</p><h2 v-if="filteredProjects.some((project) => !project.academic)" class="category-divider">{{ t.professionalProjects }}</h2><div v-if="filteredProjects.length" class="project-grid"><article v-for="(project, index) in filteredProjects.filter((item) => !item.academic)" :key="project.id" class="project-card"><div class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">{{ projectNumber(index) }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div><div v-else class="empty-state"><h2>{{ t.noResults }}</h2><p>{{ t.adjust }}</p></div><h2 v-if="filteredProjects.some((project) => project.academic)" class="category-divider">{{ t.academicProjects }}</h2><div class="project-grid"><article v-for="(project, index) in filteredProjects.filter((item) => item.academic)" :key="project.id" class="project-card academic-card"><div v-if="project.preview" class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">{{ projectNumber(index) }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div></div>
+        <div class="container"><div class="section-heading section-heading-left" v-reveal><p class="eyebrow">03 / {{ t.projects }}</p><h1>{{ t.myProjects }}</h1><p>{{ t.projectsIntro }}</p></div><div class="filters"><input v-model="search" type="search" :aria-label="t.search" :placeholder="t.search"><select v-model="technology" :aria-label="t.allTechnologies"><option value="">{{ t.allTechnologies }}</option><option v-for="item in technologies" :key="item" :value="item">{{ item }}</option></select><label><input v-model="featuredOnly" type="checkbox"> {{ t.onlyFeatured }}</label><button v-if="search || technology || featuredOnly" class="text-button" type="button" @click="search = ''; technology = ''; featuredOnly = false">{{ t.clear }}</button></div><p class="result-count">{{ filteredProjects.length }} {{ t.results }}</p><h2 v-if="filteredProjects.some((project) => !project.academic)" class="category-divider">{{ t.professionalProjects }}</h2><div v-if="filteredProjects.length" class="project-grid"><article v-for="(project, index) in filteredProjects.filter((item) => !item.academic)" :key="project.id" class="project-card" v-reveal="(index % 3) * 55"><div class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">{{ projectNumber(index) }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div><div v-else class="empty-state"><h2>{{ t.noResults }}</h2><p>{{ t.adjust }}</p></div><h2 v-if="filteredProjects.some((project) => project.academic)" class="category-divider">{{ t.academicProjects }}</h2><div class="project-grid"><article v-for="(project, index) in filteredProjects.filter((item) => item.academic)" :key="project.id" class="project-card academic-card" v-reveal="(index % 3) * 55"><div v-if="project.preview" class="project-image"><img :src="project.image" :alt="project.title" loading="lazy"><span class="project-number">{{ projectNumber(index) }}</span></div><div class="card-body"><div class="card-kicker"><span>{{ project.category }}</span><span>{{ project.startDate }}</span></div><h3>{{ project.title }}</h3><p>{{ project.shortDescription }}</p><div class="tag-row"><span v-for="item in project.technologies" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div><div class="card-actions"><a class="text-link card-details" :href="`#project/${project.slug}`" @click.prevent="navigate(`project/${project.slug}`)">{{ t.details }}</a><a v-if="projectUrl(project)" class="button button-small button-primary" :href="projectUrl(project)" @click="confirmDemoStart($event, project)" :target="project.live && project.demoType === 'php' ? '_self' : '_blank'" rel="noopener noreferrer">{{ projectButtonLabel(project) }} ↗</a><span v-else-if="project.currentSite" class="project-current-site">{{ t.currentSite }}</span><span v-else-if="project.demoType === 'development'" class="project-status">{{ t.inDevelopment }}</span><a v-if="project.github && !project.private" class="text-link card-repository" :aria-label="`GitHub ↗ · ${t.repository}: ${project.title}`" :href="project.github" target="_blank" rel="noopener noreferrer">{{ t.github }} ↗</a></div></div></article></div></div>
       </section>
 
       <section v-else-if="currentRoute === 'services'" class="section page-section buyer-page">
@@ -339,8 +344,8 @@ onUnmounted(() => {
             <h1>{{ servicePage.title }}</h1>
             <p class="buyer-lead">{{ servicePage.lead }}</p>
             <div class="button-row">
-              <button type="button" class="button button-primary" @click="scrollToServiceSection('service-scope')">{{ language === 'es' ? 'Ver servicios y precios' : 'See services and pricing' }} ↓</button>
-              <button type="button" class="buyer-inline-link" @click="scrollToServiceSection('service-case')">{{ language === 'es' ? 'Ver un caso real' : 'See a real example' }} ↓</button>
+              <button type="button" class="button button-primary" @click="scrollToSection('service-scope')">{{ language === 'es' ? 'Ver servicios y precios' : 'See services and pricing' }} ↓</button>
+              <button type="button" class="buyer-inline-link" @click="scrollToSection('service-case')">{{ language === 'es' ? 'Ver un caso real' : 'See a real example' }} ↓</button>
             </div>
           </header>
 
@@ -409,15 +414,15 @@ onUnmounted(() => {
 
       <section v-else-if="currentRoute === 'about'" class="section page-section cv-about">
         <div class="container">
-          <div class="cv-intro-layout"><header class="cv-intro"><p class="eyebrow">04 / {{ t.about }}</p><h1>{{ t.aboutTitle }}</h1><p class="cv-lead">{{ t.aboutIntro }}</p><p>{{ t.storyOne }}</p><p>{{ t.storyTwo }}</p><div class="cv-intro-actions"><button class="button button-primary" type="button" @click="downloadResume">{{ t.resumeDownload }}</button></div></header>
-            <figure class="about-portrait"><img :src="assetBase + 'pedro-about.png'" alt="Pedro Martín Méndez Carabán" width="666" height="888" loading="lazy" decoding="async"></figure>
+          <div class="cv-intro-layout"><header class="cv-intro" v-reveal><p class="eyebrow">04 / {{ t.about }}</p><h1>{{ t.aboutTitle }}</h1><p class="cv-lead">{{ t.aboutIntro }}</p><p>{{ t.storyOne }}</p><p>{{ t.storyTwo }}</p><div class="cv-intro-actions"><button class="button button-primary" type="button" @click="downloadResume">{{ t.resumeDownload }}</button></div></header>
+            <figure class="about-portrait" v-reveal="100"><img :src="assetBase + 'pedro-about.png'" alt="Pedro Martín Méndez Carabán" width="666" height="888" loading="lazy" decoding="async"></figure>
           </div>
           <div class="cv-layout">
             <div>
               <section class="cv-section" aria-labelledby="cv-experience-title">
                 <h2 id="cv-experience-title">{{ profile.experienceTitle }}</h2>
                 <div class="cv-timeline">
-                  <article v-for="experience in profile.experience" :key="experience.role" class="cv-position">
+                  <article v-for="experience in profile.experience" :key="experience.role" class="cv-position" v-reveal>
                     <p class="cv-period">{{ experience.period }}</p><h3>{{ experience.role }}</h3><p class="cv-organization">{{ experience.organization }}</p>
                     <ul><li v-for="item in experience.items" :key="item">{{ item }}</li></ul>
                   </article>
@@ -425,7 +430,7 @@ onUnmounted(() => {
               </section>
               <section class="cv-section" aria-labelledby="cv-education-title">
                 <h2 id="cv-education-title">{{ profile.educationTitle }}</h2>
-                <article v-for="education in profile.education" :key="education.title" class="cv-education">
+                <article v-for="education in profile.education" :key="education.title" class="cv-education" v-reveal>
                   <p class="cv-period">{{ education.period }}</p><h3>{{ education.title }}</h3><p class="cv-organization">{{ education.institution }}</p><span class="cv-status">{{ education.status }}</span><p>{{ education.description }}</p>
                 </article>
               </section>
@@ -445,7 +450,7 @@ onUnmounted(() => {
 
       <section v-else-if="currentRoute === 'contact'" class="section page-section contact-page">
         <div class="container">
-          <header class="contact-hero">
+          <header class="contact-hero" v-reveal>
             <div>
               <p class="eyebrow">{{ t.contact }}</p>
               <h1>{{ t.contactTitle }}</h1>
@@ -456,15 +461,15 @@ onUnmounted(() => {
           </header>
 
           <div class="contact-methods">
-            <a class="contact-method" :href="`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.contactWhatsAppMessage)}`" target="_blank" rel="noopener noreferrer">
+            <a class="contact-method" v-reveal :href="`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.contactWhatsAppMessage)}`" target="_blank" rel="noopener noreferrer">
               <span class="contact-method-icon contact-icon-whatsapp" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.4-4A8 8 0 1 1 20 11.5Z"/><path d="M9 9.2c.5 2.3 2.3 4 4.7 4.7l1.1-1.1 2 .9c-.2 1.2-.9 1.9-2.2 2-3.7-.4-7-3.6-7.3-7.2.1-1.3.8-2 2-2.2l.9 2Z"/></svg></span>
               <span class="contact-method-copy"><span class="eyebrow">{{ t.whatsappLabel }}</span><strong>{{ t.contactWhatsappTitle }}</strong><span>{{ t.contactWhatsappText }}</span><em>{{ contact.phone }} ↗</em></span>
             </a>
-            <a class="contact-method" :href="`mailto:${contact.email}`">
+            <a class="contact-method" v-reveal :href="`mailto:${contact.email}`">
               <span class="contact-method-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
               <span class="contact-method-copy"><span class="eyebrow">{{ t.emailLabel }}</span><strong>{{ t.contactEmailTitle }}</strong><span>{{ t.contactEmailText }}</span><em>{{ contact.email }} ↗</em></span>
             </a>
-            <a class="contact-method" :href="contact.linkedin" target="_blank" rel="noopener noreferrer">
+            <a class="contact-method" v-reveal :href="contact.linkedin" target="_blank" rel="noopener noreferrer">
               <span class="contact-method-icon contact-icon-in" aria-hidden="true">in</span>
               <span class="contact-method-copy"><span class="eyebrow">{{ t.linkedinLabel }}</span><strong>{{ t.contactLinkedinTitle }}</strong><span>{{ t.contactLinkedinText }}</span><em>LinkedIn ↗</em></span>
             </a>
