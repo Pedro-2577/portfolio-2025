@@ -384,7 +384,7 @@ onUnmounted(() => {
             <div class="buyer-other-grid">
               <a v-for="store in otherStores" :key="store.id" class="buyer-store-card" :href="store.url" target="_blank" rel="noopener noreferrer">
                 <div class="buyer-store-preview">
-                  <img v-if="!failedServicePreviews.includes(store.id)" :src="store.preview" :alt="servicePage.previewAlt + ' ' + store.name" width="1100" height="532" loading="lazy" @error="onServicePreviewError(store.id)">
+                  <img v-if="!failedServicePreviews.includes(store.id)" :src="assetBase + store.preview" :alt="servicePage.previewAlt + ' ' + store.name" width="1100" height="532" loading="lazy" @error="onServicePreviewError(store.id)">
                   <span v-else class="buyer-preview-fallback">{{ servicePage.previewMissing }}</span>
                   <span class="buyer-domain">{{ store.domain }} ↗</span>
                 </div>

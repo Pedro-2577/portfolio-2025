@@ -275,7 +275,7 @@ export const storeExamples = [
       "es": "Productos para el control de plagas.",
       "en": "Pest-control products."
     },
-    "preview": "https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://fumig.ar/",
+    "preview": "store-preview-fumigar.jpg",
     "domain": "fumig.ar"
   },
   {
@@ -286,7 +286,7 @@ export const storeExamples = [
       "es": "Cámaras y soluciones de seguridad.",
       "en": "Cameras and security solutions."
     },
-    "preview": "https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://cctvstore.vendoalgo.com/",
+    "preview": "store-preview-cctv.jpg",
     "domain": "cctvstore.vendoalgo.com"
   },
   {
@@ -297,7 +297,7 @@ export const storeExamples = [
       "es": "Redes de protección, deportivas y sogas.",
       "en": "Safety nets, sports nets, and ropes."
     },
-    "preview": "https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://redesparabalcon.com.ar/",
+    "preview": "store-preview-redes.jpg",
     "domain": "redesparabalcon.com.ar"
   },
   {
@@ -308,7 +308,7 @@ export const storeExamples = [
       "es": "Productos de distintas categorías.",
       "en": "Products across multiple categories."
     },
-    "preview": "https://image.thum.io/get/width/1100/crop/580/noanimate/maxAge/24/https://tiendarg.com.ar/",
+    "preview": "store-preview-tiendarg.jpg",
     "domain": "tiendarg.com.ar"
   }
 ];
