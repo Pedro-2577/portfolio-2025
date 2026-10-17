@@ -47,12 +47,6 @@ export const storeServiceCopy = {
         ]
       }
     ],
-    "flowLabel": "ACTUALIZACIÓN DE PRECIOS EN FUNCIONAMIENTO",
-    "flow": [
-      "Costos del proveedor",
-      "Cálculo según insumos",
-      "Actualización cada mañana"
-    ],
     "publicNote": "El enlace abre la tienda pública. La facturación, los permisos y la actualización automática de precios corresponden a su operación interna, descrita en este caso.",
     "scopeEyebrow": "QUÉ PODÉS DELEGAR",
     "scopeTitle": "Empezamos por lo que necesita tu negocio.",
@@ -67,8 +61,8 @@ export const storeServiceCopy = {
         "body": "Migración de un catálogo anterior, carga inicial y ajustes de la información de los productos."
       },
       {
-        "title": "Automatización de tareas",
-        "body": "Actualización de stock y precios, revisión de novedades de proveedores y otras tareas repetitivas, según las fuentes disponibles."
+        "title": "Automatizaciones a medida",
+        "body": "Configuración y mantenimiento de tareas repetitivas según la información, las reglas y los horarios acordados para tu operación."
       },
       {
         "title": "Configuraciones e integraciones",
@@ -132,7 +126,11 @@ export const storeServiceCopy = {
     "finalEyebrow": "EL PRÓXIMO PASO",
     "finalTitle": "Veamos qué tendría sentido resolver en tu negocio.",
     "finalText": "En un Meet de 30 minutos revisamos tu catálogo y una tarea que quieras delegar. Con ese contexto podemos definir qué evaluar y qué hace falta para preparar una propuesta.",
-    "mailSubject": "Consulta sobre gestión de tienda en VendoAlgo"
+    "mailSubject": "Consulta sobre gestión de tienda en VendoAlgo",
+    "automationEyebrow": "AUTOMATIZACIONES A MEDIDA",
+    "automationTitle": "Tu catálogo al día, sin ocuparte de cada cambio.",
+    "automationIntro": "Configuro y mantengo automatizaciones para actualizar precios y stock, incorporar productos nuevos, gestionar productos que el proveedor deja de ofrecer y aplicar ofertas.",
+    "automationAgreement": "Acordamos qué información tomar, qué cambios realizar y en qué horarios. Me encargo de la implementación y del mantenimiento de las tareas acordadas."
   },
   "en": {
     "profile": "View my profile",
@@ -181,12 +179,6 @@ export const storeServiceCopy = {
         ]
       }
     ],
-    "flowLabel": "LIVE PRICE-UPDATE WORKFLOW",
-    "flow": [
-      "Supplier costs",
-      "Calculation based on inputs",
-      "Updates every morning"
-    ],
     "publicNote": "The link opens the public store. Invoicing, employee permissions, and automatic price updates are part of the internal operations described in this case.",
     "scopeEyebrow": "TASKS YOU CAN DELEGATE",
     "scopeTitle": "Start with what your business needs.",
@@ -201,8 +193,8 @@ export const storeServiceCopy = {
         "body": "Migrating an existing catalog, uploading initial products, and adjusting product information."
       },
       {
-        "title": "Task automation",
-        "body": "Stock and price updates, supplier product updates, and other repetitive tasks, depending on the available sources."
+        "title": "Tailored automations",
+        "body": "Configuration and maintenance of repetitive tasks based on the information, rules, and schedule agreed for your operation."
       },
       {
         "title": "Configuration and integrations",
@@ -266,7 +258,11 @@ export const storeServiceCopy = {
     "finalEyebrow": "THE NEXT STEP",
     "finalTitle": "Let’s see what makes sense for your business.",
     "finalText": "In a 30-minute Meet, we review your catalog and a task you want to delegate. With that context, we can identify what to assess and what information a proposal needs.",
-    "mailSubject": "Inquiry about VendoAlgo store management"
+    "mailSubject": "Inquiry about VendoAlgo store management",
+    "automationEyebrow": "TAILORED AUTOMATIONS",
+    "automationTitle": "Keep your catalog up to date without handling every change.",
+    "automationIntro": "I configure and maintain automations to update prices and stock, add new products, manage products a supplier no longer offers, and apply promotions.",
+    "automationAgreement": "We agree on the information to use, the changes to make, and the schedule. I handle the implementation and maintenance of the agreed tasks."
   }
 };
 

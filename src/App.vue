@@ -326,11 +326,16 @@ onUnmounted(() => {
                 <ul><li v-for="item in group.items" :key="item">{{ item }}</li></ul>
               </article>
             </div>
-            <div class="buyer-flow">
-              <p class="eyebrow">{{ servicePage.flowLabel }}</p>
-              <ol><li v-for="item in servicePage.flow" :key="item">{{ item }}</li></ol>
-            </div>
             <p class="buyer-small buyer-proof-note">{{ servicePage.publicNote }}</p>
+          </section>
+
+          <section class="buyer-section buyer-flow" aria-labelledby="service-automation-title">
+            <header class="buyer-section-heading">
+              <p class="eyebrow">{{ servicePage.automationEyebrow }}</p>
+              <h2 id="service-automation-title">{{ servicePage.automationTitle }}</h2>
+              <p>{{ servicePage.automationIntro }}</p>
+              <p>{{ servicePage.automationAgreement }}</p>
+            </header>
           </section>
 
           <section id="service-scope" class="buyer-section" tabindex="-1" aria-labelledby="service-scope-title">
