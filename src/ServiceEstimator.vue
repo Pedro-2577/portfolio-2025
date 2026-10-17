@@ -337,11 +337,8 @@ function toggleGroup(group, checked) {
 }
 const groupCaption = group => {
   const count = groupOptions(group).length;
-  const modes = groupOptions(group).map(item => item.mode);
-  const mode = modes.every(value => value === 'once') ? (es.value ? 'pago por única vez' : 'one-time payment') : modes.every(value => value === 'monthly') ? (es.value ? 'servicio mensual' : 'monthly service') : (es.value ? 'pago único y mensual según servicio' : 'one-time and monthly by service');
-  return count + (es.value ? ' servicios · ' : ' services · ') + mode;
-};
-const modeLabel = item => item.mode === 'both' ? (es.value ? 'Implementación + mantenimiento mensual' : 'Setup + monthly maintenance') : item.mode === 'monthly' ? (es.value ? 'Servicio mensual' : 'Monthly service') : (es.value ? 'Trabajo por única vez' : 'One-time service');
+  return count + (es.value ? ' servicios' : ' services');
+};const modeLabel = item => item.mode === 'both' ? (es.value ? 'Implementación + mantenimiento mensual' : 'Setup + monthly maintenance') : item.mode === 'monthly' ? (es.value ? 'Servicio mensual' : 'Monthly service') : (es.value ? 'Trabajo por única vez' : 'One-time service');
 function toggleExtra(item, checked) {
   selected.value = checked ? [...new Set([...selected.value, item.id])] : selected.value.filter(id => id !== item.id);
   // Migration replaces the basic product upload; a visual adjustment replaces a new-store design.
@@ -472,8 +469,8 @@ function contact(event) {
   <div class="service-estimator">
     <header class="buyer-section-heading">
       <p class="eyebrow">{{ es ? 'ELEGÍ LO QUE NECESITÁS' : 'CHOOSE WHAT YOU NEED' }}</p>
-      <h2 id="service-scope-title">{{ es ? 'Armá tu propuesta' : 'Build your proposal' }}</h2>
-      <p>{{ es ? 'Seleccioná servicios por separado o marcá la puesta en marcha completa. Podés ajustar cada detalle antes de consultarme.' : 'Choose individual services or select the complete launch setup. Adjust the details before getting in touch.' }}</p>
+      <h2 id="service-scope-title">{{ es ? 'Servicios y precios' : 'Services and pricing' }}</h2>
+      <p>{{ es ? 'Elegí qué querés delegar y mirá el estimado.' : 'Choose what to delegate and see your estimate.' }}</p>
     </header>
     <div class="estimate-toolbar" aria-label="Selección de servicios">
       <span class="estimate-toolbar-count" role="status" aria-live="polite">{{ selected.length }} {{ es ? 'servicios seleccionados' : 'services selected' }}</span>
@@ -482,7 +479,6 @@ function contact(event) {
         <button type="button" @click="clearServices" :disabled="!hasSelection && !modules.length && platform === 'unsure'">{{ es ? 'Quitar todo' : 'Clear all' }}</button>
       </div>
     </div>
-    <p class="estimate-toolbar-hint">{{ es ? 'Las alternativas que se reemplazan entre sí se eligen por separado.' : 'Mutually exclusive alternatives can be chosen individually.' }}</p>
     <div class="estimate-layout">
       <div class="estimate-choices">
         <div class="estimate-package" :class="{ 'is-selected': checkedBasics.length }">
@@ -494,7 +490,6 @@ function contact(event) {
             <strong class="estimate-package-price">{{ money(partialBasics ? basicAmount : 150000) }}</strong>
             <button type="button" class="estimate-expand" :aria-expanded="expanded" aria-controls="launch-service-options" :aria-label="es ? 'Ver o editar los servicios de puesta en marcha' : 'View or edit launch services'" @click="expanded = !expanded"><svg :class="{ 'is-open': expanded }" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
           </div>
-          <p class="estimate-package-hint">{{ partialBasics ? (es ? 'Selección personalizada · ' : 'Custom selection · ') + money(basicAmount) : (es ? 'Todo lo necesario para empezar. Desplegá el detalle para personalizarlo.' : 'Everything you need to get started. Expand the details to customize it.') }}</p>
           <div v-show="expanded" id="launch-service-options" class="estimate-options">
             <label v-for="item in options" :key="item.id" class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
               <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleBasic(item, $event.target.checked)">
@@ -515,14 +510,19 @@ function contact(event) {
               <svg :class="{ 'is-open': expandedGroups[group.id] }" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
             </button>
           </div>
-          <p class="estimate-package-hint">{{ groupSelected(group.id).length ? (groupPartiallySelected(group.id) ? (es ? 'Selección personalizada · ' : 'Custom selection · ') : '') + groupSelected(group.id).length + (es ? ' servicios seleccionados · estimado orientativo' : ' services selected · indicative estimate') : (es ? group.introEs : group.introEn) }}</p>
           <div v-show="expandedGroups[group.id]" :id="'service-group-' + group.id" class="estimate-options estimate-category-options">
-          <label v-for="item in pricedExtras.filter(service => service.group === group.id)" :key="item.id" class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
-            <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleExtra(item, $event.target.checked)">
-            <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><span>{{ description(item) }}</span><span class="estimate-scope">{{ itemScope(item) }}</span><em class="estimate-service-fee">{{ itemFees(item) }}</em></span>
-          </label>
-          <div v-if="groupSelected(group.id).length" class="estimate-context">
-            <p class="estimate-context-title">{{ es ? 'Si querés, sumá un poco de contexto' : 'Add some context if you like' }}</p>
+          <div v-for="item in pricedExtras.filter(service => service.group === group.id)" :key="item.id" class="estimate-service-item">
+            <label class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
+              <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleExtra(item, $event.target.checked)">
+              <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><em class="estimate-service-fee">{{ itemFees(item) }}</em></span>
+            </label>
+            <details class="estimate-item-details">
+              <summary>{{ es ? 'Qué incluye' : 'What is included' }}</summary>
+              <p>{{ description(item) }}</p><p>{{ itemScope(item) }}</p>
+            </details>
+          </div>
+          <details v-if="groupSelected(group.id).length" class="estimate-context estimate-context-disclosure">
+            <summary>{{ es ? 'Agregar contexto (opcional)' : 'Add context (optional)' }}</summary>
             <template v-if="group.id === 'catalogue'">
               <label v-if="['migration', 'more-products', 'catalog-order'].some(id => selected.includes(id))" class="estimate-field">{{ es ? 'Cantidad aproximada de productos' : 'Approximate product count' }}<input v-model="details.productCount" inputmode="numeric" maxlength="40" :placeholder="es ? 'Ej.: 150 productos' : 'E.g. 150 products'"></label>
               <label v-if="selected.includes('migration')" class="estimate-field">{{ es ? 'Web o catálogo de origen' : 'Source website or catalog' }}<input v-model="details.source" maxlength="300" :placeholder="es ? 'Link o nombre de la tienda anterior' : 'Previous store name or link'"></label>
@@ -539,8 +539,7 @@ function contact(event) {
             </template>
             <label v-if="group.id === 'support' && selected.includes('maintenance')" class="estimate-field">{{ es ? '¿Qué tareas querés delegar cada mes?' : 'What tasks would you like to delegate each month?' }}<textarea v-model="details.supportNotes" rows="2" maxlength="400"></textarea></label>
             <label v-if="group.id === 'support' && selected.includes('technical-help')" class="estimate-field">{{ es ? '¿Qué está pasando?' : 'What is happening?' }}<textarea v-model="details.issue" rows="2" maxlength="500"></textarea></label>
-            <p class="estimate-note">{{ es ? 'Los valores corresponden al alcance base de cada servicio. Cantidades, fuentes o reglas adicionales se presupuestan antes de comenzar.' : 'Prices apply to each service’s base scope. Extra quantities, sources or rules are quoted before work begins.' }}</p>
-          </div>
+          </details>
           </div>
         </div>
 
@@ -596,9 +595,8 @@ function contact(event) {
           <p class="estimate-note">{{ es ? 'VendoAlgo, sus módulos, comisiones de cobro y servicios externos se pagan aparte. El resumen que me envíes incluye el listado completo, aunque lo tengas plegado.' : 'VendoAlgo, its modules, payment fees and external services are separate. Your inquiry includes the full list even when it is collapsed here.' }}</p>
         </details>
         <form class="estimate-contact-form" @submit.prevent="contact">
-          <div class="estimate-contact-row"><label class="estimate-field">{{ es ? 'Tu nombre' : 'Your name' }}<input v-model="inquiry.name" autocomplete="name" required maxlength="100"></label>
-          <label class="estimate-field">{{ es ? 'Negocio o web (opcional)' : 'Business or website (optional)' }}<input v-model="inquiry.business" maxlength="200"></label></div>
-          <label class="estimate-field">{{ es ? 'Contame qué necesitás (opcional)' : 'Tell me what you need (optional)' }}<textarea v-model="inquiry.message" rows="2" maxlength="1200"></textarea></label>
+          <label class="estimate-field">{{ es ? 'Tu nombre' : 'Your name' }}<input v-model="inquiry.name" autocomplete="name" required maxlength="100"></label>
+          <label class="estimate-field">{{ es ? 'Tu negocio y lo que necesitás (opcional)' : 'Your business and what you need (optional)' }}<textarea v-model="inquiry.message" rows="2" maxlength="1200"></textarea></label>
           <button class="button button-primary" type="submit" value="whatsapp" :disabled="!hasSelection">{{ es ? 'Consultar por WhatsApp' : 'Ask via WhatsApp' }} ↗</button>
           <button class="button button-secondary" type="submit" value="email" :disabled="!hasSelection">{{ es ? 'Consultar por correo' : 'Ask via email' }} ↗</button>
           <p class="estimate-note">{{ es ? 'Revisá y enviá tu consulta desde WhatsApp o tu correo. No se envía automáticamente.' : 'Review and send your inquiry in WhatsApp or your email app. Nothing is sent automatically.' }}</p>
@@ -746,4 +744,21 @@ function contact(event) {
   .estimate-summary .estimate-totals > div { grid-template-columns: 1fr; gap: 5px; }
   .estimate-summary .estimate-totals strong { text-align: left; }
 }
+
+/* A short first view; service scope remains available on demand. */
+.estimate-toolbar { padding: 0; margin: 0 0 20px; border: 0; background: none; }
+.estimate-toolbar-actions button { min-height: 36px; padding: 6px 10px; font-size: .76rem; }
+.estimate-toolbar-count { font-size: .8rem; color: var(--muted); font-weight: 500; }
+.estimate-package-heading { padding: 14px 16px; }
+.estimate-caption { margin-top: 4px; font-size: .74rem; }
+.estimate-category .estimate-package-select strong { font-size: .95rem; }
+.estimate-category-price strong { font-size: .84rem; }
+.estimate-service-item + .estimate-service-item { border-top: 1px solid var(--line); }
+.estimate-service-item .estimate-option { border-top: 0; padding-bottom: 5px; }
+.estimate-category-options .estimate-item-details { padding: 0 0 14px 32px; border: 0; }
+.estimate-item-details summary { padding: 4px 0; font-size: .76rem; font-weight: 500; color: var(--muted); cursor: pointer; }
+.estimate-item-details p { font-size: .8rem; color: var(--muted); line-height: 1.6; margin: 8px 0; }
+.estimate-category-options .estimate-context-disclosure { padding: 12px 0; border-bottom: 0; }
+.estimate-context-disclosure > summary { padding: 4px 0; font-size: .8rem; color: var(--muted); cursor: pointer; }
+@media(max-width: 500px) { .estimate-package-heading { padding: 12px; } }
 </style>
