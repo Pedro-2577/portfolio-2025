@@ -207,8 +207,8 @@
 /* A shared light field follows a mouse; touch and reduced-motion visitors keep the static design. */
 .cursor-aura { position: fixed; z-index: 40; mix-blend-mode: screen; inset: 0; overflow: hidden; pointer-events: none; visibility: hidden; opacity: 0; contain: strict; transition: opacity .25s ease, visibility 0s .25s; }
 .cursor-aura.is-visible { visibility: visible; opacity: 1; transition: opacity .25s ease; }
-.cursor-aura-glow { position: absolute; left: 0; top: 0; width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%; background: radial-gradient(circle closest-side at 50% 50%, rgba(167,191,43,.13) 0%, rgba(167,191,43,.065) 25%, rgba(115,186,159,.025) 50%, transparent 78%, transparent 100%); opacity: 0; transition: opacity .25s ease; }
-.cursor-aura.is-on-dark .cursor-aura-glow, .dark .cursor-aura-glow { opacity: .8; background: radial-gradient(circle closest-side at 50% 50%, rgba(215,244,59,.14) 0%, rgba(215,244,59,.065) 25%, rgba(105,210,201,.025) 50%, transparent 78%, transparent 100%); }
+.cursor-aura-glow { position: absolute; left: 0; top: 0; width: 800px; height: 800px; margin: -400px 0 0 -400px; border-radius: 50%; filter: blur(18px); background: radial-gradient(circle closest-side at 50% 50%, rgba(167,191,43,.1) 0%, rgba(167,191,43,.065) 18%, rgba(115,186,159,.035) 38%, rgba(115,186,159,.014) 58%, rgba(115,186,159,.004) 74%, transparent 90%, transparent 100%); opacity: 0; transition: opacity .25s ease; }
+.cursor-aura.is-on-dark .cursor-aura-glow, .dark .cursor-aura-glow { opacity: .8; background: radial-gradient(circle closest-side at 50% 50%, rgba(215,244,59,.11) 0%, rgba(215,244,59,.07) 18%, rgba(105,210,201,.038) 38%, rgba(105,210,201,.016) 58%, rgba(105,210,201,.004) 74%, transparent 90%, transparent 100%); }
 .cursor-aura.is-on-dark.is-interactive .cursor-aura-glow, .dark .cursor-aura.is-interactive .cursor-aura-glow { opacity: 1; }
 
 .button, .icon-button, .workbench-choices button { position: relative; overflow: hidden; }
