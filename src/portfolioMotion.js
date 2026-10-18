@@ -170,7 +170,10 @@ export function usePortfolioMotion(route) {
   function paintProgress() {
     scrollFrame = 0;
     const length = document.documentElement.scrollHeight - window.innerHeight;
-    root?.style.setProperty('--reading-progress', String(length > 0 ? Math.max(0, Math.min(1, window.scrollY / length)) : 0));
+    // A nearly viewport-sized page should not complete the bar after a tiny scroll.
+    const minimumScroll = Math.max(320, window.innerHeight * .5);
+    const progress = length >= minimumScroll ? Math.max(0, Math.min(1, window.scrollY / length)) : 0;
+    root?.style.setProperty('--reading-progress', String(progress));
     root?.classList.toggle('show-back-to-top', window.scrollY > 520);
     root?.style.setProperty('--hero-grid-offset', reducedMotion() ? '0px' : Math.min(64, window.scrollY * .12).toFixed(1) + 'px');
   }
