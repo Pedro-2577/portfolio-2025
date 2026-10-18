@@ -394,7 +394,7 @@ onUnmounted(() => {
           </div>
           <aside class="hero-person">
             <figure class="hero-portrait">
-              <div class="hero-portrait-frame profile-photo-frame"><img :src="assetBase + 'pedro-portrait.jpg'" alt="Pedro Martín Méndez Carabán" width="666" height="888" fetchpriority="high" decoding="async"></div>
+              <div class="hero-portrait-frame"><img :src="assetBase + 'pedro-portrait.jpg'" alt="Pedro Martín Méndez Carabán" width="666" height="888" fetchpriority="high" decoding="async"></div>
               <figcaption><strong>Pedro Méndez Carabán</strong><span>{{ t.portraitRole }}</span></figcaption>
             </figure>
             <a class="hero-work" href="#project/vendoalgo" @click.prevent="navigate('project/vendoalgo')"><span>{{ t.proofLabel }}</span><strong>VendoAlgo</strong></a>
