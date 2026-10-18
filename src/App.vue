@@ -322,7 +322,7 @@ onUnmounted(() => {
     <header class="site-header">
       <div v-if="isServiceRoute" class="container buyer-header">
         <div class="buyer-header-identity">
-          <a class="brand" href="#home" @click.prevent="navigate('home')">Pedro Méndez Carabán</a>
+          <a class="brand brand-with-avatar" href="#home" @click.prevent="navigate('home')"><span class="brand-avatar profile-photo-frame" aria-hidden="true"><img :src="assetBase + 'pedro-portrait.jpg'" alt="" width="666" height="888" decoding="async"></span><span class="brand-name">Pedro Méndez Carabán</span></a>
           <a class="buyer-ventures-back" href="#emprendimientos" @click.prevent="navigate('emprendimientos')">← {{ language === 'es' ? 'Mis emprendimientos' : 'My ventures' }}</a>
         </div>
         <nav :aria-label="t.services" class="buyer-header-links">
@@ -340,7 +340,7 @@ onUnmounted(() => {
         </div>
       </div>
       <div v-else class="container nav-wrap">
-        <a class="brand" href="#home" @click.prevent="navigate('home')">Pedro Méndez Carabán</a>
+        <a class="brand brand-with-avatar" href="#home" @click.prevent="navigate('home')"><span class="brand-avatar profile-photo-frame" aria-hidden="true"><img :src="assetBase + 'pedro-portrait.jpg'" alt="" width="666" height="888" decoding="async"></span><span class="brand-name">Pedro Méndez Carabán</span></a>
         <button class="menu-button" type="button" aria-label="Abrir menú de navegación" :aria-expanded="mobileMenuOpen" @click="mobileMenuOpen = !mobileMenuOpen">☰</button>
         <nav :class="{ 'is-open': mobileMenuOpen }" class="site-nav" aria-label="Navegación principal">
           <a :class="{ active: currentRoute === 'home' }" href="#home" @click.prevent="navigate('home')">{{ t.home }}</a>
@@ -382,7 +382,7 @@ onUnmounted(() => {
           <p class="eyebrow">{{ t.role }} <span class="eyebrow-dot"></span> Buenos Aires</p>
           <div class="hero-intro">
             <h1 class="hero-heading"><span class="hero-greeting">{{ t.greeting }}</span><span class="visually-hidden">Pedro.</span><span class="hero-name" aria-hidden="true"><span v-for="(letter, index) in 'Pedro.'" :key="index" class="hero-letter" :style="{ '--letter-index': index }" aria-hidden="true">{{ letter }}</span></span><em>{{ t.tagline }}</em></h1>
-            <img class="hero-mobile-portrait" :src="assetBase + 'pedro-portrait.jpg'" alt="Pedro Martín Méndez Carabán" width="666" height="888" decoding="async">
+            <span class="hero-mobile-portrait profile-photo-frame" aria-hidden="true"><img :src="assetBase + 'pedro-portrait.jpg'" alt="" width="666" height="888" decoding="async"></span>
           </div>
           <p class="hero-copy"><span class="hero-desktop-only">{{ t.hero }}</span><span class="hero-mobile-only">{{ language === 'es' ? 'Desarrollo productos web de punta a punta. En VendoAlgo construí la plataforma desde cero junto al equipo y hoy sigo trabajando en su evolución.' : 'I build web products end to end. At VendoAlgo, I built the platform from scratch with the team and continue to develop it today.' }}</span></p>
           <div class="button-row">
@@ -394,7 +394,7 @@ onUnmounted(() => {
           </div>
           <aside class="hero-person">
             <figure class="hero-portrait">
-              <img :src="assetBase + 'pedro-portrait.jpg'" alt="Pedro Martín Méndez Carabán" width="666" height="888" fetchpriority="high" decoding="async">
+              <div class="hero-portrait-frame profile-photo-frame"><img :src="assetBase + 'pedro-portrait.jpg'" alt="Pedro Martín Méndez Carabán" width="666" height="888" fetchpriority="high" decoding="async"></div>
               <figcaption><strong>Pedro Méndez Carabán</strong><span>{{ t.portraitRole }}</span></figcaption>
             </figure>
             <a class="hero-work" href="#project/vendoalgo" @click.prevent="navigate('project/vendoalgo')"><span>{{ t.proofLabel }}</span><strong>VendoAlgo</strong></a>
