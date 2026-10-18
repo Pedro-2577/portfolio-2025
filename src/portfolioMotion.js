@@ -45,8 +45,6 @@ export function usePortfolioMotion(route) {
   let root;
   let aura;
   let glow;
-  let ring;
-  let point;
   let pointerFrame = 0;
   let scrollFrame = 0;
   let surface;
@@ -115,8 +113,6 @@ export function usePortfolioMotion(route) {
     position.x = distance < .3 ? pointer.x : position.x + dx * .18;
     position.y = distance < .3 ? pointer.y : position.y + dy * .18;
     glow?.style.setProperty('transform', 'translate3d(' + position.x.toFixed(2) + 'px,' + position.y.toFixed(2) + 'px,0)');
-    ring?.style.setProperty('transform', 'translate3d(' + (position.x + (pointer.x - position.x) * .55).toFixed(2) + 'px,' + (position.y + (pointer.y - position.y) * .55).toFixed(2) + 'px,0)');
-    point?.style.setProperty('transform', 'translate3d(' + pointer.x.toFixed(2) + 'px,' + pointer.y.toFixed(2) + 'px,0)');
     if (pointer.surfaceDirty) {
       paintSurface();
       pointer.surfaceDirty = false;
@@ -217,8 +213,6 @@ export function usePortfolioMotion(route) {
     root = document.querySelector('.app-shell');
     aura = root?.querySelector('.cursor-aura');
     glow = aura?.querySelector('.cursor-aura-glow');
-    ring = aura?.querySelector('.cursor-aura-ring');
-    point = aura?.querySelector('.cursor-aura-point');
     motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     root?.addEventListener('pointermove', onPointer, { passive: true });
     root?.addEventListener('pointerdown', onPointerDown, { passive: true });

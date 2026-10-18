@@ -318,8 +318,6 @@ onUnmounted(() => {
   <div class="app-shell">
     <div class="cursor-aura" aria-hidden="true">
       <div class="cursor-aura-glow"></div>
-      <div class="cursor-aura-ring"></div>
-      <div class="cursor-aura-point"></div>
     </div>
     <header class="site-header">
       <div v-if="isServiceRoute" class="container buyer-header">
