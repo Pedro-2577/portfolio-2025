@@ -376,13 +376,15 @@ onUnmounted(() => {
       <HttpErrorPage v-if="pageError" :status="pageError" :language="language" :preview="errorPreview" @navigate="navigate" @retry="retryPage" />
       <template v-else>
       <section v-if="currentRoute === 'home'" class="hero">
+        <div class="hero-scenery" aria-hidden="true" :style="{ '--hero-photo': `url('${assetBase}pedro-portrait.jpg')` }">
+          <img :src="assetBase + 'pedro-portrait.jpg'" alt="" width="666" height="888" fetchpriority="high" decoding="async">
+        </div>
         <div class="container hero-content">
         <div class="hero-layout">
           <div class="hero-main">
           <p class="eyebrow">{{ t.role }} <span class="eyebrow-dot"></span> Buenos Aires</p>
           <div class="hero-intro">
             <h1 class="hero-heading"><span class="hero-greeting">{{ t.greeting }}</span><span class="visually-hidden">Pedro.</span><span class="hero-name" aria-hidden="true"><span v-for="(letter, index) in 'Pedro.'" :key="index" class="hero-letter" :style="{ '--letter-index': index }" aria-hidden="true">{{ letter }}</span></span><em>{{ t.tagline }}</em></h1>
-            <span class="hero-mobile-portrait profile-photo-frame" aria-hidden="true"><img :src="assetBase + 'pedro-portrait.jpg'" alt="" width="666" height="888" decoding="async"></span>
           </div>
           <p class="hero-copy"><span class="hero-desktop-only">{{ t.hero }}</span><span class="hero-mobile-only">{{ language === 'es' ? 'Desarrollo productos web de punta a punta. En VendoAlgo construí la plataforma desde cero junto al equipo y hoy sigo trabajando en su evolución.' : 'I build web products end to end. At VendoAlgo, I built the platform from scratch with the team and continue to develop it today.' }}</span></p>
           <div class="button-row">
@@ -392,13 +394,7 @@ onUnmounted(() => {
           </div>
           <a class="hero-mobile-work" href="#project/vendoalgo" @click.prevent="navigate('project/vendoalgo')"><span>{{ t.proofLabel }}</span><strong>VendoAlgo</strong><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12"/></svg></a>
           </div>
-          <aside class="hero-person">
-            <figure class="hero-portrait">
-              <div class="hero-portrait-frame"><img :src="assetBase + 'pedro-portrait.jpg'" alt="Pedro Martín Méndez Carabán" width="666" height="888" fetchpriority="high" decoding="async"></div>
-              <figcaption><strong>Pedro Méndez Carabán</strong><span>{{ t.portraitRole }}</span></figcaption>
-            </figure>
-            <a class="hero-work" href="#project/vendoalgo" @click.prevent="navigate('project/vendoalgo')"><span>{{ t.proofLabel }}</span><strong>VendoAlgo</strong></a>
-          </aside>
+
         </div>
           <div class="hero-meta"><span>{{ projects.length }} {{ t.projectCount }}</span><span>{{ projects.filter((project) => project.live).length }} {{ t.publicEvidence }}</span><span>{{ t.stackLabel }}: {{ t.stackText }}</span></div>
           <a class="hero-explore" href="#portfolio-playground" @click.prevent="scrollToSection('portfolio-playground')"><span>{{ language === 'es' ? 'Explorá cómo trabajo' : 'Explore how I work' }}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6"/></svg></a>
