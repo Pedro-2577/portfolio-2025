@@ -110,8 +110,8 @@ export function usePortfolioMotion(route) {
     const dx = pointer.x - position.x;
     const dy = pointer.y - position.y;
     const distance = Math.abs(dx) + Math.abs(dy);
-    position.x = distance < .3 ? pointer.x : position.x + dx * .18;
-    position.y = distance < .3 ? pointer.y : position.y + dy * .18;
+    position.x = distance < .3 ? pointer.x : position.x + dx * .55;
+    position.y = distance < .3 ? pointer.y : position.y + dy * .55;
     glow?.style.setProperty('transform', 'translate3d(' + position.x.toFixed(2) + 'px,' + position.y.toFixed(2) + 'px,0)');
     if (pointer.surfaceDirty) {
       paintSurface();
