@@ -689,3 +689,19 @@ details p { color: var(--muted); line-height: 1.6; }
 .cv-skill-area[data-skill-area] h3 { display: flex; align-items: center; gap: .55rem; }
 .cv-skill-area[data-skill-area] h3::before { content: ''; width: 3px; height: 1em; flex-shrink: 0; border-radius: 2px; background: var(--area-ink); }
 .capability-card[data-skill-area] .capability-number { color: var(--area-ink); }
+
+
+/* Keep the academic archive available without competing with professional work. */
+.academic-projects-archive { margin-top: var(--space-8); border-top: 1px solid var(--line); }
+.academic-projects-archive > summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 56px; padding: .9rem 0; color: var(--ink); font-size: .78rem; font-weight: 800; letter-spacing: .12em; list-style: none; text-transform: uppercase; cursor: pointer; }
+.academic-projects-archive > summary::-webkit-details-marker { display: none; }
+.academic-projects-archive > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+.academic-projects-count { display: inline-flex; align-items: center; gap: .65rem; color: var(--muted); font-size: .78rem; font-weight: 600; letter-spacing: normal; text-transform: none; }
+.academic-projects-count svg { width: 15px; height: 15px; transition: transform .2s ease; }
+.academic-projects-archive[open] .academic-projects-count svg { transform: rotate(180deg); }
+.academic-projects-archive[open] > .project-grid { padding: 0 0 var(--space-3); }
+.project-source-note { margin: .75rem 0 0; padding: .75rem; color: var(--muted); background: var(--soft); border-left: 2px solid var(--line); font-size: .82rem; line-height: 1.55; }
+@media (max-width: 480px) {
+  .academic-projects-archive > summary { font-size: .7rem; }
+  .academic-projects-count { gap: .35rem; font-size: .7rem; }
+}
