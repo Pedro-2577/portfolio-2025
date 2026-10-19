@@ -590,3 +590,10 @@ details p { color: var(--muted); line-height: 1.6; }
   .nav-ventures-list { position: static; width: 100%; margin: 4px 0 8px; box-shadow: none; background: var(--soft); }
 }
 @media (prefers-reduced-motion: reduce) { .nav-ventures-toggle svg { transition: none; } }
+
+/* Subtle graph-paper texture beneath the content surfaces. */
+
+.app-shell { background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px); background-size: 48px 48px; background-position: center top; }
+:root { --grid-line: rgba(23, 32, 51, .045); }
+:root.dark { --grid-line: rgba(241, 243, 237, .035); }
+@media (max-width: 700px) { .app-shell { background-size: 32px 32px; } }
