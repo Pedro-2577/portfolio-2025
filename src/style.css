@@ -508,7 +508,7 @@ details p { color: var(--muted); line-height: 1.6; }
 .availability-inner > div { grid-column: 1 / span 8; }
 .availability-inner > a { grid-column: 10 / span 3; justify-self: end; }
 
-.footer-inner > div:first-child { grid-column: 1 / span 7; }
+.footer-inner > div:first-child { grid-column: 1 / span 5; }
 .footer-links { grid-column: 7 / span 6; justify-content: flex-end; }
 
 /* Shared responsive grid: 12 columns on desktop, 8 on tablet, 4 on mobile. */
