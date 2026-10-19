@@ -402,12 +402,12 @@ onUnmounted(() => {
               <div v-for="item in t.heroFacts" :key="item.title"><dt>{{ item.title }}</dt><dd><a v-if="item.route" :href="'#' + item.route" @click.prevent="navigate(item.route)">{{ item.description }} <span aria-hidden="true">↗</span></a><template v-else>{{ item.description }}</template></dd></div>
             </dl>
           </div>
-          <a class="hero-explore" href="#portfolio-playground" @click.prevent="scrollToSection('portfolio-playground')"><span>{{ language === 'es' ? 'Cómo encaro un proyecto' : 'How I approach a project' }}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6"/></svg></a>
+          <a class="hero-explore" href="#portfolio-playground" @click.prevent="scrollToSection('portfolio-playground')"><span>{{ language === 'es' ? 'Ver mi experiencia' : 'View my experience' }}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6"/></svg></a>
         </div>
       </section>
 
       <template v-if="currentRoute === 'home'">
-        <PortfolioWorkbench :language="language" v-reveal />
+        <PortfolioWorkbench :language="language" v-reveal @navigate="navigate" />
         <section class="section">
           <div class="container">
             <div class="section-heading section-heading-left" v-reveal><p class="eyebrow">01 / {{ t.skills }}</p><h2>{{ t.skills }}</h2><p>{{ t.skillsIntro }}</p></div>
