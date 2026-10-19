@@ -667,3 +667,25 @@ details p { color: var(--muted); line-height: 1.6; }
 .buyer-content-nav button:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .buyer-demo-section .buyer-case-details { margin-top: 1.5rem; }
 @media(max-width:500px) { .buyer-content-nav { gap: .25rem 1.25rem; } .buyer-content-nav button { font-size: .85rem; } }
+
+/* Skills use one palette per area; project technology badges retain brand colors. */
+[data-skill-area="frontend"] { --area-ink: #234f83; --area-surface: #e1eaf4; --area-line: #b9cce1; }
+.dark [data-skill-area="frontend"] { --area-ink: #bfd9f7; --area-surface: #243347; --area-line: #3c5674; }
+[data-skill-area="backend"] { --area-ink: #654386; --area-surface: #eee5f5; --area-line: #d4c1e4; }
+.dark [data-skill-area="backend"] { --area-ink: #dec9f2; --area-surface: #342a43; --area-line: #59456f; }
+[data-skill-area="security"] { --area-ink: #883f35; --area-surface: #f4e4df; --area-line: #dfbdb4; }
+.dark [data-skill-area="security"] { --area-ink: #f2c5b9; --area-surface: #412c28; --area-line: #705046; }
+[data-skill-area="ai"] { --area-ink: #26634d; --area-surface: #dfeee5; --area-line: #b7d3c1; }
+.dark [data-skill-area="ai"] { --area-ink: #b8e2ca; --area-surface: #213b31; --area-line: #426553; }
+[data-skill-area="tools"] { --area-ink: #405668; --area-surface: #e3e9ed; --area-line: #c3cfd7; }
+.dark [data-skill-area="tools"] { --area-ink: #cddce7; --area-surface: #2b343b; --area-line: #4b5d69; }
+[data-skill-area="design"] { --area-ink: #775418; --area-surface: #f3ead7; --area-line: #decda8; }
+.dark [data-skill-area="design"] { --area-ink: #efd5a3; --area-surface: #3c3323; --area-line: #6e5c38; }
+.cv-skill-area[data-skill-area] .tag, .capability-card[data-skill-area] .capability-tags > li {
+  color: var(--area-ink);
+  background: var(--area-surface);
+  border: 1px solid var(--area-line);
+}
+.cv-skill-area[data-skill-area] h3 { display: flex; align-items: center; gap: .55rem; }
+.cv-skill-area[data-skill-area] h3::before { content: ''; width: 3px; height: 1em; flex-shrink: 0; border-radius: 2px; background: var(--area-ink); }
+.capability-card[data-skill-area] .capability-number { color: var(--area-ink); }

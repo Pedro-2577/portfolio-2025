@@ -60,6 +60,7 @@ export const professionalProfile = {
     ],
     "skills": [
       {
+        "id": "frontend",
         "title": "Frontend, frameworks y UX",
         "items": [
           "JavaScript",
@@ -83,6 +84,7 @@ export const professionalProfile = {
         ]
       },
       {
+        "id": "backend",
         "title": "Backend y bases de datos",
         "items": [
           "PHP",
@@ -103,6 +105,7 @@ export const professionalProfile = {
         ]
       },
       {
+        "id": "security",
         "title": "Seguridad de aplicaciones",
         "items": [
           "Bug bounty",
@@ -113,6 +116,7 @@ export const professionalProfile = {
         ]
       },
       {
+        "id": "ai",
         "title": "IA aplicada y automatización",
         "items": [
           "Integración de LLMs en producto",
@@ -129,6 +133,7 @@ export const professionalProfile = {
         "focus": "En actualización: RAG, agentes y evaluación de respuestas."
       },
       {
+        "id": "tools",
         "title": "Herramientas y publicación web",
         "items": [
           "Git",
@@ -138,6 +143,7 @@ export const professionalProfile = {
         ]
       },
       {
+        "id": "design",
         "title": "Diseño y comunicación digital",
         "items": [
           "Diseño web",
@@ -283,6 +289,7 @@ export const professionalProfile = {
     ],
     "skills": [
       {
+        "id": "frontend",
         "title": "Frontend, frameworks & UX",
         "items": [
           "JavaScript",
@@ -306,6 +313,7 @@ export const professionalProfile = {
         ]
       },
       {
+        "id": "backend",
         "title": "Backend & databases",
         "items": [
           "PHP",
@@ -326,6 +334,7 @@ export const professionalProfile = {
         ]
       },
       {
+        "id": "security",
         "title": "Application security",
         "items": [
           "Bug bounty",
@@ -336,6 +345,7 @@ export const professionalProfile = {
         ]
       },
       {
+        "id": "ai",
         "title": "Applied AI & automation",
         "items": [
           "LLM integration in product features",
@@ -352,6 +362,7 @@ export const professionalProfile = {
         "focus": "Keeping current: RAG, agents and response evaluation."
       },
       {
+        "id": "tools",
         "title": "Tools & web publishing",
         "items": [
           "Git",
@@ -361,6 +372,7 @@ export const professionalProfile = {
         ]
       },
       {
+        "id": "design",
         "title": "Design & digital communication",
         "items": [
           "Web design",

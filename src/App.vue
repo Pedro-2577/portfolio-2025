@@ -422,7 +422,7 @@ onUnmounted(() => {
               <p>{{ t.skillsIntro }}</p>
             </div>
             <div class="capability-grid">
-              <article v-for="(area, index) in profile.homeCapabilities" :key="area.id" class="capability-card" v-reveal="index * 50">
+              <article v-for="(area, index) in profile.homeCapabilities" :key="area.id" class="capability-card" :data-skill-area="area.id" v-reveal="index * 50">
                 <div class="capability-top"><span class="capability-number" aria-hidden="true">0{{ index + 1 }}</span><span>{{ area.label }}</span></div>
                 <h3>{{ area.title }}</h3>
                 <p class="capability-description">{{ area.body }}</p>
@@ -565,7 +565,7 @@ onUnmounted(() => {
               </section>
             </div>
             <aside class="cv-sidebar">
-              <section class="info-panel" v-reveal><h2>{{ profile.skillsTitle }}</h2><div v-for="area in profile.skills" :key="area.title" class="cv-skill-area"><h3>{{ area.title }}</h3><div class="tag-row"><span v-for="item in area.items" :key="item" class="tag" :class="{ 'tag-branded': technologyStyle(item) }" :style="technologyStyle(item)">{{ item }}</span></div></div></section>
+              <section class="info-panel" v-reveal><h2>{{ profile.skillsTitle }}</h2><div v-for="area in profile.skills" :key="area.id" class="cv-skill-area" :data-skill-area="area.id"><h3>{{ area.title }}</h3><div class="tag-row"><span v-for="item in area.items" :key="item" class="tag">{{ item }}</span></div></div></section>
               <section class="info-panel" v-reveal><h2>{{ profile.languagesTitle }}</h2><p>{{ profile.languages }}</p><div class="quote-box"><strong>{{ profile.strengthsTitle }}</strong><p>{{ profile.strengths }}</p></div></section>
               <section class="info-panel" v-reveal><h2>{{ t.workflowTitle }}</h2><p>{{ t.workflowText }}</p></section>
             </aside>
