@@ -1,4 +1,5 @@
 <script setup>
+import { vReveal } from './portfolioMotion';
 defineProps({ language: { type: String, default: 'es' } });
 const emit = defineEmits(['navigate']);
 </script>
@@ -6,26 +7,26 @@ const emit = defineEmits(['navigate']);
 <template>
   <section class="section page-section ventures-page">
     <div class="container">
-      <header class="ventures-intro">
+      <header class="ventures-intro" v-reveal>
         <p class="eyebrow">{{ language === 'es' ? 'PROYECTOS PROPIOS' : 'MY OWN INITIATIVES' }}</p>
         <h1>{{ language === 'es' ? 'Mis emprendimientos' : 'My ventures' }}</h1>
         <p>{{ language === 'es' ? 'Tres proyectos en los que estoy trabajando. Acá podés conocer de qué se trata cada uno.' : 'Three ventures I am working on. Here is a short introduction to each one.' }}</p>
       </header>
 
       <div class="ventures-grid">
-        <article class="venture-card">
+        <article class="venture-card" v-reveal>
           <div class="venture-art venture-art-services" aria-hidden="true">
             <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 32h52l-6-15H20l-6 15Z"/><path d="M14 32v5a7 7 0 0 0 13 4 7 7 0 0 0 13 0 7 7 0 0 0 13 0 7 7 0 0 0 13-4v-5M20 45v19h40V45M34 64V49h13v15"/><path d="m27 32 3-15m10 15V17m13 15-3-15"/></svg>
           </div>
           <div class="venture-content">
-            <span class="venture-status venture-status-live">{{ language === 'es' ? 'Disponible' : 'Available' }}</span>
+            <span class="venture-status venture-status-live">{{ language === 'es' ? 'Servicio' : 'Service' }}</span>
             <h2>{{ language === 'es' ? 'Gestión de tiendas' : 'Store management' }}</h2>
             <p>{{ language === 'es' ? 'Te ayudo a crear tu tienda en VendoAlgo y a mantenerla al día: productos, precios, envíos y ayuda cuando la necesites.' : 'I help you create and maintain your VendoAlgo store: products, prices, shipping and day-to-day support.' }}</p>
             <a class="button button-primary" href="#services" @click.prevent="emit('navigate', 'services')">{{ language === 'es' ? 'Conocer el servicio' : 'Explore the service' }} <span aria-hidden="true">↗</span></a>
           </div>
         </article>
 
-        <article class="venture-card venture-card-locked" aria-labelledby="venture-citarme-title">
+        <article class="venture-card venture-card-locked" v-reveal="65" aria-labelledby="venture-citarme-title">
           <div class="venture-art venture-art-calendar" aria-hidden="true">
             <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="20" width="48" height="44" rx="6"/><path d="M16 33h48M28 15v12m24-12v12M27 44h5m10 0h5m-20 10h5"/><circle cx="51" cy="53" r="7"/><path d="m48 53 2 2 4-4"/></svg>
           </div>
@@ -37,7 +38,7 @@ const emit = defineEmits(['navigate']);
           </div>
         </article>
 
-        <article class="venture-card venture-card-locked" aria-labelledby="venture-tiendarg-title">
+        <article class="venture-card venture-card-locked" v-reveal="130" aria-labelledby="venture-tiendarg-title">
           <div class="venture-art venture-art-shop" aria-hidden="true">
             <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m24 30 4-12h24l4 12M18 30h44l-4 34H22l-4-34Z"/><path d="M29 36v5a11 11 0 0 0 22 0v-5"/><path d="M32 18v-3m16 3v-3"/></svg>
           </div>
