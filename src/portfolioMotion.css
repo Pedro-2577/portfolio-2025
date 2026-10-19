@@ -320,3 +320,37 @@
 .hero-focus-list a { text-decoration: underline; text-decoration-color: rgba(197,205,200,.5); text-underline-offset: 4px; }
 .hero-focus-list a:hover { color: #fff; text-decoration-color: var(--accent); }
 .hero-focus-list a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+
+/* Depth follows the pointer; navigation and content retain their normal geometry. */
+.capability-card { position: relative; isolation: isolate; transition: transform .3s cubic-bezier(.16,1,.3,1), border-color .25s, box-shadow .3s; }
+.capability-card::after { position: absolute; z-index: -1; inset: 0; content: ''; border-radius: inherit; pointer-events: none; opacity: 0; background: radial-gradient(400px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(148,173,63,.14), transparent 72%); transition: opacity .25s; }
+.capability-card::before { position: absolute; left: 24px; right: 24px; top: -1px; height: 2px; content: ''; pointer-events: none; background: linear-gradient(90deg, transparent, #91a763, transparent); transform: scaleX(0); transition: transform .4s cubic-bezier(.16,1,.3,1); }
+.capability-card:focus-within { border-color: #91a763; }
+.capability-card:focus-within::before { transform: scaleX(1); }
+.capability-evidence a > span { display: inline-block; transition: translate .25s; }
+.capability-evidence a:hover > span, .capability-evidence a:focus-visible > span { translate: 3px -3px; }
+.hero-focus-list > div { animation: fact-arrive .7s cubic-bezier(.16,1,.3,1) both; }
+.hero-focus-list > div:nth-child(1) { animation-delay: .4s; }
+.hero-focus-list > div:nth-child(2) { animation-delay: .5s; }
+.hero-focus-list > div:nth-child(3) { animation-delay: .6s; }
+.technical-case-item { transition: border-color .25s, box-shadow .25s; }
+.technical-case-item[open] { border-color: #91a763; box-shadow: 0 8px 28px rgba(23,32,51,.045); }
+.technical-case-number { transition: color .25s; }
+.technical-case-item[open] .technical-case-number { color: #637c2d; }
+.dark .technical-case-item[open] .technical-case-number { color: var(--accent); }
+@keyframes fact-arrive { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }
+@media (hover: hover) and (pointer: fine) {
+  .project-card:not(.academic-card):hover { transform: perspective(1200px) translateY(-6px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)); }
+  .project-card:not(.academic-card):hover .project-image img { transform: scale(1.06) translate(var(--image-x, 0px), var(--image-y, 0px)); }
+  .capability-card.is-pointer-active { transform: perspective(1200px) translateY(-4px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)); border-color: #91a763; box-shadow: 0 16px 34px rgba(23,32,51,.065); }
+  .capability-card.is-pointer-active::after { opacity: 1; }
+  .capability-card.is-pointer-active::before { transform: scaleX(1); }
+  .contact-method:hover .contact-method-icon { transform: translateY(-3px) rotate(-6deg); }
+  .contact-method-icon { transition: transform .35s cubic-bezier(.16,1,.3,1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-focus-list > div, .capability-card, .capability-card::before, .capability-card::after, .capability-evidence a > span, .contact-method-icon, .technical-case-item, .technical-case-number { animation: none !important; transition: none !important; }
+  .project-card:not(.academic-card):hover, .project-card:not(.academic-card):hover .project-image img, .capability-card.is-pointer-active, .contact-method:hover .contact-method-icon { transform: none; }
+  .capability-evidence a > span { translate: none !important; }
+}

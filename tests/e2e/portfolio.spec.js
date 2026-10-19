@@ -144,3 +144,18 @@ test.describe('recovery without JavaScript', () => {
     await expect(page).toHaveURL(new URL('#home', baseURL).href);
   });
 });
+
+test.describe('optional motion', () => {
+  test.use({ reducedMotion: 'no-preference' });
+  test('switching to reduced motion during navigation leaves content and controls usable', async ({ page }) => {
+    await page.goto('./#home');
+    await page.goto('./#projects');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(page.locator('main')).toBeVisible();
+    await expect(page.locator('.motion-pending')).toHaveCount(0);
+    expect(await page.evaluate(() => document.getAnimations().filter(animation => animation.id === 'portfolio-decoration' && animation.playState === 'running').length)).toBe(0);
+    await page.getByRole('searchbox').fill('Widget Horas Insightful');
+    await expect(page.locator('.project-card')).toHaveCount(1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  });
+});
