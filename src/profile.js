@@ -78,7 +78,8 @@ export const professionalProfile = {
           "Alpine.js",
           "Tailwind CSS",
           "PWA",
-          "Vite"
+          "Vite",
+          "Chrome Extensions"
         ],
         "homeItems": [
           "JavaScript · TypeScript",
@@ -317,7 +318,8 @@ export const professionalProfile = {
           "Alpine.js",
           "Tailwind CSS",
           "PWA",
-          "Vite"
+          "Vite",
+          "Chrome Extensions"
         ],
         "homeItems": [
           "JavaScript · TypeScript",
