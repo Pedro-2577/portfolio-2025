@@ -617,3 +617,32 @@ details p { color: var(--muted); line-height: 1.6; }
 .capability-practices summary { cursor: pointer; font-size: .8rem; color: var(--muted); }
 .capability-practices details p { max-width: 80ch; color: var(--muted); font-size: .84rem; line-height: 1.7; margin: 12px 0 0; }
 @media (max-width: 700px) { .capability-grid { grid-template-columns: 1fr; gap: 16px; } .capability-card { padding: 24px; } }
+
+/* Keep the case study and its optional details visually grouped. */
+.buyer-case.buyer-section { margin-block: 48px 24px; padding: clamp(20px, 3vw, 32px); border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.buyer-case .buyer-store-preview { aspect-ratio: 16 / 10; border-radius: 8px; background: var(--soft); }
+.buyer-case .buyer-store-preview img { object-fit: contain; object-position: center; }
+.buyer-case-details { margin-top: 24px; padding: 0; border: 0; border-top: 1px solid var(--line); }
+.buyer-case-details > summary, .buyer-more > summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; list-style: none; color: var(--ink); font-size: .95rem; line-height: 1.5; }
+.buyer-case-details > summary { padding: 16px 0; }
+.buyer-case-details > summary::-webkit-details-marker, .buyer-more > summary::-webkit-details-marker { display: none; }
+.buyer-case-details > summary::marker, .buyer-more > summary::marker { content: ''; }
+.buyer-case-details > summary::after, .buyer-more > summary::after { flex: 0 0 9px; width: 9px; height: 9px; margin-right: 3px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; content: ''; transform: rotate(45deg); }
+.buyer-case-details[open] > summary::after, .buyer-more[open] > summary::after { transform: rotate(225deg); }
+.buyer-case-details > summary:focus-visible, .buyer-more > summary:focus-visible { outline: 3px solid #749b2e; outline-offset: 4px; border-radius: 4px; }
+.buyer-case-details .buyer-work-grid { margin-top: 4px; gap: 16px; }
+.buyer-case-details .buyer-work-grid article { padding: 20px; border-radius: 8px; }
+.buyer-case-details .buyer-proof-note { margin-bottom: 0; }
+.buyer-more.buyer-section { margin-block: 24px 32px; padding: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); }
+.buyer-more > summary { padding: 18px 20px; letter-spacing: normal; }
+.buyer-more > p { margin: 0; padding: 0 20px 20px; }
+.buyer-more .buyer-other-grid { margin-top: 0; padding: 0 20px 20px; }
+.buyer-more .buyer-store-card { background: var(--surface); border-radius: 8px; overflow: hidden; }
+@media (max-width: 700px) {
+ .buyer-case.buyer-section { margin-top: 32px; padding: 20px; }
+ .buyer-case-top { gap: 24px; }
+ .buyer-case-details .buyer-work-grid { grid-template-columns: minmax(0, 1fr); }
+ .buyer-more > summary { padding: 16px; }
+ .buyer-more > p { padding: 0 16px 16px; }
+ .buyer-more .buyer-other-grid { padding: 0 16px 16px; }
+}

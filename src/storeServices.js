@@ -297,7 +297,7 @@ export const storeExamples = [
       "es": "Productos para el control de plagas.",
       "en": "Pest-control products."
     },
-    "preview": "store-preview-fumigar.jpg",
+    "preview": "store-preview-fumigar-current.jpg",
     "domain": "fumig.ar"
   },
   {

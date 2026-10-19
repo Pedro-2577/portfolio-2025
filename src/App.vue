@@ -469,7 +469,7 @@ onUnmounted(() => {
                 <a class="button button-secondary" :href="featuredStore.url" target="_blank" rel="noopener noreferrer">{{ servicePage.visit }} ↗</a>
               </header>
               <a class="buyer-store-preview" :href="featuredStore.url" :aria-label="servicePage.visit" target="_blank" rel="noopener noreferrer">
-                <img v-if="!failedServicePreviews.includes(featuredStore.id)" :src="featuredStore.preview" :alt="servicePage.previewAlt + ' ' + featuredStore.name" width="1100" height="532" loading="lazy" @error="onServicePreviewError(featuredStore.id)">
+                <img v-if="!failedServicePreviews.includes(featuredStore.id)" :src="assetBase + featuredStore.preview" :alt="servicePage.previewAlt + ' ' + featuredStore.name" width="1280" height="800" loading="lazy" @error="onServicePreviewError(featuredStore.id)">
                 <span v-else class="buyer-preview-fallback">{{ servicePage.previewMissing }}</span>
                 <span class="buyer-domain">{{ featuredStore.domain }} ↗</span>
               </a>
