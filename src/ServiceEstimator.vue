@@ -452,6 +452,7 @@ const helpKind = ref('');
 const catalogSize = ref('unsure');
 const workspace = ref(null);
 const customServicesDetails = ref(null);
+const openCustomGroups = ref([]);
 const questionnaireStep = ref(0);
 const businessAnswers = ref({ website: '', marketplace: '', products: '' });
 const businessQuestions = [
@@ -521,7 +522,7 @@ const guidedGoals = [
   { id: 'launch', es: 'Quiero mi propia tienda online', en: 'I want my own online store', descEs: 'Empezar a vender con una tienda preparada para mi negocio.', descEn: 'Start selling with a store prepared for my business.' },
   { id: 'help', es: 'Ya tengo tienda y necesito ayuda', en: 'I have a store and need help', descEs: 'Hacer cambios, resolver un problema o recibir ayuda cada mes.', descEn: 'Make changes, fix an issue or get ongoing help.' },
   { id: 'updates', es: 'Quiero dejar de actualizar datos a mano', en: 'I want to stop updating things manually', descEs: 'Mantener precios, cantidades o productos al día.', descEn: 'Keep prices, quantities or products up to date.' },
-  { id: 'custom', es: 'Elegir servicios de forma personalizada', en: 'Choose individual services', descEs: 'Ver todos los servicios por categoría y marcar los que me interesan.', descEn: 'See all services by category and select what interests me.' },
+  { id: 'custom', es: 'Elegí los servicios que necesitás', en: 'Choose the services you need', descEs: 'Ya marqué algunas opciones según tus respuestas. Podés sumar o sacar cualquiera.', descEn: 'I selected a few options based on your answers. Add or remove any of them.' },
 ];
 const helpOptions = [
   { id: 'catalogue', es: 'Cambiar productos o el diseño', en: 'Change products or design' },
@@ -586,7 +587,18 @@ async function answerQuestion(optionId) {
     return;
   }
 
-  await chooseGoal(recommendation.value.goal);
+  const suggestion = recommendation.value;
+  await chooseGoal('custom');
+  selected.value = [...suggestion.selected];
+  expanded.value = suggestion.expandLaunch;
+  expandedGroups.value = {};
+  openCustomGroups.value = [...suggestion.openGroups];
+}
+function setCustomGroupOpen(groupId, event) {
+  const next = new Set(openCustomGroups.value);
+  if (event.target.open) next.add(groupId);
+  else next.delete(groupId);
+  openCustomGroups.value = [...next];
 }
 async function exploreOtherServices(groupId = '') {
   if (!customServicesDetails.value) return;
@@ -621,7 +633,7 @@ const guidanceUrl = computed(() => 'https://wa.me/5491158471048?text=' + encodeU
 const message = computed(() => {
   const lines = [
     es.value ? 'Hola Pedro, me interesan estos servicios para mi tienda:' : 'Hi Pedro, I am interested in these services for my store:',
-    ...(currentGoal.value ? [(es.value ? 'Por dónde empezar: ' : 'Recommended starting point: ') + title(currentGoal.value)] : []),
+    ...(currentGoal.value ? [(goal.value === 'custom' ? (es.value ? 'Selección sugerida según tus respuestas: ' : 'Suggested selections based on your answers: ') : (es.value ? 'Por dónde empezar: ' : 'Recommended starting point: ')) + title(currentGoal.value)] : []),
     ...(businessAnswers.value.website ? [
       (es.value ? 'Página propia: ' : 'Own website: ') + ({ yes: es.value ? 'ya tengo' : 'already have one', new: es.value ? 'quiero crear una' : 'want to create one', 'other-channels': es.value ? 'vendo por redes, WhatsApp o en un local' : 'sell on social media, WhatsApp or in a store', unsure: es.value ? 'no estoy seguro' : 'not sure' }[businessAnswers.value.website]),
       (es.value ? 'Mercado Libre: ' : 'Mercado Libre: ') + ({ already: es.value ? 'ya vendo' : 'already sell there', interested: es.value ? 'me interesa empezar' : 'interested in starting', 'not-now': es.value ? 'no por ahora' : 'not right now', unsure: es.value ? 'no estoy seguro' : 'not sure' }[businessAnswers.value.marketplace]),
@@ -696,7 +708,6 @@ function contact(event) {
       <section v-if="businessAnswers.website" class="guided-recommendation" aria-labelledby="guidance-result-title">
         <h3 id="guidance-result-title">{{ es ? 'Tu situación' : 'Your situation' }}</h3>
         <p>{{ guidanceSummary }}</p>
-        <button v-if="recommendation.productUpdatesRelevant && goal !== 'custom'" type="button" class="guided-text-button guided-recommendation-link" aria-controls="guided-custom-services" @click="exploreOtherServices('automation')">{{ es ? 'Ver opciones para actualizar precios y productos' : 'See options for updating prices and products' }} ↓</button>
       </section>
       <div class="guided-layout">
         <div class="guided-main">
@@ -822,12 +833,12 @@ function contact(event) {
             <summary>{{ es ? 'Elegir otros servicios' : 'Choose other services' }}</summary>
             <p class="guided-muted">{{ es ? 'Podés agregar o quitar tareas. Si no sabés qué elegir, lo vemos juntos.' : 'Add or remove tasks. If you are unsure, we can choose together.' }}</p>
             <div class="guided-bulk"><span>{{ selected.length }} {{ es ? 'elegidos' : 'selected' }}</span><button type="button" @click="selectAllServices" :disabled="allServicesSelected">{{ es ? 'Seleccionar todo' : 'Select all' }}</button><button type="button" @click="clearServices" :disabled="!hasSelection && !modules.length">{{ es ? 'Quitar todo' : 'Clear all' }}</button></div>
-            <details class="guided-category">
+            <details class="guided-category" :open="expanded" @toggle="expanded = $event.target.open">
               <summary>{{ es ? 'Crear mi tienda' : 'Create my store' }}<span>{{ checkedBasics.length }}/5</span></summary>
               <label class="guided-all"><input type="checkbox" :checked="allBasics" :indeterminate.prop="partialBasics" @change="toggleBasics">{{ es ? 'Elegir las cinco tareas' : 'Choose all five tasks' }}</label>
               <label v-for="item in options" :key="item.id" class="guided-option"><input type="checkbox" :checked="selected.includes(item.id)" @change="toggleBasic(item, $event.target.checked)"><span><strong>{{ title(item) }}</strong><em v-if="showPrices">{{ basicFees(item) }} · {{ es ? 'una sola vez' : 'one-time' }}</em></span></label>
             </details>
-            <details v-for="group in serviceGroups" :key="group.id" class="guided-category" :data-service-group="group.id">
+            <details v-for="group in serviceGroups" :key="group.id" class="guided-category" :data-service-group="group.id" :open="openCustomGroups.includes(group.id)" @toggle="setCustomGroupOpen(group.id, $event)">
               <summary>{{ title(group) }}<span>{{ groupSelected(group.id).length }}/{{ groupOptions(group.id).length }}</span></summary>
               <label class="guided-all"><input type="checkbox" :checked="groupAllSelected(group.id)" :indeterminate.prop="groupPartiallySelected(group.id)" @change="toggleGroup(group.id, $event.target.checked)">{{ es ? 'Elegir todo este grupo' : 'Choose this whole group' }}</label>
               <div v-for="item in groupOptions(group.id)" :key="item.id" class="guided-service-item">
@@ -1119,7 +1130,6 @@ function contact(event) {
 .guided-recommendation { max-width: 63%; margin: -.75rem 0 1.5rem; padding: .9rem 1.1rem; border-left: 3px solid #718c38; background: var(--soft); border-radius: .35rem; }
 .guided-recommendation h3 { margin: 0 0 .35rem; font-size: 1rem; }
 .guided-recommendation p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.6; }
-.guided-recommendation-link { margin-top: .3rem; min-height: 2.5rem; padding: .35rem 0; }
 .guided-text-button { flex-shrink: 0; padding: .7rem 0; background: transparent; border: 0; color: var(--ink); font-size: .9rem; text-decoration: underline; text-underline-offset: .25rem; cursor: pointer; }
 .guided-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(21rem, .85fr); gap: clamp(1.25rem, 2.5vw, 2rem); align-items: start; }
 .guided-main { min-width: 0; display: grid; gap: 1.25rem; }
