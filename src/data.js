@@ -25,6 +25,84 @@ export const projects = [
     id: 1,
     title: 'VendoAlgo',
     slug: 'vendoalgo',
+    technicalCase: {
+      "es": {
+        "eyebrow": "Caso técnico",
+        "title": "Facturación automática con ARCA",
+        "intro": "Desarrollé un servicio de facturación integrado con ARCA para VendoAlgo y otras plataformas autorizadas. Después lo integré en VendoAlgo, desde la emisión automática hasta las interfaces y el tratamiento de errores.",
+        "flowLabel": "Esquema de la integración",
+        "flow": [
+          "VendoAlgo y plataformas autorizadas",
+          "Servicio de facturación",
+          "ARCA"
+        ],
+        "sections": [
+          {
+            "title": "Qué necesitaba resolver",
+            "body": "Permitir que distintas plataformas usaran un mismo servicio de facturación, restringiendo su consumo a las plataformas autorizadas. En VendoAlgo, ese servicio debía quedar integrado en el flujo de facturación automática."
+          },
+          {
+            "title": "Qué desarrollé",
+            "items": [
+              "El servicio de facturación con ARCA y la restricción de uso para las plataformas autorizadas.",
+              "La integración del servicio en VendoAlgo para emitir facturas automáticamente.",
+              "Las interfaces, los mensajes y el diseño responsive del flujo de facturación."
+            ]
+          },
+          {
+            "title": "Cómo responde ante un fallo",
+            "body": "Cuando falla la emisión, el mensaje de error llega al feed. El usuario puede revisar el aviso y reintentar la operación estrictamente a mano: el flujo no dispara reintentos automáticos."
+          },
+          {
+            "title": "Qué validé",
+            "body": "Probé los casos de uso del servicio y su integración en VendoAlgo, incluyendo permisos, fallos, mensajes de error y recuperación manual. También revisé el comportamiento de las interfaces en móvil y distintos tamaños de pantalla."
+          },
+          {
+            "title": "Resultado",
+            "body": "Un servicio de facturación compartido, de uso restringido a las plataformas autorizadas, con emisión automática integrada en VendoAlgo y un recorrido definido para informar errores y permitir el reintento manual."
+          }
+        ],
+        "linkLabel": "Ver caso de facturación"
+      },
+      "en": {
+        "eyebrow": "Technical case",
+        "title": "Automatic invoicing with ARCA",
+        "intro": "I developed an ARCA-integrated invoicing service for VendoAlgo and other authorized platforms. I then integrated it into VendoAlgo, covering automatic issuance, interfaces and error handling.",
+        "flowLabel": "Integration overview",
+        "flow": [
+          "VendoAlgo and authorized platforms",
+          "Invoicing service",
+          "ARCA"
+        ],
+        "sections": [
+          {
+            "title": "The problem",
+            "body": "Allow different platforms to use a shared invoicing service while restricting its use to authorized platforms. In VendoAlgo, the service needed to be integrated into the automatic invoicing workflow."
+          },
+          {
+            "title": "What I developed",
+            "items": [
+              "The ARCA invoicing service and restrictions on use by authorized platforms.",
+              "The VendoAlgo integration for automatic invoice issuance.",
+              "The interfaces, user messages and responsive design for the invoicing workflow."
+            ]
+          },
+          {
+            "title": "What happens when it fails",
+            "body": "If invoice issuance fails, an error message appears in the feed. The user can review the notification and retry the operation manually. The workflow does not trigger automatic retries."
+          },
+          {
+            "title": "What I validated",
+            "body": "I tested the service's use cases and its VendoAlgo integration, including permissions, failures, error messages and manual recovery. I also reviewed how the interfaces behave on mobile and across screen sizes."
+          },
+          {
+            "title": "Outcome",
+            "body": "A shared invoicing service restricted to authorized platforms, with automatic issuance integrated into VendoAlgo and a defined flow for reporting errors and allowing manual retries."
+          }
+        ],
+        "linkLabel": "View invoicing case"
+      }
+    },
     description: 'Plataforma para crear y gestionar tiendas online, con catálogo de productos, medios de pago, opciones de envío y personalización de la tienda.',
     shortDescription: 'Mi trabajo actual: desarrollo integral de una plataforma de e-commerce',
     image: './project-vendoalgo.jpg',
@@ -44,8 +122,8 @@ export const projects = [
     importance: 1,
     role: 'Programador full stack dentro del equipo de VendoAlgo. Desarrollo de la plataforma desde cero hasta su versión actual, con participación en frontend, backend, APIs, diseño visual, UX y marketing.',
     roleEn: 'Full-stack developer on the VendoAlgo team. Development of the platform from scratch to its current version, contributing to frontend, backend, APIs, visual design, UX and marketing.',
-    highlights: ['Desarrollo del frontend y backend desde cero', 'Implementación e integración de APIs utilizadas por la plataforma', 'Diseño visual y experiencia de usuario', 'Participación en marketing y evolución del producto junto al equipo', 'Integración de IA y automatización de procesos', 'Codificación segura y revisión de código'],
-    highlightsEn: ['Frontend and backend development from scratch', 'Implementation and integration of platform APIs', 'Visual design and user experience', 'Contributions to marketing and ongoing product development with the team', 'AI integration and process automation', 'Secure coding and code review'],
+    highlights: ['Desarrollo del frontend y backend desde cero', 'Servicio de facturación con ARCA para plataformas autorizadas e integración de emisión automática en VendoAlgo', 'Diseño visual y experiencia de usuario', 'Participación en marketing y evolución del producto junto al equipo', 'Integración de IA y automatización de procesos', 'Codificación segura y revisión de código'],
+    highlightsEn: ['Frontend and backend development from scratch', 'ARCA invoicing service for authorized platforms and automatic invoice issuance in VendoAlgo', 'Visual design and user experience', 'Contributions to marketing and ongoing product development with the team', 'AI integration and process automation', 'Secure coding and code review'],
     outcome: 'Una plataforma de comercio electrónico en producción que desarrollé desde cero dentro del equipo y en la que sigo trabajando actualmente.',
     outcomeEn: 'A production e-commerce platform that I developed from scratch as part of the team and continue to work on today.',
   },
