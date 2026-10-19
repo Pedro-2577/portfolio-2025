@@ -10,16 +10,15 @@
     "preview": "vite preview",
     "test": "node --test tests/httpErrors.test.js tests/preferences.test.js tests/catalog.test.js tests/resumePdf.test.js tests/security.test.js",
     "test:e2e": "playwright test",
-    "audit:dependencies": "npm audit --audit-level=high"
+    "audit:dependencies": "npm audit --audit-level=high",
+    "check:build": "node scripts/check-build.mjs",
+    "check:source": "node scripts/check-source.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
-    "@tailwindcss/forms": "0.5.11",
-    "@tailwindcss/typography": "0.5.20",
     "@vitejs/plugin-vue": "6.0.10",
     "autoprefixer": "10.6.1",
     "postcss": "8.5.31",
-    "tailwindcss": "3.4.19",
     "vite": "7.3.7",
     "vue": "3.5.44"
   }
