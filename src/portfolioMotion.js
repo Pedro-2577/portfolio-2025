@@ -52,15 +52,56 @@ export function usePortfolioMotion(route) {
   let pointer;
   let position;
   let motionQuery;
+  let heroName;
   const ripples = new Set();
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
   const canFollow = () => finePointer.matches && !reducedMotion();
+
+
+  // Decorative animations never own visibility or change layout.
+  function animateDecoration(element, frames, options = {}) {
+    if (!element?.animate || reducedMotion()) return;
+    for (const animation of element.getAnimations()) if (animation.id === 'portfolio-decoration') animation.cancel();
+    const animation = element.animate(frames, { duration: 420, easing: 'cubic-bezier(.16,1,.3,1)', ...options });
+    animation.id = 'portfolio-decoration';
+    running.add(animation);
+    animation.onfinish = () => { running.delete(animation); animation.cancel(); };
+    animation.oncancel = () => running.delete(animation);
+  }
+
+  function waveName(name, origin) {
+    const letters = [...name.querySelectorAll('.hero-letter')];
+    const source = Math.max(0, letters.indexOf(origin?.closest('.hero-letter')));
+    letters.forEach((letter, index) => animateDecoration(letter,
+      [{ translate: '0 0' }, { translate: '0 -9px', offset: .35 }, { translate: '0 0' }],
+      { duration: 620, delay: Math.abs(index - source) * 45 },
+    ));
+  }
+
+  function onDisclosure(event) {
+    const details = event.target;
+    if (!(details instanceof Element) || !details.matches('.technical-case-item')) return;
+    if (!details.open) {
+      for (const animation of details.getAnimations({ subtree: true })) if (animation.id === 'portfolio-decoration') animation.cancel();
+      return;
+    }
+    animateDecoration(details.querySelector('.technical-case-body'),
+      [{ opacity: .2, translate: '0 -8px' }, { opacity: 1, translate: '0 0' }],
+      { duration: 360 },
+    );
+    details.querySelectorAll('.technical-case-flow li').forEach((step, index) => animateDecoration(step,
+      [{ opacity: .3, translate: '0 9px' }, { opacity: 1, translate: '0 0' }],
+      { duration: 420, delay: index * 75 },
+    ));
+  }
 
   function resetSurface() {
     if (!surface) return;
     surface.classList.remove('is-pointer-active');
     surface.style.removeProperty('--tilt-x');
     surface.style.removeProperty('--tilt-y');
+    surface.style.removeProperty('--image-x');
+    surface.style.removeProperty('--image-y');
     surface = undefined;
   }
 
@@ -79,6 +120,7 @@ export function usePortfolioMotion(route) {
     aura?.classList.remove('is-visible', 'is-interactive', 'is-on-dark');
     resetSurface();
     resetMagnet();
+    heroName = undefined;
   }
 
   function paintSurface() {
@@ -91,6 +133,8 @@ export function usePortfolioMotion(route) {
       surface.style.setProperty('--pointer-y', (y * 100).toFixed(2) + '%');
       surface.style.setProperty('--tilt-x', ((.5 - y) * 4).toFixed(2) + 'deg');
       surface.style.setProperty('--tilt-y', ((x - .5) * 4).toFixed(2) + 'deg');
+      surface.style.setProperty('--image-x', ((x - .5) * 8).toFixed(2) + 'px');
+      surface.style.setProperty('--image-y', ((y - .5) * 8).toFixed(2) + 'px');
       surface.classList.add('is-pointer-active');
     }
     if (magnet?.isConnected) {
@@ -123,7 +167,10 @@ export function usePortfolioMotion(route) {
   function onPointer(event) {
     if (event.pointerType !== 'mouse' || !canFollow()) return;
     const element = event.target instanceof Element ? event.target : null;
-    const nextSurface = element?.closest('.hero-portrait, .project-card:not(.academic-card), .skill-card, .workbench, .contact-method') || null;
+    const name = element?.closest('.hero-name');
+    if (name && name !== heroName) waveName(name, element);
+    heroName = name;
+    const nextSurface = element?.closest('.hero-portrait, .project-card:not(.academic-card), .skill-card, .capability-card, .workbench, .contact-method') || null;
     const nextMagnet = element?.closest('.hero-main .button:not(.button-outline), .availability .button') || null;
     if (nextSurface !== surface) { resetSurface(); surface = nextSurface; }
     if (nextMagnet !== magnet) { resetMagnet(); magnet = nextMagnet; }
@@ -193,7 +240,10 @@ export function usePortfolioMotion(route) {
   }
 
   function onVisibility() {
-    if (document.hidden) { hidePointer(); clearRipples(); }
+    if (document.hidden) {
+      hidePointer(); clearRipples();
+      for (const animation of [...running]) animation.cancel();
+    }
   }
 
   function onMotionPreference() {
@@ -208,8 +258,13 @@ export function usePortfolioMotion(route) {
   watch(route, async () => {
     hidePointer();
     clearRipples();
+    for (const animation of [...running]) animation.cancel();
     await nextTick();
     scheduleProgress();
+    animateDecoration(root?.querySelector('.route-view'),
+      [{ opacity: .35, translate: '0 12px' }, { opacity: 1, translate: '0 0' }],
+      { duration: 400 },
+    );
   });
 
   onMounted(() => {
@@ -221,6 +276,7 @@ export function usePortfolioMotion(route) {
     root?.addEventListener('pointerdown', onPointerDown, { passive: true });
     root?.addEventListener('pointerleave', hidePointer);
     root?.addEventListener('focusin', onFocus);
+    root?.addEventListener('toggle', onDisclosure, true);
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('visibilitychange', onVisibility);
     window.addEventListener('blur', hidePointer);
@@ -236,6 +292,7 @@ export function usePortfolioMotion(route) {
     root?.removeEventListener('pointerdown', onPointerDown);
     root?.removeEventListener('pointerleave', hidePointer);
     root?.removeEventListener('focusin', onFocus);
+    root?.removeEventListener('toggle', onDisclosure, true);
     document.removeEventListener('keydown', onKeyDown);
     document.removeEventListener('visibilitychange', onVisibility);
     window.removeEventListener('blur', hidePointer);
