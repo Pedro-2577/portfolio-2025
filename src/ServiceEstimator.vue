@@ -584,6 +584,7 @@ function contact(event) {
       <div class="guided-layout">
         <div class="guided-main">
           <div v-if="goal === 'custom'" class="estimate-choices guided-custom-catalog">
+            <div class="guided-bulk"><span role="status" aria-live="polite">{{ selected.length }} {{ es ? 'elegidos' : 'selected' }}</span><button type="button" @click="selectAllServices" :disabled="allServicesSelected">{{ es ? 'Seleccionar todo' : 'Select all' }}</button><button type="button" @click="clearServices" :disabled="!hasSelection && !modules.length">{{ es ? 'Quitar todo' : 'Clear all' }}</button></div>
         <div class="estimate-package" :class="{ 'is-selected': checkedBasics.length }">
           <div class="estimate-package-heading">
             <label class="estimate-package-select">
@@ -719,7 +720,7 @@ function contact(event) {
             </details>
           </details>
 
-          <fieldset v-if="selected.includes('hiring')" class="guided-staff">
+          <fieldset v-if="goal !== 'custom' && selected.includes('hiring')" class="guided-staff">
             <legend>{{ es ? '¿A quién necesitás? (opcional)' : 'Who do you need? (optional)' }}</legend>
             <label v-for="role in staffRoles" :key="role.id"><input v-model="details.roles" type="checkbox" :value="role.id">{{ title(role) }}</label>
           </fieldset>
