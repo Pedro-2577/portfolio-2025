@@ -471,6 +471,44 @@ export const projects = [
     startDate: '2023',
     academic: true,
   },
+  {
+    "id": 18,
+    "title": "Widget Horas Insightful",
+    "slug": "widget-horas-insightful",
+    "description": "Extensión de Chrome que desarrollé para calcular mis horas de trabajo de forma más cómoda. Añade una calculadora flotante con un panel para configurar la jornada. Es una utilidad personal sencilla, publicada en Chrome Web Store.",
+    "shortDescription": "Calculadora de horas de trabajo que hice para uso personal",
+    "image": "./project-widget-horas-insightful.jpg",
+    "github": null,
+    "live": "https://chromewebstore.google.com/detail/widget-horas-insightful/mjgpnfcmoijpkhgmmifaoeklhmlmdklh",
+    "featured": false,
+    "private": false,
+    "category": "Herramienta personal",
+    "titleEn": "Widget Horas Insightful",
+    "descriptionEn": "A Chrome extension I built to calculate my working hours more conveniently. It adds a floating calculator with a panel for configuring working hours. It is a simple personal tool published on the Chrome Web Store.",
+    "shortDescriptionEn": "A working-hours calculator I built for personal use",
+    "categoryEn": "Personal tool",
+    "technologies": [
+      "Chrome Extensions"
+    ],
+    "demoType": "extension",
+    "startDate": "2026",
+    "academic": false,
+    "importance": 6,
+    "role": "Desarrollo de una utilidad personal y publicación en Chrome Web Store.",
+    "roleEn": "Development of a personal tool and publication on the Chrome Web Store.",
+    "highlights": [
+      "Calculadora de horas flotante integrada en la página",
+      "Panel para configurar horas por día, días laborables y feriados",
+      "Publicación accesible desde Chrome Web Store"
+    ],
+    "highlightsEn": [
+      "Floating working-hours calculator integrated into the page",
+      "Configuration panel for daily hours, working days and holidays",
+      "Public listing on the Chrome Web Store"
+    ],
+    "outcome": "Una extensión publicada que uso para calcular mis horas de trabajo con más comodidad.",
+    "outcomeEn": "A published extension that I use to calculate my working hours more conveniently."
+  },
 ];
 
 export const contact = {

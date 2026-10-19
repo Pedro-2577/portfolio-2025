@@ -37,7 +37,7 @@ export const professionalProfile = {
           "Diseño y desarrollo plataformas web con Vue.js, Node.js y PHP/MySQL, con foco en interfaces responsive y UX/UI.",
           "Gestiono tiendas en VendoAlgo. En FumigAR configuré el catálogo, la presentación, los envíos y las funciones de facturación y Mercado Libre.",
           "Configuro actualizaciones de precios a partir de los costos del proveedor, capacito a los usuarios y doy soporte y seguimiento a incidencias.",
-          "Desarrollo y publico extensiones para navegadores en Chrome Web Store.",
+          "Desarrollé y publiqué Widget Horas Insightful en Chrome Web Store, una calculadora sencilla para facilitar mi propio registro de horas de trabajo.",
           "Colaboré en Cinematch en el diseño, la estructuración y la integración de componentes de la plataforma."
         ]
       }
@@ -260,7 +260,7 @@ export const professionalProfile = {
           "Design and build web platforms using Vue.js, Node.js and PHP/MySQL, focusing on responsive interfaces and UX/UI.",
           "Manage VendoAlgo stores. At FumigAR, I configured the catalog, presentation, shipping, invoicing and Mercado Libre features.",
           "Configure price updates based on supplier costs, train users and provide support and issue follow-up.",
-          "Develop and publish browser extensions on the Chrome Web Store.",
+          "Developed and published Widget Horas Insightful on the Chrome Web Store, a simple calculator to make tracking my own working hours easier.",
           "Contributed to Cinematch through interface design, platform structure and component integration."
         ]
       }
