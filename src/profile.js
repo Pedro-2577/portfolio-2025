@@ -31,10 +31,12 @@ export const professionalProfile = {
       },
       {
         "period": "Ene. 2020 — Actualidad",
-        "role": "Desarrollador web full stack freelance",
+        "role": "Desarrollador full stack y gestor de tiendas freelance",
         "organization": "Proyectos independientes",
         "items": [
           "Diseño y desarrollo plataformas web con Vue.js, Node.js y PHP/MySQL, con foco en interfaces responsive y UX/UI.",
+          "Gestiono tiendas en VendoAlgo. En FumigAR configuré el catálogo, la presentación, los envíos y las funciones de facturación y Mercado Libre.",
+          "Configuro actualizaciones de precios a partir de los costos del proveedor, capacito a los usuarios y doy soporte y seguimiento a incidencias.",
           "Desarrollo y publico extensiones para navegadores en Chrome Web Store.",
           "Colaboré en Cinematch en el diseño, la estructuración y la integración de componentes de la plataforma."
         ]
@@ -252,10 +254,12 @@ export const professionalProfile = {
       },
       {
         "period": "Jan 2020 — Present",
-        "role": "Freelance full-stack web developer",
+        "role": "Freelance full-stack developer and store manager",
         "organization": "Independent projects",
         "items": [
           "Design and build web platforms using Vue.js, Node.js and PHP/MySQL, focusing on responsive interfaces and UX/UI.",
+          "Manage VendoAlgo stores. At FumigAR, I configured the catalog, presentation, shipping, invoicing and Mercado Libre features.",
+          "Configure price updates based on supplier costs, train users and provide support and issue follow-up.",
           "Develop and publish browser extensions on the Chrome Web Store.",
           "Contributed to Cinematch through interface design, platform structure and component integration."
         ]

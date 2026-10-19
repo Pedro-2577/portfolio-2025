@@ -14,7 +14,7 @@ const copy = {
     collapse: 'Ocultar aportes',
     entries: [
       { match: 'VendoAlgo', title: 'VendoAlgo', summary: 'Participé en la construcción de la plataforma desde cero y sigo trabajando en su evolución junto al equipo.', route: 'project/vendoalgo', link: 'Ver el proyecto' },
-      { match: 'Proyectos independientes', title: 'Proyectos independientes', summary: 'Desarrollo de proyectos web, trabajos para clientes y extensiones para navegadores.', route: 'projects', link: 'Ver mis proyectos' },
+      { match: 'Proyectos independientes', title: 'Trabajo freelance', summary: 'Desarrollo web para clientes, extensiones para navegadores y gestión de tiendas. En FumigAR me ocupo de la configuración y el acompañamiento de la operación.', route: 'projects', link: 'Ver mis proyectos', serviceLink: 'Gestión de tiendas y caso FumigAR' },
     ],
   },
   en: {
@@ -26,7 +26,7 @@ const copy = {
     collapse: 'Hide contributions',
     entries: [
       { match: 'VendoAlgo', title: 'VendoAlgo', summary: 'I helped build the platform from scratch and continue developing it with the team.', route: 'project/vendoalgo', link: 'View the project' },
-      { match: 'Independent projects', title: 'Independent projects', summary: 'Web development, client work and browser extensions.', route: 'projects', link: 'View my projects' },
+      { match: 'Independent projects', title: 'Freelance work', summary: 'Client web development, browser extensions and store management. At FumigAR, I handle configuration and ongoing operational support.', route: 'projects', link: 'View my projects', serviceLink: 'Store management and the FumigAR case' },
     ],
   },
 };
@@ -59,7 +59,10 @@ const experience = computed(() => {
             <summary><span class="contributions-closed">{{ t.expand }}</span><span class="contributions-open">{{ t.collapse }}</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg></summary>
             <ul><li v-for="item in entry.items" :key="item">{{ item }}</li></ul>
           </details>
-          <a class="text-link experience-project-link" :href="'#' + entry.route" @click.prevent="emit('navigate', entry.route)">{{ entry.link }} <span aria-hidden="true">↗</span></a>
+          <div class="experience-preview-links">
+  <a class="text-link experience-project-link" :href="'#' + entry.route" @click.prevent="emit('navigate', entry.route)">{{ entry.link }} <span aria-hidden="true">↗</span></a>
+            <a v-if="entry.serviceLink" class="text-link experience-project-link" href="#services" @click.prevent="emit('navigate', 'services')">{{ entry.serviceLink }} <span aria-hidden="true">↗</span></a>
+          </div>
         </article>
       </div>
     </div>
@@ -91,6 +94,7 @@ const experience = computed(() => {
 .contributions-open, .experience-preview-details[open] .contributions-closed { display: none; }
 .experience-preview-details[open] .contributions-open { display: inline; }
 .experience-preview-details ul { display: grid; gap: 10px; margin: 8px 0 18px; padding-left: 18px; color: var(--muted); font-size: .88rem; line-height: 1.65; }
+.experience-preview-links { display: flex; flex-wrap: wrap; gap: 8px 20px; }
 .experience-project-link { display: inline-block; padding-block: 6px; color: var(--ink); font-size: .82rem; font-weight: 600; line-height: 1.5; }
 .experience-preview :is(a, summary):focus-visible { outline: 2px solid #749b2e; outline-offset: 4px; border-radius: 2px; }
 @media (max-width: 960px) {
