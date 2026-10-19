@@ -646,3 +646,14 @@ details p { color: var(--muted); line-height: 1.6; }
  .buyer-more > p { padding: 0 16px 16px; }
  .buyer-more .buyer-other-grid { padding: 0 16px 16px; }
 }
+
+/* Store service overview: a real walkthrough and an easy route to each answer. */
+.buyer-price-heading { max-width: 46rem; margin-bottom: 1.5rem; }
+.buyer-price-heading h1 { font-size: clamp(1.9rem, 4vw, 2.7rem); letter-spacing: -.04em; line-height: 1.15; margin: .5rem 0 1rem; }
+.buyer-price-heading > p:not(.eyebrow), .buyer-audience { color: var(--muted); line-height: 1.75; }
+.buyer-audience { max-width: 58ch; font-size: 1rem; }
+.buyer-content-nav { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; padding: 1rem 0; border-block: 1px solid var(--line); margin-top: 2rem; }
+.buyer-content-nav button { padding: .65rem 0; min-height: 44px; border: 0; background: transparent; color: var(--ink); text-decoration: underline; text-underline-offset: .25rem; font-size: .9rem; cursor: pointer; }
+.buyer-content-nav button:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+.buyer-demo-section .buyer-case-details { margin-top: 1.5rem; }
+@media(max-width:500px) { .buyer-content-nav { gap: .25rem 1.25rem; } .buyer-content-nav button { font-size: .85rem; } }

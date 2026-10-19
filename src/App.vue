@@ -3,6 +3,7 @@ import { computed, onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
 import { contact, projects } from './data';
 import { storeServiceCopy, storeExamples, bookingUrl } from './storeServices';
 import ServiceEstimator from './ServiceEstimator.vue';
+import StoreServiceGuide from './StoreServiceGuide.vue';
 import VenturesPage from './VenturesPage.vue';
 import PortfolioWorkbench from './PortfolioWorkbench.vue';
 import ProjectTechnicalCase from './ProjectTechnicalCase.vue';
@@ -448,49 +449,60 @@ onUnmounted(() => {
 
       <section v-else-if="isServiceRoute" class="section page-section buyer-page">
         <div class="container">
+          <header v-if="showServicePrices" class="buyer-price-heading">
+            <p class="eyebrow">{{ language === 'es' ? 'SERVICIOS Y PRECIOS ORIENTATIVOS' : 'SERVICES AND INDICATIVE PRICES' }}</p>
+            <h1>{{ language === 'es' ? 'Armá tu consulta.' : 'Build your inquiry.' }}</h1>
+            <p>{{ language === 'es' ? 'Elegí lo que necesitás. El resumen separa mi trabajo del costo de VendoAlgo.' : 'Choose what you need. My fees and VendoAlgo costs are shown separately.' }}</p>
+            <button type="button" class="buyer-inline-link" @click="scrollToSection('service-payment')">{{ language === 'es' ? 'Ver formas de pago y cuotas' : 'See payment terms and installments' }} ↓</button>
+          </header>
           <section v-if="showServicePrices" id="service-scope" class="buyer-section" tabindex="-1" :aria-label="language === 'es' ? 'Preparar mi consulta y estimado' : 'Prepare my inquiry and estimate'">
             <ServiceEstimator :language="language" :show-prices="true" />
           </section>
+          <div v-if="showServicePrices" class="buyer-section"><StoreServiceGuide part="payment" :language="language" :show-prices="showServicePrices" /></div>
           <header v-if="!showServicePrices" class="buyer-hero">
             <p class="eyebrow">{{ servicePage.eyebrow }}</p>
             <h1>{{ servicePage.title }}</h1>
             <p class="buyer-lead">{{ servicePage.lead }}</p>
+            <p class="buyer-audience">{{ servicePage.audience }}</p>
             <div class="button-row">
-              <button type="button" class="button button-primary" @click="scrollToSection('service-scope')">{{ language === 'es' ? (showServicePrices ? 'Ver servicios y rangos' : 'Ver servicios') : (showServicePrices ? 'See services and price ranges' : 'See services') }} ↓</button>
-              <button type="button" class="buyer-inline-link" @click="scrollToSection('service-case')">{{ language === 'es' ? 'Ver un caso real' : 'See a real example' }} ↓</button>
+              <button type="button" class="button button-primary" @click="scrollToSection('service-case')">{{ language === 'es' ? 'Ver una tienda funcionando' : 'See a working store' }} ↓</button>
+              <button type="button" class="buyer-inline-link" @click="scrollToSection('service-scope')">{{ language === 'es' ? 'Elegir qué necesito' : 'Choose what I need' }} ↓</button>
             </div>
           </header>
 
-          <section id="service-case" class="buyer-case buyer-section" tabindex="-1" aria-labelledby="service-case-title">
-            <div class="buyer-case-top">
-              <header>
-                <p class="eyebrow">{{ servicePage.caseEyebrow }}</p>
-                <h2 id="service-case-title">{{ servicePage.caseTitle }}</h2>
-                <p>{{ servicePage.caseIntro }}</p>
-                <a class="button button-secondary" :href="featuredStore.url" target="_blank" rel="noopener noreferrer">{{ servicePage.visit }} ↗</a>
-              </header>
-              <a class="buyer-store-preview" :href="featuredStore.url" :aria-label="servicePage.visit" target="_blank" rel="noopener noreferrer">
-                <img v-if="!failedServicePreviews.includes(featuredStore.id)" :src="assetBase + featuredStore.preview" :alt="servicePage.previewAlt + ' ' + featuredStore.name" width="1280" height="800" loading="lazy" @error="onServicePreviewError(featuredStore.id)">
-                <span v-else class="buyer-preview-fallback">{{ servicePage.previewMissing }}</span>
-                <span class="buyer-domain">{{ featuredStore.domain }} ↗</span>
-              </a>
-            </div>
+          <nav class="buyer-content-nav" :aria-label="language === 'es' ? 'En esta página' : 'On this page'">
+            <button type="button" @click="scrollToSection('service-case')">{{ language === 'es' ? 'Ejemplo real' : 'Real example' }}</button>
+            <button type="button" @click="scrollToSection('service-process')">{{ language === 'es' ? 'Cómo trabajo' : 'How I work' }}</button>
+            <button type="button" @click="scrollToSection('service-scope')">{{ language === 'es' ? 'Servicios' : 'Services' }}</button>
+            <button type="button" @click="scrollToSection('service-questions')">{{ language === 'es' ? 'Preguntas frecuentes' : 'Common questions' }}</button>
+          </nav>
+          <section id="service-case" class="buyer-section buyer-demo-section" tabindex="-1" aria-labelledby="service-tour-title">
+            <StoreServiceGuide part="tour" :language="language" :show-prices="showServicePrices" />
             <details class="buyer-case-details">
-              <summary>{{ language === 'es' ? 'Qué hice en FumigAR' : 'What I did for FumigAR' }}</summary>
-            <div class="buyer-work-grid">
-              <article v-for="(group, index) in servicePage.caseGroups" :key="group.title" :class="{ 'buyer-work-featured': index === 2 }">
-                <span class="buyer-number">0{{ index + 1 }}</span>
-                <h3>{{ group.title }}</h3>
-                <ul><li v-for="item in group.items" :key="item">{{ item }}</li></ul>
-              </article>
-            </div>
-            <p class="buyer-small buyer-proof-note">{{ servicePage.publicNote }}</p>
+              <summary>{{ language === 'es' ? 'Ver todo lo que hice para FumigAR' : 'See my full scope at FumigAR' }}</summary>
+              <p>{{ language === 'es' ? 'Me pidieron pasar los productos de la tienda anterior, preparar la nueva tienda y acompañar su operación diaria. Mi trabajo incluyó:' : 'They asked me to migrate their previous catalog, prepare the new store and support everyday operations. My work included:' }}</p>
+              <div class="buyer-work-grid">
+                <article v-for="(group, index) in servicePage.caseGroups" :key="group.title" :class="{ 'buyer-work-featured': index === 2 }">
+                  <span class="buyer-number">0{{ index + 1 }}</span>
+                  <h3>{{ group.title }}</h3>
+                  <ul><li v-for="item in group.items" :key="item">{{ item }}</li></ul>
+                </article>
+              </div>
+              <p class="buyer-small buyer-proof-note">{{ servicePage.publicNote }}</p>
             </details>
           </section>
+
+          <div id="service-process" class="buyer-section" tabindex="-1">
+            <StoreServiceGuide part="process" :language="language" />
+          </div>
 
           <section v-if="!showServicePrices" id="service-scope" class="buyer-section" tabindex="-1" :aria-label="language === 'es' ? 'Preparar mi consulta' : 'Prepare my inquiry'">
             <ServiceEstimator :language="language" :show-prices="showServicePrices" />
           </section>
+
+          <div id="service-questions" class="buyer-section" tabindex="-1">
+            <StoreServiceGuide part="faq" :language="language" :show-prices="showServicePrices" />
+          </div>
 
           <details class="buyer-more buyer-section">
             <summary>{{ servicePage.otherTitle }}</summary>
@@ -510,7 +522,7 @@ onUnmounted(() => {
           <aside class="buyer-person">
             <img :src="assetBase + 'pedro-portrait.jpg'" alt="Pedro Méndez Carabán" width="88" height="108" loading="lazy">
             <div><h2>{{ servicePage.personTitle }}</h2><p>{{ servicePage.personText }}</p>
-              <div class="button-row"><a class="text-link" href="#about" @click.prevent="navigate('about')">{{ servicePage.profile }} →</a></div>
+              <div class="button-row"><a class="text-link" href="#about" @click.prevent="navigate('about')">{{ servicePage.profile }} →</a><a class="text-link" href="https://vendoalgo.com/" target="_blank" rel="noopener noreferrer">{{ servicePage.platform }} ↗</a></div>
             </div>
           </aside>
 

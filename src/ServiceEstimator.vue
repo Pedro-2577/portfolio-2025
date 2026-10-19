@@ -376,6 +376,7 @@ const monthlyAmountUpper = computed(() => checkedExtras.value.reduce((sum, item)
 const requiredModuleIds = computed(() => [
   ...(selected.value.includes('ml') ? ['mercadolibre'] : []),
   ...(selected.value.includes('arca') ? ['invoicing'] : []),
+  ...(automationCount.value ? ['ai'] : []),
 ]);
 const selectedModules = computed(() => storePlatformPricing.modules.filter(item => modules.value.includes(item.id) || requiredModuleIds.value.includes(item.id)));
 const proRequired = computed(() => selectedModules.value.length > 0 || selected.value.includes('roles'));
@@ -400,7 +401,7 @@ const itemFees = item => {
   return parts.join(' · ') || quote.value;
 };
 const itemScope = item => es.value ? item.scopeEs : item.scopeEn;
-const platformFeatureName = item => !es.value ? item.name : ({ blog: 'Publicar artículos y noticias', coupons: 'Cupones de descuento', recovery: 'Recordar compras que quedaron sin terminar', shopping: 'Mostrar productos en Google', mercadolibre: 'Conectar Mercado Libre', ai: 'Herramientas extra de inteligencia artificial', invoicing: 'Emitir facturas automáticamente' })[item.id] || item.name;
+const platformFeatureName = item => !es.value ? item.name : ({ blog: 'Publicar artículos y noticias', coupons: 'Cupones de descuento', recovery: 'Recordar compras que quedaron sin terminar', shopping: 'Mostrar productos en Google', mercadolibre: 'Conectar Mercado Libre', ai: 'Conexión IA · para actualizaciones automáticas', invoicing: 'Emitir facturas automáticamente' })[item.id] || item.name;
 const groupEstimate = group => {
   const items = groupSelected(group).length ? groupSelected(group) : groupOptions(group);
   const commonCount = group === 'automation' ? Math.max(0, items.length - 1) : 0;
@@ -511,8 +512,8 @@ function chooseHelp(kind) {
 watch([catalogSize, automationCount], ([size, automaticTasks]) => {
   platform.value = size === 'over50' ? 'pro' : size === 'upto50' && !automaticTasks ? 'free' : 'unsure';
 });
-// Automated tasks need a confirmed platform scope before showing an all-in total.
-const platformPending = computed(() => platformCost.value === null || automationCount.value > 0);
+// Automation platform requirements confirmed by Pedro: Pro plus the AI connection module.
+const platformPending = computed(() => platformCost.value === null);
 const monthlyTotalLower = computed(() => platformPending.value ? null : monthlyAmount.value + platformCost.value);
 const monthlyTotalUpper = computed(() => platformPending.value ? null : monthlyAmountUpper.value + platformCost.value);
 const guidanceUrl = computed(() => 'https://wa.me/5491158471048?text=' + encodeURIComponent(
@@ -548,6 +549,9 @@ const message = computed(() => {
   ];
   return lines.join('\n');
 });
+function showPaymentTerms() {
+  document.getElementById('service-payment')?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
 function contact(event) {
   if (!goal.value && !hasSelection.value) return;
   const channel = event.submitter?.value;
@@ -751,13 +755,15 @@ function contact(event) {
           <p v-else class="guided-muted">{{ es ? 'Podés elegir una tarea o contarme qué te pasa. No hace falta que sepas cómo resolverlo.' : 'Choose a task or tell me what is happening. You do not need to know how to solve it.' }}</p>
 
           <p v-if="showPrices && hasSelection" class="guided-range-note">{{ es ? 'Rangos en pesos argentinos. El precio cambia con los productos, proveedores y trabajo necesario. Recibís un presupuesto antes de contratar.' : 'Ranges in Argentine pesos. Pricing varies with products, suppliers and work needed. You receive a quote before hiring.' }}</p>
+          <button v-if="showPrices && hasSelection" type="button" class="guided-payment-link" @click="showPaymentTerms">{{ es ? 'Podés pagar el trabajo inicial en cuotas · ver condiciones' : 'Pay initial fees in installments · see terms' }}</button>
+          <p v-if="showPrices && hasSelection" class="guided-contact-note">{{ es ? 'Cuotas acordadas en USD, pagaderas en pesos al cambio pactado. El importe en pesos puede variar.' : 'Installments agreed in USD, payable in pesos at the agreed rate. Peso amounts may vary.' }}</p>
           <details v-if="showPrices && hasSelection" class="guided-price-details">
             <summary>{{ es ? 'Qué incluye el precio y qué se paga aparte' : 'What is included and what costs extra' }}</summary>
             <p>{{ es ? 'Los valores más bajos corresponden al trabajo base de cada tarea. Más productos, proveedores o condiciones especiales pueden aumentar el presupuesto. Si tu caso supera lo previsto, te lo aclaro antes de comenzar.' : 'Lower figures apply to each task’s base scope. Extra products, suppliers or special conditions may increase the quote. Work outside those scopes is confirmed before starting.' }}</p>
-            <p v-if="automationCount">{{ es ? 'Las tareas automáticas se estiman para un proveedor, hasta 100 productos y una actualización diaria. Las tareas que usan el mismo proveedor comparten parte de la preparación y revisión: esa parte se descuenta.' : 'Automations assume one supplier, up to 100 products and one daily update. Tasks using the same supplier share part of setup and review, which is discounted.' }}</p>
+            <p v-if="automationCount">{{ es ? 'Las tareas automáticas se estiman para un proveedor, hasta 100 productos y una actualización diaria. Las tareas que usan el mismo proveedor comparten parte de la preparación y revisión: esa parte se descuenta. El abono incluye una revisión mensual y hasta una hora de ajustes menores. Una ampliación o un cambio que requiera rehacer una parte importante se presupuesta antes. No cobro un extra por el solo hecho de cambiar una herramienta por decisión mía.' : 'Automations assume one supplier, up to 100 products and one daily update. Tasks using the same supplier share discounted setup and review. The fee includes a monthly review and up to one hour of minor adjustments. Extensions or substantial rework are quoted beforehand. Tool changes I choose do not themselves create extra fees.' }}</p>
             <p>{{ es ? 'VendoAlgo es donde funciona tu tienda. Su plan y las funciones extra se pagan aparte de mi trabajo. Las comisiones de cobro, la dirección web propia y otros servicios que hagan falta también van aparte.' : 'VendoAlgo is where your store runs. Its plan and extra features are paid separately from my work. Payment fees, your domain and other required services are also separate.' }}</p>
             <label class="guided-field">{{ es ? 'Si ya conocés tu plan de VendoAlgo' : 'If you already know your VendoAlgo plan' }}<select :value="effectivePlatform" :disabled="proRequired || catalogSize === 'over50'" @change="platform = $event.target.value"><option value="unsure">{{ es ? 'Lo definimos juntos' : 'We will choose together' }}</option><option value="free">{{ es ? 'Gratis · hasta 50 productos activos' : 'Free · up to 50 active products' }}</option><option value="pro">Pro · {{ money(storePlatformPricing.plans.pro.monthly) }}/{{ es ? 'mes' : 'month' }}</option></select></label>
-            <p v-if="proRequired">{{ es ? 'Las tareas elegidas necesitan el plan Pro. Las funciones extra conocidas se suman a ese plan; cualquier costo pendiente se confirma antes de empezar.' : 'Selected tasks require Pro. Known extra features are added to that plan; any pending costs are confirmed before starting.' }}</p>
+            <p v-if="proRequired">{{ es ? 'Las tareas elegidas necesitan el plan Pro. Si elegiste actualizaciones automáticas, también necesitan Conexión IA. Las funciones necesarias ya están sumadas al costo de VendoAlgo.' : 'Selected tasks require Pro. Automatic updates also need the AI Connection module. Required features are included in the VendoAlgo cost.' }}</p>
             <details class="guided-platform-extras"><summary>{{ es ? 'Ver las funciones extra de VendoAlgo' : 'See extra VendoAlgo features' }}</summary>
               <label v-for="item in storePlatformPricing.modules" :key="item.id" class="guided-platform-option"><input type="checkbox" :checked="selectedModules.some(module => module.id === item.id)" :disabled="requiredModuleIds.includes(item.id)" @change="toggleModule(item.id, $event.target.checked)"><span>{{ platformFeatureName(item) }}</span><small>{{ money(item.monthly) }}/{{ es ? 'mes' : 'month' }}</small></label>
             </details>
@@ -1116,4 +1122,5 @@ function contact(event) {
 .guided-custom-catalog { display: grid; gap: 12px; }
 .guided-custom-catalog .estimate-package-heading { min-height: 80px; }
 @media(max-width:960px) { .guided-custom-catalog { order: 1; } }
+.guided-payment-link { display: block; border: 0; background: transparent; padding: .65rem 0; margin: .5rem 0; color: var(--ink); text-align: left; text-decoration: underline; text-underline-offset: .2rem; font-size: .9rem; line-height: 1.6; cursor: pointer; }
 </style>
