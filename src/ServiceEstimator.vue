@@ -505,7 +505,19 @@ const guidanceCopy = {
   bothSources: ['Tenés productos propios y de proveedores: podemos contemplar las dos formas de trabajo.', 'You have both your own products and supplier products: we can account for both workflows.'],
   productsUnsure: ['Todavía no vendés o no definiste el origen de tus productos.', 'You are not selling yet or have not decided where your products will come from.'],
 };
-const guidanceReasons = computed(() => recommendation.value.reasons.map(key => guidanceCopy[key][es.value ? 0 : 1]));
+const guidanceReasons = computed(() => recommendation.value.reasons.map(key => {
+  if (key === 'existingMarketplace') {
+    return es.value
+      ? (businessAnswers.value.website === 'yes' ? 'Ya vendés por Mercado Libre: podemos revisar cómo conectarlo con tu tienda.' : 'Ya vendés por Mercado Libre: podemos ver qué apoyo necesita hoy tu operación.')
+      : (businessAnswers.value.website === 'yes' ? 'You already sell on Mercado Libre: we can review how to connect it to your store.' : 'You already sell on Mercado Libre: we can see what support your operation needs.');
+  }
+  if (key === 'newMarketplace') {
+    return es.value
+      ? (businessAnswers.value.website === 'yes' ? 'Te interesa Mercado Libre: podemos revisar cómo sumar ese canal a tu tienda actual.' : businessAnswers.value.website === 'new' ? 'Podemos tener Mercado Libre en cuenta al preparar tu tienda.' : 'Podemos ver qué necesitás para empezar en Mercado Libre y si te conviene una tienda propia.')
+      : (businessAnswers.value.website === 'yes' ? 'You are interested in Mercado Libre: we can look at adding that channel to your current store.' : businessAnswers.value.website === 'new' ? 'We can consider Mercado Libre when preparing your store.' : 'We can review what you need to start on Mercado Libre and whether your own store would help.');
+  }
+  return guidanceCopy[key][es.value ? 0 : 1];
+}));
 const savedChoices = ref({});
 const guidedGoals = [
   { id: 'launch', es: 'Quiero mi propia tienda online', en: 'I want my own online store', descEs: 'Empezar a vender con una tienda preparada para mi negocio.', descEn: 'Start selling with a store prepared for my business.' },
@@ -580,11 +592,18 @@ async function answerQuestion(optionId) {
   await chooseGoal(suggested.goal);
   if (suggested.help) chooseHelp(suggested.help);
 }
-async function exploreOtherServices() {
+async function exploreOtherServices(groupId = '') {
   if (!customServicesDetails.value) return;
   customServicesDetails.value.open = true;
   await nextTick();
-  customServicesDetails.value.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  const category = groupId
+    ? customServicesDetails.value.querySelector(`[data-service-group="${groupId}"]`)
+    : null;
+  if (category) category.open = true;
+  (category || customServicesDetails.value).scrollIntoView({
+    block: 'center',
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+  });
 }
 function chooseHelp(kind) {
   helpKind.value = kind;
@@ -686,7 +705,7 @@ function contact(event) {
         <p>{{ recommendation.productUpdatesRelevant
           ? (es ? 'Esta es una sugerencia para empezar. También podemos ver otros servicios, como mantener al día los productos de tus proveedores.' : 'This is a suggested starting point. We can also look at other services, such as keeping supplier products up to date.')
           : (es ? 'Esta es una sugerencia para empezar. También podés explorar otros servicios y elegir lo que te sirva.' : 'This is a suggested starting point. You can explore other services and choose what works for you.') }}</p>
-        <button type="button" aria-controls="guided-custom-services" @click="exploreOtherServices">{{ es ? 'Explorar otros servicios' : 'Explore other services' }}</button>
+        <button type="button" aria-controls="guided-custom-services" @click="exploreOtherServices(recommendation.productUpdatesRelevant ? 'automation' : '')">{{ recommendation.productUpdatesRelevant ? (es ? 'Ver opciones para mantenerlos al día' : 'See ways to keep them up to date') : (es ? 'Explorar otros servicios' : 'Explore other services') }}</button>
       </div>
       <div class="guided-layout">
         <div class="guided-main">
@@ -817,7 +836,7 @@ function contact(event) {
               <label class="guided-all"><input type="checkbox" :checked="allBasics" :indeterminate.prop="partialBasics" @change="toggleBasics">{{ es ? 'Elegir las cinco tareas' : 'Choose all five tasks' }}</label>
               <label v-for="item in options" :key="item.id" class="guided-option"><input type="checkbox" :checked="selected.includes(item.id)" @change="toggleBasic(item, $event.target.checked)"><span><strong>{{ title(item) }}</strong><em v-if="showPrices">{{ basicFees(item) }} · {{ es ? 'una sola vez' : 'one-time' }}</em></span></label>
             </details>
-            <details v-for="group in serviceGroups" :key="group.id" class="guided-category">
+            <details v-for="group in serviceGroups" :key="group.id" class="guided-category" :data-service-group="group.id">
               <summary>{{ title(group) }}<span>{{ groupSelected(group.id).length }}/{{ groupOptions(group.id).length }}</span></summary>
               <label class="guided-all"><input type="checkbox" :checked="groupAllSelected(group.id)" :indeterminate.prop="groupPartiallySelected(group.id)" @change="toggleGroup(group.id, $event.target.checked)">{{ es ? 'Elegir todo este grupo' : 'Choose this whole group' }}</label>
               <div v-for="item in groupOptions(group.id)" :key="item.id" class="guided-service-item">
@@ -1116,7 +1135,7 @@ function contact(event) {
 .guided-explore button { flex: 0 0 auto; min-height: 42px; padding: .6rem .9rem; border: 1px solid var(--line); border-radius: .45rem; background: var(--surface); color: var(--ink); font: inherit; font-size: .88rem; font-weight: 650; cursor: pointer; }
 .guided-explore button:hover { border-color: var(--ink); }
 .guided-explore button:focus-visible { outline: 3px solid #749b2e; outline-offset: 3px; }
-.guided-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(20rem, .85fr); gap: 2rem; align-items: start; }
+.guided-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(21rem, .85fr); gap: clamp(1.25rem, 2.5vw, 2rem); align-items: start; }
 .guided-main { min-width: 0; display: grid; gap: 1.25rem; }
 .guided-panel { padding: 1.65rem; border: 1px solid var(--line); border-radius: .65rem; background: var(--surface); }
 .guided-panel h3, .guided-summary h3 { margin: 0 0 .85rem; font-size: 1.35rem; line-height: 1.3; letter-spacing: -.025em; }
@@ -1194,7 +1213,7 @@ function contact(event) {
 .guided-contact-note, .guided-invoice { color: var(--muted); font-size: .8rem; line-height: 1.7; margin: 0; }
 .guided-invoice { border-top: 1px solid var(--line); margin-top: 1.25rem; padding-top: 1rem; }
 .guided-service button:focus-visible, .guided-service a:focus-visible, .guided-service summary:focus-visible, .guided-service input:focus-visible, .guided-service textarea:focus-visible, .guided-service select:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
-@media(max-width: 960px) {
+@media(max-width: 1100px) {
   .guided-layout { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
   .guided-summary { max-width: none; }
 }
@@ -1228,7 +1247,7 @@ function contact(event) {
 .guided-benefits li { position: relative; padding-left: 1.45rem; line-height: 1.55; }
 .guided-benefits li::before { content: '✓'; position: absolute; left: 0; color: var(--muted); font-weight: 700; }
 .guided-benefits li + li { margin-top: 0; }
-@media(max-width: 960px) {
+@media(max-width: 1100px) {
   .guided-main { display: contents; }
   .guided-panel { order: 1; }
   .guided-context { order: 2; }
@@ -1246,6 +1265,6 @@ function contact(event) {
 
 .guided-custom-catalog { display: grid; gap: 12px; }
 .guided-custom-catalog .estimate-package-heading { min-height: 80px; }
-@media(max-width:960px) { .guided-custom-catalog { order: 1; } }
+@media(max-width:1100px) { .guided-custom-catalog { order: 1; } }
 .guided-payment-link { display: block; border: 0; background: transparent; padding: .65rem 0; margin: .5rem 0; color: var(--ink); text-align: left; text-decoration: underline; text-underline-offset: .2rem; font-size: .9rem; line-height: 1.6; cursor: pointer; }
 </style>
