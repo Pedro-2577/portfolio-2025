@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue';
 import { storePlatformPricing } from './storeServices';
+import { recommendServices } from './serviceGuidance';
 
 const props = defineProps({ language: { type: String, default: 'es' }, showPrices: { type: Boolean, default: false } });
 const es = computed(() => props.language !== 'en');
@@ -452,7 +453,7 @@ const catalogSize = ref('unsure');
 const workspace = ref(null);
 const customServicesDetails = ref(null);
 const questionnaireStep = ref(0);
-const businessAnswers = ref({ website: '', marketplace: '', products: '', priority: '' });
+const businessAnswers = ref({ website: '', marketplace: '', products: '' });
 const businessQuestions = [
   {
     id: 'website',
@@ -489,34 +490,22 @@ const businessQuestions = [
   },
 ];
 const activeQuestion = computed(() => businessQuestions[questionnaireStep.value]);
-const businessSummary = computed(() => {
-  const website = businessAnswers.value.website;
-  const websiteText = ({ yes: es.value ? 'ya tiene página propia' : 'already has an own website', new: es.value ? 'quiere crear una página propia' : 'wants to create an own website', 'other-channels': es.value ? 'vende por redes, WhatsApp o en un local' : 'sells on social media, WhatsApp or in a store', unsure: es.value ? 'todavía no sabe si necesita una página' : 'is not sure about needing a website' })[website];
-  const marketplace = ({ already: es.value ? 'ya vende en Mercado Libre' : 'already sells on Mercado Libre', interested: es.value ? 'le interesa vender en Mercado Libre' : 'is interested in selling on Mercado Libre', 'not-now': es.value ? 'no planea vender en Mercado Libre ahora' : 'does not plan to sell on Mercado Libre now', unsure: es.value ? 'no sabe si venderá en Mercado Libre' : 'is not sure about selling on Mercado Libre' })[businessAnswers.value.marketplace];
-  const products = ({ suppliers: es.value ? 'compra a proveedores' : 'buys from suppliers', 'made-here': es.value ? 'fabrica o prepara sus productos' : 'makes or prepares products', both: es.value ? 'compra y también fabrica productos' : 'buys and also makes products', unsure: es.value ? 'todavía no definió el origen de sus productos' : 'has not decided where products will come from' })[businessAnswers.value.products];
-  return [websiteText, marketplace, products].filter(Boolean).join(' · ');
-});
-const startingAdvice = computed(() => {
-  const marketplaceAdvice = ['already', 'interested'].includes(businessAnswers.value.marketplace)
-    ? (es.value ? ' Como ya vendés o te interesa Mercado Libre, también podemos revisar cómo conectar ambos canales.' : ' Since you sell on or are interested in Mercado Libre, we can also look at connecting both channels.')
-    : '';
-  const productAdvice = ({
-    suppliers: es.value ? ' Como trabajás con proveedores, también podemos revisar cómo mantener precios, stock y productos al día.' : ' Since you work with suppliers, we can also look at keeping prices, stock and products up to date.',
-    'made-here': es.value ? ' Como fabricás o preparás tus productos, podemos revisar cómo mantener el catálogo y las cantidades al día.' : ' Since you make or prepare your products, we can look at keeping the catalog and quantities up to date.',
-    both: es.value ? ' Podemos revisar qué productos vienen de proveedores y cuáles producís para mantener precios, stock y catálogo al día.' : ' We can look at which products come from suppliers and which you make, then keep prices, stock and the catalog up to date.',
-  })[businessAnswers.value.products] || '';
-  let base;
-  if (goal.value === 'launch') {
-    base = es.value ? 'Empezaría preparando tu tienda propia.' : 'I would start by preparing your own store.';
-  } else if (goal.value === 'help' && marketplaceAdvice) {
-    base = es.value ? 'Empezaría revisando tu tienda actual.' : 'I would start by reviewing your current store.';
-  } else if (goal.value === 'help') {
-    base = es.value ? 'Empezaría revisando tu tienda actual y las tareas que querés delegar.' : 'I would start by reviewing your current store and the tasks you want to delegate.';
-  } else {
-    base = es.value ? 'Veamos juntos qué servicios encajan con tu negocio.' : 'Let’s find the services that fit your business.';
-  }
-  return base + marketplaceAdvice + productAdvice + (es.value ? ' Podés revisar y cambiar los servicios sugeridos.' : ' You can review and change the suggested services.');
-});
+const recommendation = computed(() => recommendServices(businessAnswers.value));
+const guidanceCopy = {
+  existingStore: ['Ya tenés una página propia: podemos trabajar sobre la que usás hoy.', 'You already have your own website: we can work with the one you use today.'],
+  newStore: ['Querés crear una página propia: podemos empezar por prepararla para vender.', 'You want your own website: we can start by getting it ready to sell.'],
+  otherChannels: ['Hoy vendés por redes, WhatsApp o en un local: podemos evaluar si te sirve sumar una página propia.', 'You currently sell through social media, WhatsApp or a store: we can see whether your own website would help.'],
+  websiteUnsure: ['Todavía no definiste si necesitás una página propia; podemos orientarte antes de elegir.', 'You have not decided whether you need your own website; we can help you decide first.'],
+  existingMarketplace: ['Ya vendés por Mercado Libre: podemos revisar cómo acompañar ese canal.', 'You already sell on Mercado Libre: we can look at how to support that channel.'],
+  newMarketplace: ['Te interesa vender por Mercado Libre: podemos tenerlo en cuenta al preparar la tienda.', 'You are interested in selling on Mercado Libre: we can consider it when setting up your store.'],
+  noMarketplace: ['Por ahora, Mercado Libre no es una prioridad para vos.', 'Mercado Libre is not a priority for you right now.'],
+  marketplaceUnsure: ['Todavía no definiste si querés vender por Mercado Libre.', 'You have not decided whether you want to sell on Mercado Libre.'],
+  suppliers: ['Comprás a proveedores: podemos revisar cómo mantener sus productos, precios o cantidades al día.', 'You buy from suppliers: we can look at keeping their products, prices or quantities up to date.'],
+  ownProducts: ['Fabricás o preparás tus productos: podemos organizar cómo publicarlos y mantener su información.', 'You make or prepare your products: we can organize how to list them and keep their information updated.'],
+  bothSources: ['Tenés productos propios y de proveedores: podemos contemplar las dos formas de trabajo.', 'You have both your own products and supplier products: we can account for both workflows.'],
+  productsUnsure: ['Todavía no vendés o no definiste el origen de tus productos.', 'You are not selling yet or have not decided where your products will come from.'],
+};
+const guidanceReasons = computed(() => recommendation.value.reasons.map(key => guidanceCopy[key][es.value ? 0 : 1]));
 const savedChoices = ref({});
 const guidedGoals = [
   { id: 'launch', es: 'Quiero mi propia tienda online', en: 'I want my own online store', descEs: 'Empezar a vender con una tienda preparada para mi negocio.', descEn: 'Start selling with a store prepared for my business.' },
@@ -531,7 +520,12 @@ const helpOptions = [
   { id: 'team', es: 'Preparar o ampliar mi equipo', en: 'Train or expand my team' },
   { id: 'configuration', es: 'Mercado Libre, facturas o envíos', en: 'Mercado Libre, invoices or shipping' },
 ];
-const currentGoal = computed(() => guidedGoals.find(item => item.id === goal.value));
+const currentGoal = computed(() => {
+  if (goal.value === 'help' && recommendation.value.orientation) {
+    return { id: 'help', es: 'Quiero orientación para mi negocio', en: 'I would like guidance for my business' };
+  }
+  return guidedGoals.find(item => item.id === goal.value);
+});
 const relevantServices = computed(() => {
   if (goal.value === 'updates') return pricedExtras.filter(item => item.group === 'automation');
   if (goal.value !== 'help') return [];
@@ -577,19 +571,14 @@ async function answerQuestion(optionId) {
   businessAnswers.value[question.id] = optionId;
   if (questionnaireStep.value < businessQuestions.length - 1) {
     questionnaireStep.value += 1;
+    await nextTick();
+    document.getElementById('business-question-title')?.focus({ preventScroll: true });
     return;
   }
 
-  // Use the complete profile to choose a starting point; no single last answer overrides the rest.
-  const goal = businessAnswers.value.website === 'yes'
-    ? 'help'
-    : businessAnswers.value.website === 'unsure'
-      ? 'custom'
-      : 'launch';
-  const wantsMercadoLibre = ['already', 'interested'].includes(businessAnswers.value.marketplace);
-  await chooseGoal(goal);
-  if (goal === 'help' && wantsMercadoLibre) chooseHelp('configuration');
-  if (wantsMercadoLibre) selected.value = [...new Set([...selected.value, 'ml'])];
+  const suggested = recommendation.value;
+  await chooseGoal(suggested.goal);
+  if (suggested.help) chooseHelp(suggested.help);
 }
 async function exploreOtherServices() {
   if (!customServicesDetails.value) return;
@@ -689,12 +678,14 @@ function contact(event) {
         <div><p class="eyebrow">{{ es ? 'TU NEGOCIO' : 'YOUR BUSINESS' }}</p><h2 id="guided-goal-title">{{ title(currentGoal) }}</h2></div>
         <button type="button" class="guided-text-button" @click="changeGoal">{{ es ? 'Editar mis respuestas' : 'Edit my answers' }}</button>
       </div>
-      <div v-if="businessAnswers.website" class="business-answer-summary">
-        <p><strong>{{ es ? 'Por lo que me contaste:' : 'Based on what you told me:' }}</strong> {{ businessSummary }}</p>
-        <p>{{ startingAdvice }}</p>
-      </div>
+      <section v-if="businessAnswers.website" class="guided-recommendation" aria-labelledby="guidance-result-title">
+        <h3 id="guidance-result-title">{{ es ? 'Con lo que me contaste' : 'Based on what you shared' }}</h3>
+        <ul><li v-for="(reason, index) in guidanceReasons" :key="index">{{ reason }}</li></ul>
+      </section>
       <div v-if="goal !== 'custom'" class="guided-explore">
-        <p>{{ es ? 'Esta opción es solo un punto de partida. También podés sumar otros servicios.' : 'This option is just a starting point. You can add other services too.' }}</p>
+        <p>{{ recommendation.productUpdatesRelevant
+          ? (es ? 'Esta es una sugerencia para empezar. También podemos ver otros servicios, como mantener al día los productos de tus proveedores.' : 'This is a suggested starting point. We can also look at other services, such as keeping supplier products up to date.')
+          : (es ? 'Esta es una sugerencia para empezar. También podés explorar otros servicios y elegir lo que te sirva.' : 'This is a suggested starting point. You can explore other services and choose what works for you.') }}</p>
         <button type="button" aria-controls="guided-custom-services" @click="exploreOtherServices">{{ es ? 'Explorar otros servicios' : 'Explore other services' }}</button>
       </div>
       <div class="guided-layout">
@@ -1115,10 +1106,10 @@ function contact(event) {
 .guided-workspace:focus, #service-scope-title:focus { outline: none; }
 .guided-current { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.75rem; }
 .guided-current h2 { max-width: 40rem; margin-bottom: 0; }
-.business-answer-summary { max-width: 58rem; margin: -.75rem 0 1.75rem; padding: 1rem 1.15rem; border-left: 3px solid #718c38; background: var(--soft); }
-.business-answer-summary p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.65; }
-.business-answer-summary p + p { margin-top: .55rem; }
-.business-answer-summary strong { color: var(--ink); }
+.guided-recommendation { max-width: 58rem; margin: -.75rem 0 1.5rem; padding: 1rem 1.15rem; border-left: 3px solid #718c38; background: var(--soft); border-radius: .35rem; }
+.guided-recommendation h3 { margin: 0 0 .65rem; font-size: 1.05rem; }
+.guided-recommendation ul { margin: 0; padding-left: 1.15rem; color: var(--muted); }
+.guided-recommendation li + li { margin-top: .45rem; }
 .guided-text-button { flex-shrink: 0; padding: .7rem 0; background: transparent; border: 0; color: var(--ink); font-size: .9rem; text-decoration: underline; text-underline-offset: .25rem; cursor: pointer; }
 .guided-explore { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: 52rem; padding: 1rem 1.15rem; margin: 0 0 1.75rem; border: 1px solid var(--line); border-radius: .65rem; background: var(--soft); }
 .guided-explore p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.6; }
