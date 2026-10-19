@@ -36,7 +36,7 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; }
+body { margin: 0; min-width: 0; }
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font: inherit; }
 .app-shell { min-height: 100vh; display: flex; flex-direction: column; background: var(--surface); }
@@ -590,3 +590,6 @@ details p { color: var(--muted); line-height: 1.6; }
   .nav-ventures-list { position: static; width: 100%; margin: 4px 0 8px; box-shadow: none; background: var(--soft); }
 }
 @media (prefers-reduced-motion: reduce) { .nav-ventures-toggle svg { transition: none; } }
+
+.site-nav { gap: clamp(10px, 1.2vw, 18px); }
+.site-nav > a, .nav-ventures-heading > a { white-space: nowrap; }
