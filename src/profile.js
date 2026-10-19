@@ -66,7 +66,7 @@ export const professionalProfile = {
           "JavaScript",
           "TypeScript",
           "Vue.js",
-          "React",
+          "React (conocimientos)",
           "Nuxt",
           "HTML5",
           "CSS3",
@@ -294,7 +294,7 @@ export const professionalProfile = {
         "period": "Since 2019",
         "title": "Web Design and Development",
         "institution": "Da Vinci School · Buenos Aires",
-        "status": "Coursework passed · Final project pending · Average grade: 7.86",
+        "status": "Coursework completed · Final project pending · Average grade: 7.86",
         "description": "Training in frontend and backend development, UX/UI design and web development methodologies."
       }
     ],
@@ -306,7 +306,7 @@ export const professionalProfile = {
           "JavaScript",
           "TypeScript",
           "Vue.js",
-          "React",
+          "React (familiarity)",
           "Nuxt",
           "HTML5",
           "CSS3",
@@ -486,7 +486,7 @@ function normalizeSkill(name) {
   return String(name).toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
-const skillAliases = { html: 'html5', css: 'css3' };
+const skillAliases = { html: 'html5', css: 'css3', react: 'reactconocimientos' };
 
 // Project technology tags use the same skill groups displayed in About.
 export function skillAreaFor(name) {
