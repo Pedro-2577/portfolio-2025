@@ -2,17 +2,13 @@ name: Validate portfolio
 on:
   pull_request:
     branches: [main]
+  push:
+    branches: ['codex/**']
 permissions:
   contents: read
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: node --test tests/httpErrors.test.js
-      - run: npm run build
+  quality:
+    uses: ./.github/workflows/quality.yml

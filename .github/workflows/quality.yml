@@ -1,0 +1,47 @@
+name: Quality checks
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Check tracked source artifacts
+        run: npm run check:source
+      - name: Unit and data contract tests
+        run: npm test
+      - name: Dependency advisories
+        run: npm run audit:dependencies
+      - name: Production build
+        run: npm run build
+      - name: Validate public artifact
+        run: npm run check:build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Browser smoke tests
+        run: npm run test:e2e
+      - name: Browser report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+      - name: Upload verified site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
