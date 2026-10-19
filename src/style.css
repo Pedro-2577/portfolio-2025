@@ -3,13 +3,13 @@
 :root {
   font-family: Figtree, system-ui, sans-serif;
   color: #172033;
-  background: #fbfbf8;
+  background: #e8eae3;
   font-synthesis: none;
   --ink: #172033;
-  --muted: #687080;
-  --line: #e3e5df;
-  --surface: #ffffff;
-  --soft: #f4f5f0;
+  --muted: #5c6572;
+  --line: #cfd4c8;
+  --surface: #eeeee8;
+  --soft: #e3e6dd;
   --accent: #d7f43b;
   --accent-dark: #172033;
   --grid-gap: 24px;
@@ -46,7 +46,7 @@ button, input, select, textarea { font: inherit; }
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(255, 255, 255, .94);
+  background: rgba(238, 238, 232, .94);
   border-bottom: 1px solid var(--line);
 }
 .dark .site-header { background: rgba(27, 32, 26, .94); }
