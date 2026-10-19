@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL = 'http://127.0.0.1:4173/';
+const baseURL = new URL(process.env.PORTFOLIO_BASE_PATH || '/', 'http://127.0.0.1:4173').href;
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,

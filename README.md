@@ -27,7 +27,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Los tests de navegador necesitan primero el build. Playwright levanta automáticamente un servidor local de preview; no prueba ni modifica las tiendas reales.
+Los tests de navegador necesitan primero el build. Si usás PORTFOLIO_BASE_PATH para compilar bajo una subcarpeta, pasá el mismo valor a Playwright. En CI, actions/configure-pages obtiene automáticamente la ruta vigente del sitio, incluyendo un dominio propio. Playwright levanta automáticamente un servidor local de preview; no prueba ni modifica las tiendas reales.
 
 - **Node test runner:** rutas y errores, integridad del catálogo y sus recursos, preferencias, estructura y contenido del PDF, exclusión de artefactos Laravel de la publicación.
 - **Playwright / Chromium:** navegación, casos técnicos con teclado, filtros, idioma y tema, descargas reales ES/EN, rutas desconocidas, almacenamiento bloqueado y vista móvil. Los accesos externos se bloquean durante estos tests.

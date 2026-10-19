@@ -31,7 +31,7 @@ No hay login, cookies de sesión de aplicación, carga de archivos ni endpoint p
 
 Node: contratos del catálogo, archivos de preview, URL HTTPS de datos mantenidos, rutas, preferencias, PDF bilingüe y estructura de referencias PDF. La prueba de exclusión usa una carpeta temporal y verifica que se conservan los recursos vigentes.
 
-Playwright: recorridos sobre el build local en Chromium, con perfiles de escritorio y móvil, teclado, filtros, preferencias, CV real, errores y CSP. No ejecuta compras, envíos, mensajes ni peticiones a demos o servicios externos.
+Playwright: recorridos sobre el build local en Chromium, con perfiles de escritorio y móvil, teclado, filtros, preferencias, CV real, errores y CSP. El 404 real se sirve en una URL inexistente anidada para comprobar la carga de sus recursos y la vuelta al inicio; también se comprueba la recuperación sin JavaScript. Los tests de generación cubren bases en la raíz y en /portfolio-2025/. No ejecuta compras, envíos, mensajes ni peticiones a demos o servicios externos.
 
 check:build inspecciona index.html y 404.html y rechaza ejecutables PHP, logs, claves, mapas y directorios de runtime en dist.
 
@@ -51,3 +51,9 @@ Antes de publicar, todas las comprobaciones deben completarse. Los fallos impide
 - [CSP en meta y directivas admitidas](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP).
 - [Ramas mantenidas de Vite](https://vite.dev/releases).
 - [Pruebas sobre un servidor local con Playwright](https://playwright.dev/docs/test-webserver).
+
+## Rutas de publicación y recuperación
+
+GitHub Actions obtiene la ruta actual del sitio con actions/configure-pages y la pasa al build y a Playwright mediante PORTFOLIO_BASE_PATH. Al configurar un dominio propio, el siguiente despliegue obtiene la nueva base sin deducirla de la URL que escribió un visitante. En desarrollo local la base predeterminada es /.
+
+El 404 incluye una base absoluta antes de sus recursos y un enlace de recuperación a la raíz del sitio. Esta revisión reprodujo y corrigió el fallo anterior: en una dirección inexistente con varios niveles, la base relativa buscaba los recursos y el inicio dentro de la carpeta inexistente.

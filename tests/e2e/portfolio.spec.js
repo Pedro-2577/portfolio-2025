@@ -112,3 +112,35 @@ test('production CSP allows the application and blocks an injected inline script
   expect(await page.evaluate(() => window.__unexpectedInlineExecution)).toBeUndefined();
   await expect(page.getByRole('button', { name: 'Descargar CV (PDF)', exact: true })).toBeVisible();
 });
+
+test('a hosted nested 404 loads the application and recovers to the real home', async ({ page, baseURL }) => {
+  const html = await readFile('dist/404.html', 'utf8');
+  const missingURL = new URL('missing/child/page', baseURL).href;
+  await page.route(missingURL, route => route.fulfill({ status: 404, contentType: 'text/html', body: html }));
+  const brokenAssets = [];
+  page.on('response', response => {
+    if (['script', 'stylesheet', 'image'].includes(response.request().resourceType()) && response.status() >= 400) brokenAssets.push(response.url());
+  });
+  const response = await page.goto(missingURL);
+  expect(response.status()).toBe(404);
+  await expect(page.getByRole('heading', { name: 'Esta página se salió del mapa.' })).toBeVisible();
+  await page.getByRole('link', { name: /Volver al inicio/ }).click();
+  await expect(page).toHaveURL(new URL('#home', baseURL).href);
+  await expect(page.getByRole('button', { name: 'Descargar CV (PDF)', exact: true })).toBeVisible();
+  expect(brokenAssets).toEqual([]);
+});
+
+test.describe('recovery without JavaScript', () => {
+  test.use({ javaScriptEnabled: false });
+  test('the static 404 returns to home from a nested directory', async ({ page, baseURL }) => {
+    const html = await readFile('dist/404.html', 'utf8');
+    const missingURL = new URL('missing/child/', baseURL).href;
+    await page.route(missingURL, route => route.fulfill({ status: 404, contentType: 'text/html', body: html }));
+    const response = await page.goto(missingURL);
+    expect(response.status()).toBe(404);
+    const home = page.getByRole('link', { name: /Volver al inicio/ });
+    await expect(home).toHaveAttribute('href', new URL(baseURL).pathname + '#home');
+    await home.click();
+    await expect(page).toHaveURL(new URL('#home', baseURL).href);
+  });
+});
