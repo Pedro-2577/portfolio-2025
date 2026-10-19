@@ -74,7 +74,11 @@ export const professionalProfile = {
           "Bootstrap",
           "Quasar",
           "UX/UI",
-          "AJAX"
+          "AJAX",
+          "Alpine.js",
+          "Tailwind CSS",
+          "PWA",
+          "Vite"
         ],
         "homeItems": [
           "JavaScript · TypeScript",
@@ -95,7 +99,12 @@ export const professionalProfile = {
           "NoSQL",
           "JSON",
           "APIs REST",
-          "Arquitectura de software"
+          "Arquitectura de software",
+          "Firebase",
+          "Blade",
+          "SQLite",
+          "Express",
+          "APIs"
         ],
         "homeItems": [
           "PHP",
@@ -139,7 +148,8 @@ export const professionalProfile = {
           "Git",
           "GitHub",
           "WordPress",
-          "SEO"
+          "SEO",
+          "GitHub Pages"
         ]
       },
       {
@@ -303,7 +313,11 @@ export const professionalProfile = {
           "Bootstrap",
           "Quasar",
           "UX/UI",
-          "AJAX"
+          "AJAX",
+          "Alpine.js",
+          "Tailwind CSS",
+          "PWA",
+          "Vite"
         ],
         "homeItems": [
           "JavaScript · TypeScript",
@@ -324,7 +338,12 @@ export const professionalProfile = {
           "NoSQL",
           "JSON",
           "REST APIs",
-          "Software architecture"
+          "Software architecture",
+          "Firebase",
+          "Blade",
+          "SQLite",
+          "Express",
+          "APIs"
         ],
         "homeItems": [
           "PHP",
@@ -368,7 +387,8 @@ export const professionalProfile = {
           "Git",
           "GitHub",
           "WordPress",
-          "SEO"
+          "SEO",
+          "GitHub Pages"
         ]
       },
       {
@@ -459,3 +479,17 @@ export const professionalProfile = {
     ]
   }
 };
+
+function normalizeSkill(name) {
+  return String(name).toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+const skillAliases = { html: 'html5', css: 'css3' };
+
+// Project technology tags use the same skill groups displayed in About.
+export function skillAreaFor(name) {
+  const key = skillAliases[normalizeSkill(name)] || normalizeSkill(name);
+  return professionalProfile.es.skills.find((area) =>
+    area.items.some((item) => normalizeSkill(item) === key)
+  )?.id || null;
+}
