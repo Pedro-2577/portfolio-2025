@@ -158,7 +158,7 @@ export const professionalProfile = {
         "text": "Platzi, DeepLearning.AI y Udemy: integración de LLMs, arquitecturas web y desarrollo seguro."
       }
     ],
-    "languages": "Español nativo. Inglés intermedio, con foco en lectura de documentación técnica y mejora continua.",
+    "languages": "Español nativo. Inglés intermedio: buena comprensión lectora y auditiva, uso cotidiano del idioma y conversación en desarrollo.",
     "strengths": "Pensamiento analítico para depurar y auditar código, investigación independiente, autonomía y adaptación a nuevas tecnologías.",
     "homeCapabilities": [
       {
@@ -381,7 +381,7 @@ export const professionalProfile = {
         "text": "Platzi, DeepLearning.AI and Udemy: LLM integration, web architectures and secure development."
       }
     ],
-    "languages": "Native Spanish. Intermediate English, focused on reading technical documentation and continuous improvement.",
+    "languages": "Native Spanish. Intermediate English: good reading and listening comprehension, daily use of English and developing speaking skills.",
     "strengths": "Analytical problem solving for debugging and code auditing, independent research, autonomy and adaptability to new technologies.",
     "homeCapabilities": [
       {
