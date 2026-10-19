@@ -37,6 +37,7 @@ const text = {
     demoEyebrow: 'Demo académica', demoTitle: 'Antes de abrir la demo', demoWait: 'La demo se activa cuando la visitás. La primera carga puede tardar alrededor de un minuto.', demoTime: 'Tiempo de activación', demoTimeValue: '≈ 1 min', demoData: 'Datos de prueba · Sin compras reales', demoContinue: 'Abrir demo', demoCancel: 'Volver', demoClose: 'Cerrar aviso',
     home: 'Inicio', projects: 'Proyectos', services: 'Gestión de tiendas', about: 'Sobre mí', contact: 'Contacto',
     portraitRole: 'Desarrollador full stack · Buenos Aires', proofLabel: 'Trabajo actual', proofStatus: 'Plataforma de e-commerce en producción', proofCopy: 'Construcción desde cero y evolución continua dentro de un equipo.', proofPoints: ['Frontend, backend y APIs', 'Diseño, UX y producto', 'IA y automatización aplicadas'],
+    projectFocusTitle: 'En qué me fijo', projectFocus: [{"title":"Código y seguridad","description":"Datos, integraciones, permisos y posibles fallas."},{"title":"Diseño y experiencia","description":"La imagen de marca y el recorrido de cada usuario."},{"title":"Pantallas y casos límite","description":"Distintos tamaños, errores y caminos inesperados."}],
     greeting: 'Hola, soy', role: 'Desarrollador full stack · Seguridad · IA',
     hero: 'Me importa cómo está programado un proyecto, pero también cómo se ve, qué comunica y cómo se usa en cada pantalla. Pienso en quien compra, quien vende, quien administra, quien se pierde y quien intenta encontrar una falla. Me gusta recorrer esas situaciones y cuidar que cada persona reciba la respuesta que necesita.',
     viewProjects: 'Ver proyectos', talk: 'Hablemos', featured: 'Proyectos destacados',
@@ -73,6 +74,7 @@ const text = {
     demoEyebrow: 'Academic demo', demoTitle: 'Before you open the demo', demoWait: 'The demo starts when you visit it. The first load may take about a minute.', demoTime: 'Startup time', demoTimeValue: '≈ 1 min', demoData: 'Sample data · No real purchases', demoContinue: 'Open demo', demoCancel: 'Go back', demoClose: 'Close notice',
     home: 'Home', projects: 'Projects', services: 'Store management', about: 'About me', contact: 'Contact',
     portraitRole: 'Full-stack developer · Buenos Aires', proofLabel: 'Current role', proofStatus: 'E-commerce platform in production', proofCopy: 'Built from scratch and continuously evolved as part of a team.', proofPoints: ['Frontend, backend and APIs', 'Design, UX and product', 'Applied AI and automation'],
+    projectFocusTitle: 'What I look at', projectFocus: [{"title":"Code and security","description":"Data, integrations, permissions and potential vulnerabilities."},{"title":"Design and experience","description":"Brand identity and each user's journey."},{"title":"Screens and edge cases","description":"Different screen sizes, errors and unexpected paths."}],
     greeting: "Hi, I'm", role: 'Full-stack developer · Security · AI',
     hero: 'I care about how a project is built, but also how it looks, what it communicates and how it works on every screen. I think about the buyer, the seller, the administrator, someone who gets lost and someone looking for a vulnerability. I like working through those situations and making sure each person gets the response they need.',
     viewProjects: 'View projects', talk: "Let's talk", featured: 'Featured projects',
@@ -396,6 +398,12 @@ onUnmounted(() => {
           </div>
 
         </div>
+          <div class="hero-focus" aria-labelledby="hero-focus-title">
+            <h2 id="hero-focus-title">{{ t.projectFocusTitle }}</h2>
+            <dl class="hero-focus-list">
+              <div v-for="item in t.projectFocus" :key="item.title"><dt>{{ item.title }}</dt><dd>{{ item.description }}</dd></div>
+            </dl>
+          </div>
           <a class="hero-explore" href="#portfolio-playground" @click.prevent="scrollToSection('portfolio-playground')"><span>{{ language === 'es' ? 'Cómo encaro un proyecto' : 'How I approach a project' }}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6"/></svg></a>
         </div>
       </section>
