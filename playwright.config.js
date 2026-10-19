@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL = 'http://127.0.0.1:4173' + (process.env.GITHUB_ACTIONS ? '/portfolio-2025/' : '/');
+const baseURL = 'http://127.0.0.1:4173/';
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
