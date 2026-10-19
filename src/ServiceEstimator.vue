@@ -450,6 +450,7 @@ const goal = ref('');
 const helpKind = ref('');
 const catalogSize = ref('unsure');
 const workspace = ref(null);
+const customServicesDetails = ref(null);
 const savedChoices = ref({});
 const guidedGoals = [
   { id: 'launch', es: 'Quiero mi propia tienda online', en: 'I want my own online store', descEs: 'Empezar a vender con una tienda preparada para mi negocio.', descEn: 'Start selling with a store prepared for my business.' },
@@ -503,6 +504,12 @@ async function changeGoal() {
   await nextTick();
   document.getElementById('service-scope-title')?.focus({ preventScroll: true });
   document.getElementById('service-scope-title')?.scrollIntoView({ block: 'start', behavior: 'auto' });
+}
+async function exploreOtherServices() {
+  if (!customServicesDetails.value) return;
+  customServicesDetails.value.open = true;
+  await nextTick();
+  customServicesDetails.value.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 }
 function chooseHelp(kind) {
   helpKind.value = kind;
@@ -584,6 +591,10 @@ function contact(event) {
       <div class="guided-current">
         <div><p class="eyebrow">{{ es ? 'TU NEGOCIO' : 'YOUR BUSINESS' }}</p><h2 id="guided-goal-title">{{ title(currentGoal) }}</h2></div>
         <button type="button" class="guided-text-button" @click="changeGoal">{{ es ? 'Cambiar mi respuesta' : 'Change my answer' }}</button>
+      </div>
+      <div v-if="goal !== 'custom'" class="guided-explore">
+        <p>{{ es ? 'Esta opción es solo un punto de partida. También podés sumar otros servicios.' : 'This option is just a starting point. You can add other services too.' }}</p>
+        <button type="button" aria-controls="guided-custom-services" @click="exploreOtherServices">{{ es ? 'Explorar otros servicios' : 'Explore other services' }}</button>
       </div>
       <div class="guided-layout">
         <div class="guided-main">
@@ -705,8 +716,8 @@ function contact(event) {
             <label v-if="automationCount" class="guided-field">{{ es ? '¿Qué proveedor o lista usás? (opcional)' : 'Which supplier or price list do you use? (optional)' }}<input v-model="details.suppliers" maxlength="300" :placeholder="es ? 'Podés dejarlo para cuando conversemos' : 'You can leave this for our conversation'"></label>
           </div>
 
-          <details v-if="goal !== 'custom'" class="guided-custom">
-            <summary>{{ es ? 'Personalizar mi pedido · ver todos los servicios' : 'Customize my request · see all services' }}</summary>
+          <details v-if="goal !== 'custom'" id="guided-custom-services" ref="customServicesDetails" class="guided-custom">
+            <summary>{{ es ? 'Elegir otros servicios' : 'Choose other services' }}</summary>
             <p class="guided-muted">{{ es ? 'Podés agregar o quitar tareas. Si no sabés qué elegir, lo vemos juntos.' : 'Add or remove tasks. If you are unsure, we can choose together.' }}</p>
             <div class="guided-bulk"><span>{{ selected.length }} {{ es ? 'elegidos' : 'selected' }}</span><button type="button" @click="selectAllServices" :disabled="allServicesSelected">{{ es ? 'Seleccionar todo' : 'Select all' }}</button><button type="button" @click="clearServices" :disabled="!hasSelection && !modules.length">{{ es ? 'Quitar todo' : 'Clear all' }}</button></div>
             <details class="guided-category">
@@ -989,11 +1000,16 @@ function contact(event) {
 .goal-copy small { font-size: .9rem; font-weight: 600; }
 .guided-help { margin: 1.5rem 0 0; color: var(--muted); font-size: .95rem; line-height: 1.8; }
 .guided-help a { color: var(--ink); font-weight: 650; text-underline-offset: .2rem; }
-.guided-workspace, #service-scope-title { scroll-margin-top: 7rem; }
+.guided-workspace, #service-scope-title, #guided-custom-services { scroll-margin-top: 7rem; }
 .guided-workspace:focus, #service-scope-title:focus { outline: none; }
 .guided-current { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.75rem; }
 .guided-current h2 { max-width: 40rem; margin-bottom: 0; }
 .guided-text-button { flex-shrink: 0; padding: .7rem 0; background: transparent; border: 0; color: var(--ink); font-size: .9rem; text-decoration: underline; text-underline-offset: .25rem; cursor: pointer; }
+.guided-explore { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: 52rem; padding: 1rem 1.15rem; margin: 0 0 1.75rem; border: 1px solid var(--line); border-radius: .65rem; background: var(--soft); }
+.guided-explore p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.6; }
+.guided-explore button { flex: 0 0 auto; min-height: 42px; padding: .6rem .9rem; border: 1px solid var(--line); border-radius: .45rem; background: var(--surface); color: var(--ink); font: inherit; font-size: .88rem; font-weight: 650; cursor: pointer; }
+.guided-explore button:hover { border-color: var(--ink); }
+.guided-explore button:focus-visible { outline: 3px solid #749b2e; outline-offset: 3px; }
 .guided-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(20rem, .85fr); gap: 2rem; align-items: start; }
 .guided-main { min-width: 0; display: grid; gap: 1.25rem; }
 .guided-panel { padding: 1.65rem; border: 1px solid var(--line); border-radius: .65rem; background: var(--surface); }
@@ -1077,6 +1093,8 @@ function contact(event) {
   .guided-summary { max-width: none; }
 }
 @media(max-width: 600px) {
+  .guided-explore { align-items: stretch; flex-direction: column; }
+  .guided-explore button { align-self: flex-start; }
   .guided-current { display: grid; gap: .5rem; }
   .guided-current h2 { font-size: 1.85rem; }
   .guided-text-button { justify-self: start; min-height: 2.75rem; }
