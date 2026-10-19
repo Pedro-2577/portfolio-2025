@@ -446,7 +446,10 @@ onUnmounted(() => {
 
       <section v-else-if="isServiceRoute" class="section page-section buyer-page">
         <div class="container">
-          <header class="buyer-hero">
+          <section v-if="showServicePrices" id="service-scope" class="buyer-section" tabindex="-1" :aria-label="language === 'es' ? 'Preparar mi consulta y estimado' : 'Prepare my inquiry and estimate'">
+            <ServiceEstimator :language="language" :show-prices="true" />
+          </section>
+          <header v-if="!showServicePrices" class="buyer-hero">
             <p class="eyebrow">{{ servicePage.eyebrow }}</p>
             <h1>{{ servicePage.title }}</h1>
             <p class="buyer-lead">{{ servicePage.lead }}</p>
@@ -483,7 +486,7 @@ onUnmounted(() => {
             </details>
           </section>
 
-          <section id="service-scope" class="buyer-section" tabindex="-1" aria-labelledby="service-scope-title">
+          <section v-if="!showServicePrices" id="service-scope" class="buyer-section" tabindex="-1" :aria-label="language === 'es' ? 'Preparar mi consulta' : 'Prepare my inquiry'">
             <ServiceEstimator :language="language" :show-prices="showServicePrices" />
           </section>
 
