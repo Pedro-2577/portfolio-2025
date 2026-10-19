@@ -8,7 +8,7 @@
     "build": "vite build",
     "dev": "vite",
     "preview": "vite preview",
-    "test": "node --test tests/httpErrors.test.js tests/preferences.test.js tests/catalog.test.js tests/resumePdf.test.js tests/security.test.js tests/404Page.test.js",
+    "test": "node --test tests/httpErrors.test.js tests/preferences.test.js tests/catalog.test.js tests/resumePdf.test.js tests/security.test.js tests/404Page.test.js tests/serviceGuidance.test.js",
     "test:e2e": "playwright test",
     "audit:dependencies": "npm audit --audit-level=high",
     "check:build": "node scripts/check-build.mjs",

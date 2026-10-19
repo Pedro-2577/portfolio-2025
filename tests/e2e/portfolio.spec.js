@@ -144,3 +144,38 @@ test.describe('recovery without JavaScript', () => {
     await expect(page).toHaveURL(new URL('#home', baseURL).href);
   });
 });
+
+test('the three business answers determine the result and editing them changes the guidance', async ({ page }) => {
+  await page.goto('./#services');
+  const questionnaire = page.locator('.business-questionnaire');
+  await expect(questionnaire).toContainText('Pregunta 1 de 3');
+  await questionnaire.getByRole('button', { name: 'No, quiero crear una', exact: true }).click();
+  await expect(page.locator('#business-question-title')).toBeFocused();
+  await questionnaire.getByRole('button', { name: 'Sí, ya vendo por ahí', exact: true }).click();
+  await expect(questionnaire).toContainText('Pregunta 3 de 3');
+  await questionnaire.getByRole('button', { name: 'Los compro a uno o más proveedores', exact: true }).click();
+  await expect(page.locator('#guided-goal-title')).toHaveText('Quiero mi propia tienda online');
+  await expect(page.locator('.guided-recommendation')).toContainText('Como ya vendés en Mercado Libre');
+  await expect(page.locator('.guided-recommendation')).toContainText('Trabajás con proveedores');
+  await expect(questionnaire).toHaveCount(0);
+
+  await page.getByRole('button', { name: 'Editar mis respuestas', exact: true }).click();
+  await questionnaire.getByRole('button', { name: 'Sí, ya tengo una', exact: true }).click();
+  await questionnaire.getByRole('button', { name: 'No por ahora', exact: true }).click();
+  await questionnaire.getByRole('button', { name: 'Los fabrico o preparo yo', exact: true }).click();
+  await expect(page.locator('#guided-goal-title')).toHaveText('Ya tengo tienda y necesito ayuda');
+  await expect(page.locator('.guided-recommendation')).toContainText('Tus productos son propios');
+  await expect(page.locator('.guided-recommendation')).not.toContainText('Mercado Libre');
+  await expect(page.getByRole('button', { name: 'Revisar actualización de productos', exact: true })).toHaveCount(0);
+});
+
+test('uncertain visitors get guidance without selected paid services', async ({ page }) => {
+  await page.goto('./#services');
+  const questionnaire = page.locator('.business-questionnaire');
+  await questionnaire.getByRole('button', { name: 'No estoy seguro', exact: true }).click();
+  await questionnaire.getByRole('button', { name: 'No estoy seguro', exact: true }).click();
+  await questionnaire.getByRole('button', { name: 'No estoy seguro o todavía no vendo', exact: true }).click();
+  await expect(page.locator('#guided-goal-title')).toHaveText('Quiero orientación para mi negocio');
+  await expect(page.locator('.guided-recommendation')).toContainText('sin dar por hecho que hace falta crear una tienda');
+  await expect(page.locator('.guided-workspace input[type="checkbox"]:checked')).toHaveCount(0);
+});
