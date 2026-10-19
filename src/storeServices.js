@@ -7,7 +7,7 @@ export const storeServiceCopy = {
     "eyebrow": "TU TIENDA EN VENDOALGO",
     "title": "Tu tienda online, con alguien que se ocupe.",
     "lead": "Te ayudo a crear tu tienda y a mantenerla al día: productos, precios, envíos y ayuda cuando la necesites. También podés contratarme para una sola tarea.",
-    "audience": "Si vendés por Mercado Libre, te ayudo a sumar una tienda propia. Si ya tenés una tienda, puedo ocuparme de una tarea puntual o de su gestión diaria.",
+    "audience": "Si vendés por Mercado Libre, te ayudo a sumar una tienda online en VendoAlgo. Si ya tenés una tienda en VendoAlgo, puedo ocuparme de una tarea puntual o de su gestión diaria.",
     "seeCase": "Ver el caso FumigAR",
     "seeScope": "Qué puedo resolver",
     "caseEyebrow": "UN CASO REAL · FUMIGAR",
@@ -122,7 +122,7 @@ export const storeServiceCopy = {
       },
       {
         "q": "¿Cómo convive con Mercado Libre?",
-        "a": "Podés sumar la tienda como un canal propio. Te explico qué funciones de Mercado Libre ofrece VendoAlgo y te ayudo a configurar las que contrates."
+        "a": "Podés vender por Mercado Libre y también tener una tienda online en VendoAlgo. La conexión entre ambos canales es opcional y se contrata aparte; te ayudo a evaluar si la necesitás."
       },
       {
         "q": "¿Qué pasa si surge un problema?",
@@ -149,7 +149,7 @@ export const storeServiceCopy = {
     "eyebrow": "VENDOALGO STORES · PERSONALIZED SERVICE",
     "title": "Your online store, ready to sell and kept up to date.",
     "lead": "I set up your VendoAlgo store and handle your catalog, updates and support. Add your own channel alongside Mercado Libre or delegate tasks in your existing store.",
-    "audience": "If you sell on Mercado Libre, I can help you add your own store. If you already have a store, I can take on a specific task or its day-to-day management.",
+    "audience": "If you sell on Mercado Libre, I can help you add an online store on VendoAlgo. If you already have a VendoAlgo store, I can take on a specific task or its day-to-day management.",
     "seeCase": "Explore the FumigAR case",
     "seeScope": "What I can help with",
     "caseEyebrow": "A REAL IMPLEMENTATION · FUMIGAR",
@@ -266,7 +266,7 @@ export const storeServiceCopy = {
       },
       {
         "q": "How does it work alongside Mercado Libre?",
-        "a": "You can add the store as your own sales channel. I explain which Mercado Libre features VendoAlgo provides and help configure the ones you purchase."
+        "a": "You can sell on Mercado Libre and also have an online store on VendoAlgo. Connecting both channels is optional and purchased separately; I help you assess whether you need it."
       },
       {
         "q": "What happens if something goes wrong?",

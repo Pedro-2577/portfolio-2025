@@ -70,7 +70,7 @@ const copy = {
     "faq": [
       {
         "q": "¿Tengo que dejar Mercado Libre?",
-        "a": "No. Podés sumar una tienda propia y seguir vendiendo en Mercado Libre. La conexión entre ambos es una función opcional de VendoAlgo que se contrata aparte; te ayudo a evaluar si la necesitás."
+        "a": "No. Podés vender por Mercado Libre y también tener una tienda online en VendoAlgo. La conexión entre ambos canales es opcional y se contrata aparte; te ayudo a evaluar si la necesitás."
       },
       {
         "q": "¿Tengo que saber de tecnología?",
@@ -195,7 +195,7 @@ const copy = {
     "faq": [
       {
         "q": "Do I have to leave Mercado Libre?",
-        "a": "No. You can add your own store and keep selling on Mercado Libre. Connecting both is an optional VendoAlgo feature purchased separately; I help you assess whether you need it."
+        "a": "No. You can sell on Mercado Libre and also have an online store on VendoAlgo. Connecting both channels is optional and purchased separately; I help you assess whether you need it."
       },
       {
         "q": "Do I need technical skills?",
