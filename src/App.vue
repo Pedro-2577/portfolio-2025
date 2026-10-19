@@ -69,7 +69,7 @@ const text = {
     faqOne: '¿Trabajás con equipos remotos?', faqOneAnswer: 'Sí. Estoy acostumbrado a colaborar con herramientas digitales, Git y comunicación asincrónica.',
     faqTwo: '¿Qué tipo de proyectos te interesan?', faqTwoAnswer: 'Desarrollo full stack, integración de IA, automatización y proyectos de ciberseguridad, además de productos web que resuelvan problemas reales.',
     workflowTitle: 'Cómo valido una entrega', workflowText: 'Primero, el código debe superar las pruebas automatizadas con Pest. Después realizo revisión y pruebas asistidas por IA. Por último, valido manualmente los casos de uso, UX, diseño, errores y recuperación. Si encuentro un problema, lo corrijo y repito las verificaciones correspondientes.',
-    footer: 'Portfolio de Pedro Méndez Carabán', tagline: 'Me gusta involucrarme en cada detalle de un proyecto.', sourceCode: 'Ver código', liveDemo: 'Abrir demo', privateCode: 'Código privado', privateDemo: 'Demo privada', phpWarning: 'Demo académica desarrollada con Laravel/PHP. El servidor se activa al recibir visitas; la primera carga puede tardar alrededor de un minuto. Los datos son de prueba y pueden reiniciarse.', nodeWarning: 'Este proyecto necesita un servidor Node.js para funcionar; todavía no hay una demo pública configurada.', noDemo: 'Todavía no hay una demo pública configurada para este proyecto.',
+    footer: 'Pedro Méndez Carabán', tagline: 'Me gusta involucrarme en cada detalle de un proyecto.', sourceCode: 'Ver código', liveDemo: 'Abrir demo', privateCode: 'Código privado', privateDemo: 'Demo privada', phpWarning: 'Demo académica desarrollada con Laravel/PHP. El servidor se activa al recibir visitas; la primera carga puede tardar alrededor de un minuto. Los datos son de prueba y pueden reiniciarse.', nodeWarning: 'Este proyecto necesita un servidor Node.js para funcionar; todavía no hay una demo pública configurada.', noDemo: 'Todavía no hay una demo pública configurada para este proyecto.',
     viewProject: 'Ver proyecto', demo: 'Ver demo', repository: 'Ver repositorio', resumeDownload: 'Descargar CV (PDF)', resumeSummary: 'Desarrollador full stack con experiencia en productos web, integración de IA y seguridad de aplicaciones. Desarrollo desde el frontend hasta las APIs y el backend, con foco en experiencia de usuario, rendimiento y mantenibilidad.', resumeProjectsTitle: 'Proyectos seleccionados', resumeGitHub: 'GitHub', resumeSite: 'Portfolio', resumePage: 'Portfolio', projectCount: 'proyectos catalogados', publicEvidence: 'demos públicas revisables', stackLabel: 'Trabajo con', stackText: 'código · UX · IA', openToWork: 'Abierto a oportunidades',
     roleLabel: 'Mi responsabilidad', highlightsLabel: 'Qué entregué', outcomeLabel: 'Resultado', academicProjects: 'Proyectos académicos', professionalProjects: 'Proyectos profesionales y propios', currentSite: 'Estás viendo este proyecto', inDevelopment: 'En desarrollo', developmentNotice: 'Proyecto en desarrollo. La presentación pública estará disponible después del lanzamiento.',
   },
@@ -106,7 +106,7 @@ const text = {
     faqOne: 'Do you work with remote teams?', faqOneAnswer: 'Yes. I am used to collaborating with digital tools, Git and asynchronous communication.',
     faqTwo: 'What kind of projects interest you?', faqTwoAnswer: 'Full-stack development, AI integration, automation and cybersecurity projects, as well as web products that solve real problems.',
     workflowTitle: 'How I validate a delivery', workflowText: 'First, the code must pass the automated tests with Pest. Next, I perform AI-assisted review and testing. Finally, I manually validate use cases, UX, design, errors and recovery. If I find a problem, I fix it and repeat the relevant checks.',
-    footer: "Pedro Méndez Carabán's portfolio", tagline: 'I like being involved in every detail of a project.', sourceCode: 'View source', liveDemo: 'Open demo', privateCode: 'Private code', privateDemo: 'Private demo', phpWarning: 'Academic demo built with Laravel/PHP. The server starts when visited; the first load may take about a minute. Data is for demonstration and may reset.', nodeWarning: 'This project needs a Node.js server to run; there is no public demo configured yet.', noDemo: 'There is no public demo configured for this project yet.',
+    footer: 'Pedro Méndez Carabán', tagline: 'I like being involved in every detail of a project.', sourceCode: 'View source', liveDemo: 'Open demo', privateCode: 'Private code', privateDemo: 'Private demo', phpWarning: 'Academic demo built with Laravel/PHP. The server starts when visited; the first load may take about a minute. Data is for demonstration and may reset.', nodeWarning: 'This project needs a Node.js server to run; there is no public demo configured yet.', noDemo: 'There is no public demo configured for this project yet.',
     viewProject: 'View project', demo: 'View demo', repository: 'View repository', resumeDownload: 'Download CV (PDF)', resumeSummary: 'Full-stack developer experienced in web products, AI integration and application security. I work across frontend, APIs and backend, focusing on user experience, performance and maintainability.', resumeProjectsTitle: 'Selected projects', resumeGitHub: 'GitHub', resumeSite: 'Portfolio', resumePage: 'Portfolio', projectCount: 'cataloged projects', publicEvidence: 'reviewable public demos', stackLabel: 'Work across', stackText: 'code · UX · AI', openToWork: 'Open to opportunities',
     roleLabel: 'My responsibility', highlightsLabel: 'What I delivered', outcomeLabel: 'Outcome', academicProjects: 'Academic projects', professionalProjects: 'Professional and personal projects', currentSite: 'You are viewing this project', inDevelopment: 'In development', developmentNotice: 'Project in development. A public presentation will be available after launch.',
   },
@@ -651,6 +651,19 @@ onUnmounted(() => {
       <svg class="back-to-top-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg>
     </button>
 
-    <footer class="site-footer"><div class="container footer-inner"><div><strong>{{ t.footer }}</strong><p v-if="!isServiceRoute">Vue · Vite · GitHub Pages</p></div><div class="footer-links"><a :href="contact.github" target="_blank" rel="noopener noreferrer">GitHub</a><a :href="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a><a :href="`mailto:${contact.email}`">Email</a></div></div></footer>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-identity">
+          <strong>{{ t.footer }}</strong>
+          <p>{{ t.portraitRole }}</p>
+        </div>
+        <nav class="footer-links" :aria-label="language === 'es' ? 'Contacto y CV' : 'Contact and CV'">
+          <a class="footer-email" :href="`mailto:${contact.email}`">{{ contact.email }}</a>
+          <a :href="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+          <a :href="contact.github" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+          <button class="footer-cv" type="button" :aria-label="language === 'es' ? 'Descargar CV en español (PDF)' : 'Download CV in English (PDF)'" @click="downloadResume">CV (PDF) <span aria-hidden="true">↓</span></button>
+        </nav>
+      </div>
+    </footer>
   </div>
 </template>
