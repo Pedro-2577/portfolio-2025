@@ -12,7 +12,8 @@ async function walk(directory) {
 }
 for (const name of ['index.html', '404.html']) {
   const html = await readFile('dist/' + name, 'utf8');
-  assert.ok(html.includes(contentSecurityPolicy), name + ': missing CSP');
+  const decoded = html.replace(/&#39;|&#x27;|&apos;/gi, "'").replace(/&quot;/g, '\"').replace(/&amp;/g, '&');
+  assert.ok(decoded.includes(contentSecurityPolicy), name + ': missing CSP');
   assert.ok(html.includes('strict-origin-when-cross-origin'), name + ': missing referrer policy');
   assert.ok(!/<script\b[^>]*>\s*[^<\s]/i.test(html), name + ': unexpected inline script');
 }
