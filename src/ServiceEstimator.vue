@@ -487,21 +487,36 @@ const businessQuestions = [
       { id: 'unsure', es: 'No estoy seguro o todavía no vendo', en: 'I am not sure or I do not sell yet' },
     ],
   },
-  {
-    id: 'priority',
-    es: '¿Qué te gustaría resolver primero?',
-    en: 'What would you like help with first?',
-    options: [
-      { id: 'launch', es: 'Crear mi tienda propia', en: 'Create my own store' },
-      { id: 'store', es: 'Mejorar o mantener mi tienda actual', en: 'Improve or manage my current store' },
-      { id: 'updates', es: 'Mantener productos, precios o cantidades al día', en: 'Keep products, prices or quantities up to date' },
-      { id: 'mercadolibre', es: 'Conectar mi tienda con Mercado Libre', en: 'Connect my store with Mercado Libre' },
-      { id: 'team', es: 'Capacitar a mi equipo o buscar personal', en: 'Train my team or find staff' },
-      { id: 'unsure', es: 'No estoy seguro, necesito orientación', en: 'I am not sure, I need guidance' },
-    ],
-  },
 ];
 const activeQuestion = computed(() => businessQuestions[questionnaireStep.value]);
+const businessSummary = computed(() => {
+  const website = businessAnswers.value.website;
+  const websiteText = ({ yes: es.value ? 'ya tiene página propia' : 'already has an own website', new: es.value ? 'quiere crear una página propia' : 'wants to create an own website', 'other-channels': es.value ? 'vende por redes, WhatsApp o en un local' : 'sells on social media, WhatsApp or in a store', unsure: es.value ? 'todavía no sabe si necesita una página' : 'is not sure about needing a website' })[website];
+  const marketplace = ({ already: es.value ? 'ya vende en Mercado Libre' : 'already sells on Mercado Libre', interested: es.value ? 'le interesa vender en Mercado Libre' : 'is interested in selling on Mercado Libre', 'not-now': es.value ? 'no planea vender en Mercado Libre ahora' : 'does not plan to sell on Mercado Libre now', unsure: es.value ? 'no sabe si venderá en Mercado Libre' : 'is not sure about selling on Mercado Libre' })[businessAnswers.value.marketplace];
+  const products = ({ suppliers: es.value ? 'compra a proveedores' : 'buys from suppliers', 'made-here': es.value ? 'fabrica o prepara sus productos' : 'makes or prepares products', both: es.value ? 'compra y también fabrica productos' : 'buys and also makes products', unsure: es.value ? 'todavía no definió el origen de sus productos' : 'has not decided where products will come from' })[businessAnswers.value.products];
+  return [websiteText, marketplace, products].filter(Boolean).join(' · ');
+});
+const startingAdvice = computed(() => {
+  const marketplaceAdvice = ['already', 'interested'].includes(businessAnswers.value.marketplace)
+    ? (es.value ? ' Como ya vendés o te interesa Mercado Libre, también podemos revisar cómo conectar ambos canales.' : ' Since you sell on or are interested in Mercado Libre, we can also look at connecting both channels.')
+    : '';
+  const productAdvice = ({
+    suppliers: es.value ? ' Como trabajás con proveedores, también podemos revisar cómo mantener precios, stock y productos al día.' : ' Since you work with suppliers, we can also look at keeping prices, stock and products up to date.',
+    'made-here': es.value ? ' Como fabricás o preparás tus productos, podemos revisar cómo mantener el catálogo y las cantidades al día.' : ' Since you make or prepare your products, we can look at keeping the catalog and quantities up to date.',
+    both: es.value ? ' Podemos revisar qué productos vienen de proveedores y cuáles producís para mantener precios, stock y catálogo al día.' : ' We can look at which products come from suppliers and which you make, then keep prices, stock and the catalog up to date.',
+  })[businessAnswers.value.products] || '';
+  let base;
+  if (goal.value === 'launch') {
+    base = es.value ? 'Empezaría preparando tu tienda propia.' : 'I would start by preparing your own store.';
+  } else if (goal.value === 'help' && marketplaceAdvice) {
+    base = es.value ? 'Empezaría revisando tu tienda actual.' : 'I would start by reviewing your current store.';
+  } else if (goal.value === 'help') {
+    base = es.value ? 'Empezaría revisando tu tienda actual y las tareas que querés delegar.' : 'I would start by reviewing your current store and the tasks you want to delegate.';
+  } else {
+    base = es.value ? 'Veamos juntos qué servicios encajan con tu negocio.' : 'Let’s find the services that fit your business.';
+  }
+  return base + marketplaceAdvice + productAdvice + (es.value ? ' Podés revisar y cambiar los servicios sugeridos.' : ' You can review and change the suggested services.');
+});
 const savedChoices = ref({});
 const guidedGoals = [
   { id: 'launch', es: 'Quiero mi propia tienda online', en: 'I want my own online store', descEs: 'Empezar a vender con una tienda preparada para mi negocio.', descEn: 'Start selling with a store prepared for my business.' },
@@ -564,18 +579,17 @@ async function answerQuestion(optionId) {
     questionnaireStep.value += 1;
     return;
   }
-  const recommendations = {
-    launch: { goal: 'launch' },
-    store: { goal: 'help', help: 'catalogue' },
-    updates: { goal: 'updates' },
-    mercadolibre: { goal: 'help', help: 'configuration', service: 'ml' },
-    team: { goal: 'help', help: 'team' },
-    unsure: { goal: 'help' },
-  };
-  const recommendation = recommendations[optionId] || recommendations.unsure;
-  await chooseGoal(recommendation.goal);
-  if (recommendation.help) chooseHelp(recommendation.help);
-  if (recommendation.service) selected.value = [...new Set([...selected.value, recommendation.service])];
+
+  // Use the complete profile to choose a starting point; no single last answer overrides the rest.
+  const goal = businessAnswers.value.website === 'yes'
+    ? 'help'
+    : businessAnswers.value.website === 'unsure'
+      ? 'custom'
+      : 'launch';
+  const wantsMercadoLibre = ['already', 'interested'].includes(businessAnswers.value.marketplace);
+  await chooseGoal(goal);
+  if (goal === 'help' && wantsMercadoLibre) chooseHelp('configuration');
+  if (wantsMercadoLibre) selected.value = [...new Set([...selected.value, 'ml'])];
 }
 async function exploreOtherServices() {
   if (!customServicesDetails.value) return;
@@ -605,10 +619,9 @@ const message = computed(() => {
     es.value ? 'Hola Pedro, me interesan estos servicios para mi tienda:' : 'Hi Pedro, I am interested in these services for my store:',
     ...(currentGoal.value ? [(es.value ? 'Por dónde empezar: ' : 'Recommended starting point: ') + title(currentGoal.value)] : []),
     ...(businessAnswers.value.website ? [
-      (es.value ? 'Página propia: ' : 'Own website: ') + ({ yes: es.value ? 'ya tengo' : 'already have one', new: es.value ? 'quiero crear una' : 'want to create one', 'other-channels': es.value ? 'vendo por Mercado Libre, redes o WhatsApp' : 'sell on Mercado Libre, social media or WhatsApp', unsure: es.value ? 'no estoy seguro' : 'not sure' }[businessAnswers.value.website]),
+      (es.value ? 'Página propia: ' : 'Own website: ') + ({ yes: es.value ? 'ya tengo' : 'already have one', new: es.value ? 'quiero crear una' : 'want to create one', 'other-channels': es.value ? 'vendo por redes, WhatsApp o en un local' : 'sell on social media, WhatsApp or in a store', unsure: es.value ? 'no estoy seguro' : 'not sure' }[businessAnswers.value.website]),
       (es.value ? 'Mercado Libre: ' : 'Mercado Libre: ') + ({ already: es.value ? 'ya vendo' : 'already sell there', interested: es.value ? 'me interesa empezar' : 'interested in starting', 'not-now': es.value ? 'no por ahora' : 'not right now', unsure: es.value ? 'no estoy seguro' : 'not sure' }[businessAnswers.value.marketplace]),
       (es.value ? 'Origen de productos: ' : 'Product source: ') + ({ suppliers: es.value ? 'proveedores' : 'suppliers', 'made-here': es.value ? 'producción propia' : 'own production', both: es.value ? 'ambas' : 'both', unsure: es.value ? 'no estoy seguro o todavía no vendo' : 'not sure or not selling yet' }[businessAnswers.value.products]),
-      (es.value ? 'Prioridad: ' : 'Priority: ') + ({ launch: es.value ? 'crear mi tienda propia' : 'create my own store', store: es.value ? 'mejorar o mantener mi tienda actual' : 'improve or manage my current store', updates: es.value ? 'mantener productos, precios o cantidades al día' : 'keep products, prices or quantities up to date', mercadolibre: es.value ? 'conectar mi tienda con Mercado Libre' : 'connect my store with Mercado Libre', team: es.value ? 'capacitar a mi equipo o buscar personal' : 'train my team or find staff', unsure: es.value ? 'necesito orientación' : 'need guidance' }[businessAnswers.value.priority]),
     ] : []),
     '',
     ...checkedBasics.value.map(item => '- ' + title(item) + (props.showPrices ? ': ' + basicFees(item) + (es.value ? ' una vez' : ' one-time') : '')),
@@ -655,7 +668,7 @@ function contact(event) {
     <header v-if="!goal" class="guided-intro">
       <p class="eyebrow">{{ es ? 'UN PASO A LA VEZ' : 'ONE STEP AT A TIME' }}</p>
       <h2 id="service-scope-title" tabindex="-1">{{ es ? 'Te ayudo a encontrar por dónde empezar' : 'Let’s find a good place to start' }}</h2>
-      <p>{{ es ? 'Respondé cuatro preguntas sencillas. No necesitás saber de tecnología y podés cambiar tus respuestas.' : 'Answer four simple questions. No technical knowledge is needed, and you can change your answers.' }}</p>
+      <p>{{ es ? 'Respondé tres preguntas sencillas para que pueda orientarte. No necesitás saber de tecnología.' : 'Answer three simple questions so I can guide you. No technical knowledge is needed.' }}</p>
     </header>
     <div v-if="!goal" class="business-questionnaire">
       <div class="questionnaire-progress">
@@ -675,6 +688,10 @@ function contact(event) {
       <div class="guided-current">
         <div><p class="eyebrow">{{ es ? 'TU NEGOCIO' : 'YOUR BUSINESS' }}</p><h2 id="guided-goal-title">{{ title(currentGoal) }}</h2></div>
         <button type="button" class="guided-text-button" @click="changeGoal">{{ es ? 'Editar mis respuestas' : 'Edit my answers' }}</button>
+      </div>
+      <div v-if="businessAnswers.website" class="business-answer-summary">
+        <p><strong>{{ es ? 'Por lo que me contaste:' : 'Based on what you told me:' }}</strong> {{ businessSummary }}</p>
+        <p>{{ startingAdvice }}</p>
       </div>
       <div v-if="goal !== 'custom'" class="guided-explore">
         <p>{{ es ? 'Esta opción es solo un punto de partida. También podés sumar otros servicios.' : 'This option is just a starting point. You can add other services too.' }}</p>
@@ -1098,6 +1115,10 @@ function contact(event) {
 .guided-workspace:focus, #service-scope-title:focus { outline: none; }
 .guided-current { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.75rem; }
 .guided-current h2 { max-width: 40rem; margin-bottom: 0; }
+.business-answer-summary { max-width: 58rem; margin: -.75rem 0 1.75rem; padding: 1rem 1.15rem; border-left: 3px solid #718c38; background: var(--soft); }
+.business-answer-summary p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.65; }
+.business-answer-summary p + p { margin-top: .55rem; }
+.business-answer-summary strong { color: var(--ink); }
 .guided-text-button { flex-shrink: 0; padding: .7rem 0; background: transparent; border: 0; color: var(--ink); font-size: .9rem; text-decoration: underline; text-underline-offset: .25rem; cursor: pointer; }
 .guided-explore { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: 52rem; padding: 1rem 1.15rem; margin: 0 0 1.75rem; border: 1px solid var(--line); border-radius: .65rem; background: var(--soft); }
 .guided-explore p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.6; }
