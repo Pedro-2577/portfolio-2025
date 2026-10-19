@@ -1,0 +1,21 @@
+name: Prepare dependency lock
+on:
+  push:
+    branches: [codex/portfolio-quality-2026-10-19]
+    paths: [package.json, .github/workflows/prepare-lock.yml]
+permissions:
+  contents: read
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Resolve dependencies
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Export resolved lock
+        run: node --input-type=module -e "import {readFileSync} from 'node:fs'; import {gzipSync} from 'node:zlib'; console.log('LOCK_START'+gzipSync(readFileSync('package-lock.json')).toString('base64')+'LOCK_END')"
+      - name: Audit
+        run: npm audit --audit-level=high
