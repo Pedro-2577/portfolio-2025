@@ -31,7 +31,7 @@ function custom404Page() {
 }
 
 export default defineConfig({
-    base: process.env.GITHUB_ACTIONS ? '/portfolio-2025/' : '/',
+    base: './',
     plugins: [vue(), staticSecurity(), custom404Page()],
     build: {
         outDir: 'dist',
