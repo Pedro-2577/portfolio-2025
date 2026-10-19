@@ -681,7 +681,7 @@ details p { color: var(--muted); line-height: 1.6; }
 .dark [data-skill-area="tools"] { --area-ink: #cddce7; --area-surface: #2b343b; --area-line: #4b5d69; }
 [data-skill-area="design"] { --area-ink: #775418; --area-surface: #f3ead7; --area-line: #decda8; }
 .dark [data-skill-area="design"] { --area-ink: #efd5a3; --area-surface: #3c3323; --area-line: #6e5c38; }
-.cv-skill-area[data-skill-area] .tag, .capability-card[data-skill-area] .capability-tags > li {
+.cv-skill-area[data-skill-area] .tag, .capability-card[data-skill-area] .capability-tags > li, .tag[data-skill-area] {
   color: var(--area-ink);
   background: var(--area-surface);
   border: 1px solid var(--area-line);
