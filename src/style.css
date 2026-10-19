@@ -286,7 +286,13 @@ details p { color: var(--muted); line-height: 1.6; }
 .site-footer { margin-top: auto; padding: 2rem 0; border-top: 1px solid var(--line); background: var(--surface); }
 .footer-inner { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--grid-gap); color: var(--muted); }
 .footer-inner p { margin: .4rem 0 0; font-size: .82rem; }
-.footer-links { display: flex; gap: 1.2rem; align-items: center; }
+.footer-identity strong { color: var(--ink); font-size: 1rem; }
+.footer-links { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; }
+.footer-email { flex-basis: 100%; text-align: right; overflow-wrap: anywhere; color: var(--ink); }
+.footer-cv { display: inline-flex; gap: .4rem; align-items: center; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.footer-links :is(a, button) { text-underline-offset: 4px; }
+.footer-links :is(a, button):hover { color: var(--ink); text-decoration: underline; }
+.footer-links :is(a, button):focus-visible { outline: 2px solid #749b2e; outline-offset: 5px; border-radius: 2px; }
 .footer-links a:hover { color: var(--ink); }
 
 
@@ -502,8 +508,8 @@ details p { color: var(--muted); line-height: 1.6; }
 .availability-inner > div { grid-column: 1 / span 8; }
 .availability-inner > a { grid-column: 10 / span 3; justify-self: end; }
 
-.footer-inner > div:first-child { grid-column: 1 / span 7; }
-.footer-links { grid-column: 9 / span 4; justify-content: flex-end; }
+.footer-inner > div:first-child { grid-column: 1 / span 5; }
+.footer-links { grid-column: 7 / span 6; justify-content: flex-end; }
 
 /* Shared responsive grid: 12 columns on desktop, 8 on tablet, 4 on mobile. */
 @media (max-width: 960px) {
@@ -548,6 +554,7 @@ details p { color: var(--muted); line-height: 1.6; }
   .availability-inner > div, .availability-inner > a, .footer-inner > div:first-child, .footer-links { grid-column: 1 / -1; }
   .availability-inner > a { justify-self: start; }
   .footer-links { justify-content: flex-start; flex-wrap: wrap; }
+  .footer-email { text-align: left; }
   .brand { font-size: .9rem; }
 }
 @media (max-width: 360px) {
