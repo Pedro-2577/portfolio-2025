@@ -13,11 +13,12 @@ import { appFailure } from './appFailure';
 import { professionalProfile } from './profile';
 import { downloadResumePdf } from './resumePdf';
 import { technologyStyle } from './technologyColors';
+import { readLanguage, readTheme, savePreference } from './preferences';
 
 const assetBase = import.meta.env.BASE_URL;
 
-const language = ref(localStorage.getItem('language') || 'es');
-const darkMode = ref(localStorage.getItem('darkMode') === 'true');
+const language = ref(readLanguage());
+const darkMode = ref(readTheme());
 const currentRoute = ref(window.location.hash.slice(1) || 'home');
 const showServicePrices = computed(() => ['precios', '/precios', 'services/precios'].includes(currentRoute.value));
 const isServiceRoute = computed(() => currentRoute.value === 'services' || showServicePrices.value);
@@ -296,11 +297,11 @@ function onHashChange() {
 }
 
 watch(language, (value) => {
-  localStorage.setItem('language', value);
+  savePreference('language', value);
   document.documentElement.lang = value;
 });
 watch(darkMode, (value) => {
-  localStorage.setItem('darkMode', String(value));
+  savePreference('darkMode', String(value));
   document.documentElement.classList.toggle('dark', value);
 });
 

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import { staticSecurity } from './build/security.mjs';
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
@@ -31,7 +32,7 @@ function custom404Page() {
 
 export default defineConfig({
     base: process.env.GITHUB_ACTIONS ? '/portfolio-2025/' : '/',
-    plugins: [vue(), custom404Page()],
+    plugins: [vue(), staticSecurity(), custom404Page()],
     build: {
         outDir: 'dist',
         emptyOutDir: true,
