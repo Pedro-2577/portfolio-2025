@@ -213,14 +213,14 @@ export const professionalProfile = {
         "id": "ai",
         "label": "IA EN USO REAL",
         "title": "IA aplicada y automatización",
-        "body": "Integro modelos de IA y automatizo tareas del negocio, como mantener precios y productos actualizados.",
+        "body": "Integro modelos de IA cuando aportan al producto y, por separado, automatizo tareas operativas como actualizar precios desde los datos del proveedor.",
         "tags": [
           "Integración de LLMs",
           "Automatización",
           "APIs",
           "Validación de resultados"
         ],
-        "context": "Caso real: actualización automática de precios en FumigAR.",
+        "context": "Ejemplo de automatización operativa: actualización diaria de precios en FumigAR.",
         "link": "Conocer el caso y el servicio",
         "route": "services"
       },
@@ -453,14 +453,14 @@ export const professionalProfile = {
         "id": "ai",
         "label": "AI IN PRACTICE",
         "title": "Applied AI and automation",
-        "body": "I integrate AI models and automate business tasks, including keeping prices and products up to date.",
+        "body": "I integrate AI models when they add value to a product and separately automate operational tasks such as updating prices from supplier data.",
         "tags": [
           "LLM integration",
           "Automation",
           "APIs",
           "Output validation"
         ],
-        "context": "Real example: automatic price updates for FumigAR.",
+        "context": "Operational automation example: daily price updates at FumigAR.",
         "link": "Explore the case and service",
         "route": "services"
       },
@@ -480,7 +480,7 @@ export const professionalProfile = {
       }
     ]
   }
-};
+};;
 
 function normalizeSkill(name) {
   return String(name).toLowerCase().replace(/[^a-z0-9]/g, '');
