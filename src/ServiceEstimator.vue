@@ -458,35 +458,36 @@ const businessAnswers = ref({ website: '', marketplace: '', products: '' });
 const businessQuestions = [
   {
     id: 'website',
-    es: '¿Ya tenés una página propia para vender?',
-    en: 'Do you already have your own website to sell?',
+    es: '¿Ya tenés una página donde tus clientes puedan ver y comprar tus productos?',
+    en: 'Do you already have a website where customers can see and buy your products?',
     options: [
-      { id: 'yes', es: 'Sí, ya tengo una', en: 'Yes, I do' },
-      { id: 'new', es: 'No, quiero crear una', en: 'No, I want to create one' },
-      { id: 'other-channels', es: 'Vendo por redes, WhatsApp o en un local', en: 'I sell on social media, WhatsApp or in a store' },
-      { id: 'unsure', es: 'No estoy seguro', en: 'I am not sure' },
+      { id: 'yes', es: 'Sí, mi tienda está en VendoAlgo', en: 'Yes, my store is on VendoAlgo' },
+      { id: 'other-platform', es: 'Sí, en otra plataforma; quiero evaluar pasarla a VendoAlgo', en: 'Yes, on another platform; I want to consider moving it to VendoAlgo' },
+      { id: 'new', es: 'No, quiero crear una tienda en VendoAlgo', en: 'No, I want to create a store on VendoAlgo' },
+      { id: 'other-channels', es: 'No; vendo por Mercado Libre, redes, WhatsApp o en un local', en: 'No; I sell on Mercado Libre, social media, WhatsApp or in a store' },
+      { id: 'unsure', es: 'No estoy seguro; prefiero conversarlo', en: 'I am not sure; I would rather talk it through' },
     ],
   },
   {
     id: 'marketplace',
-    es: '¿Vendés por Mercado Libre o te interesaría hacerlo?',
-    en: 'Do you sell on Mercado Libre, or would you like to?',
+    es: '¿Vendés actualmente por Mercado Libre?',
+    en: 'Do you currently sell on Mercado Libre?',
     options: [
       { id: 'already', es: 'Sí, ya vendo por ahí', en: 'Yes, I already sell there' },
-      { id: 'interested', es: 'Me interesa empezar', en: 'I would like to start' },
-      { id: 'not-now', es: 'No por ahora', en: 'Not right now' },
-      { id: 'unsure', es: 'No estoy seguro', en: 'I am not sure' },
+      { id: 'interested', es: 'No, pero quiero empezar', en: 'No, but I would like to start' },
+      { id: 'not-now', es: 'No me interesa por ahora', en: 'I am not interested right now' },
+      { id: 'unsure', es: 'No sé; prefiero conversarlo', en: 'I am not sure; I would rather talk it through' },
     ],
   },
   {
     id: 'products',
-    es: '¿De dónde vienen los productos que vendés?',
-    en: 'Where do the products you sell come from?',
+    es: '¿Cómo conseguís los productos que vendés?',
+    en: 'How do you get the products you sell?',
     options: [
-      { id: 'suppliers', es: 'Los compro a uno o más proveedores', en: 'I buy them from one or more suppliers' },
+      { id: 'suppliers', es: 'Los compro a proveedores', en: 'I buy them from suppliers' },
       { id: 'made-here', es: 'Los fabrico o preparo yo', en: 'I make or prepare them myself' },
       { id: 'both', es: 'Un poco de ambas', en: 'A bit of both' },
-      { id: 'unsure', es: 'No estoy seguro o todavía no vendo', en: 'I am not sure or I do not sell yet' },
+      { id: 'unsure', es: 'Todavía no vendo o no lo decidí', en: 'I do not sell yet or have not decided' },
     ],
   },
 ];
@@ -494,10 +495,11 @@ const activeQuestion = computed(() => businessQuestions[questionnaireStep.value]
 const recommendation = computed(() => recommendServices(businessAnswers.value));
 const answerLabels = {
   website: {
-    yes: ['Tenés una tienda propia', 'You have your own store'],
-    new: ['Querés crear una tienda propia', 'You want to create your own store'],
-    'other-channels': ['Hoy vendés por redes, WhatsApp o en un local', 'You currently sell through social media, WhatsApp or a store'],
-    unsure: ['Todavía no definiste si necesitás una tienda propia', 'You have not decided whether you need your own store'],
+    yes: ['Tenés una tienda online en VendoAlgo', 'You have an online store on VendoAlgo'],
+    'other-platform': ['Tenés una tienda online en otra plataforma y querés evaluar pasarla a VendoAlgo', 'You have an online store on another platform and want to consider moving it to VendoAlgo'],
+    new: ['Querés crear una tienda online en VendoAlgo', 'You want to create an online store on VendoAlgo'],
+    'other-channels': ['Hoy vendés por Mercado Libre, redes, WhatsApp o en un local, pero no tenés tienda online', 'You currently sell on Mercado Libre, social media, WhatsApp or in a store, but do not have an online store'],
+    unsure: ['Todavía no sabés si necesitás una tienda online', 'You are not sure whether you need an online store'],
   },
   marketplace: {
     already: ['Ya vendés por Mercado Libre', 'You already sell on Mercado Libre'],
@@ -506,10 +508,10 @@ const answerLabels = {
     unsure: ['Todavía no definiste si querés vender por Mercado Libre', 'You have not decided whether to sell on Mercado Libre'],
   },
   products: {
-    suppliers: ['Trabajás con productos de proveedores', 'You work with supplier products'],
+    suppliers: ['Comprás productos a proveedores', 'You buy products from suppliers'],
     'made-here': ['Fabricás o preparás tus productos', 'You make or prepare your products'],
-    both: ['Combinás productos propios y de proveedores', 'You combine your own and supplier products'],
-    unsure: ['Todavía no definiste qué productos vas a vender', 'You have not decided which products to sell yet'],
+    both: ['Algunos los comprás y otros los fabricás o preparás', 'You buy some products and make or prepare others'],
+    unsure: ['Todavía no vendés o no decidiste qué productos ofrecer', 'You are not selling yet or have not decided which products to offer'],
   },
 };
 const guidanceSummary = computed(() => [
@@ -519,7 +521,7 @@ const guidanceSummary = computed(() => [
 ].map(([question, answer]) => answerLabels[question][answer]?.[es.value ? 0 : 1]).filter(Boolean).join(' · '));
 const savedChoices = ref({});
 const guidedGoals = [
-  { id: 'launch', es: 'Quiero mi propia tienda online', en: 'I want my own online store', descEs: 'Empezar a vender con una tienda preparada para mi negocio.', descEn: 'Start selling with a store prepared for my business.' },
+  { id: 'launch', es: 'Quiero crear una tienda online en VendoAlgo', en: 'I want to create an online store on VendoAlgo', descEs: 'Empezar a vender con una tienda preparada para mi negocio.', descEn: 'Start selling with a store prepared for my business.' },
   { id: 'help', es: 'Ya tengo tienda y necesito ayuda', en: 'I have a store and need help', descEs: 'Hacer cambios, resolver un problema o recibir ayuda cada mes.', descEn: 'Make changes, fix an issue or get ongoing help.' },
   { id: 'updates', es: 'Quiero dejar de actualizar datos a mano', en: 'I want to stop updating things manually', descEs: 'Mantener precios, cantidades o productos al día.', descEn: 'Keep prices, quantities or products up to date.' },
   { id: 'custom', es: 'Elegí los servicios que necesitás', en: 'Choose the services you need', descEs: 'Ya marqué algunas opciones según tus respuestas. Podés sumar o sacar cualquiera.', descEn: 'I selected a few options based on your answers. Add or remove any of them.' },
@@ -635,9 +637,9 @@ const message = computed(() => {
     es.value ? 'Hola Pedro, me interesan estos servicios para mi tienda:' : 'Hi Pedro, I am interested in these services for my store:',
     ...(currentGoal.value ? [(goal.value === 'custom' ? (es.value ? 'Selección sugerida según tus respuestas: ' : 'Suggested selections based on your answers: ') : (es.value ? 'Por dónde empezar: ' : 'Recommended starting point: ')) + title(currentGoal.value)] : []),
     ...(businessAnswers.value.website ? [
-      (es.value ? 'Página propia: ' : 'Own website: ') + ({ yes: es.value ? 'ya tengo' : 'already have one', new: es.value ? 'quiero crear una' : 'want to create one', 'other-channels': es.value ? 'vendo por redes, WhatsApp o en un local' : 'sell on social media, WhatsApp or in a store', unsure: es.value ? 'no estoy seguro' : 'not sure' }[businessAnswers.value.website]),
+      (es.value ? 'Tienda online: ' : 'Online store: ') + ({ yes: es.value ? 'ya tengo una en VendoAlgo' : 'already have one on VendoAlgo', 'other-platform': es.value ? 'tengo una en otra plataforma y quiero evaluar pasarla a VendoAlgo' : 'have one on another platform and want to consider moving it to VendoAlgo', new: es.value ? 'quiero crear una en VendoAlgo' : 'want to create one on VendoAlgo', 'other-channels': es.value ? 'todavía no tengo; vendo por Mercado Libre, redes, WhatsApp o en un local' : 'do not have one yet; I sell on Mercado Libre, social media, WhatsApp or in a store', unsure: es.value ? 'todavía no lo sé' : 'not sure' }[businessAnswers.value.website]),
       (es.value ? 'Mercado Libre: ' : 'Mercado Libre: ') + ({ already: es.value ? 'ya vendo' : 'already sell there', interested: es.value ? 'me interesa empezar' : 'interested in starting', 'not-now': es.value ? 'no por ahora' : 'not right now', unsure: es.value ? 'no estoy seguro' : 'not sure' }[businessAnswers.value.marketplace]),
-      (es.value ? 'Origen de productos: ' : 'Product source: ') + ({ suppliers: es.value ? 'proveedores' : 'suppliers', 'made-here': es.value ? 'producción propia' : 'own production', both: es.value ? 'ambas' : 'both', unsure: es.value ? 'no estoy seguro o todavía no vendo' : 'not sure or not selling yet' }[businessAnswers.value.products]),
+      (es.value ? 'Origen de productos: ' : 'Product source: ') + ({ suppliers: es.value ? 'compro a proveedores' : 'buy from suppliers', 'made-here': es.value ? 'fabrico o preparo mis productos' : 'make or prepare my products', both: es.value ? 'compro algunos y fabrico o preparo otros' : 'buy some and make or prepare others', unsure: es.value ? 'todavía no vendo o no lo decidí' : 'not selling yet or have not decided' }[businessAnswers.value.products]),
     ] : []),
     '',
     ...checkedBasics.value.map(item => '- ' + title(item) + (props.showPrices ? ': ' + basicFees(item) + (es.value ? ' una vez' : ' one-time') : '')),
@@ -684,7 +686,7 @@ function contact(event) {
     <header v-if="!goal" class="guided-intro">
       <p class="eyebrow">{{ es ? 'UN PASO A LA VEZ' : 'ONE STEP AT A TIME' }}</p>
       <h2 id="service-scope-title" tabindex="-1">{{ es ? 'Te ayudo a encontrar por dónde empezar' : 'Let’s find a good place to start' }}</h2>
-      <p>{{ es ? 'Respondé tres preguntas sencillas para que pueda orientarte. No necesitás saber de tecnología.' : 'Answer three simple questions so I can guide you. No technical knowledge is needed.' }}</p>
+      <p>{{ es ? 'Trabajo preparando y gestionando tiendas online en VendoAlgo. Respondé tres preguntas para orientarte; no necesitás conocer la plataforma ni saber de tecnología.' : 'I prepare and manage online stores on VendoAlgo. Answer three questions so I can guide you; you do not need to know the platform or have technical knowledge.' }}</p>
     </header>
     <div v-if="!goal" class="business-questionnaire">
       <div class="questionnaire-progress">
@@ -717,7 +719,7 @@ function contact(event) {
           <div class="estimate-package-heading">
             <label class="estimate-package-select">
               <input type="checkbox" :checked="allBasics" :indeterminate.prop="partialBasics" @change="toggleBasics">
-              <span><strong>{{ es ? 'Puesta en marcha' : 'Store launch setup' }}</strong><span class="estimate-caption">{{ es ? '5 servicios · se paga una sola vez' : '5 services · one-time payment' }}</span></span>
+              <span><strong>{{ es ? 'Crear tienda en VendoAlgo' : 'Create a VendoAlgo store' }}</strong><span class="estimate-caption">{{ es ? '5 tareas · pago por única vez' : '5 tasks · one-time payment' }}</span></span>
             </label>
             <strong v-if="showPrices" class="estimate-package-price">{{ moneyRange(partialBasics ? basicAmount : 150000, partialBasics ? basicAmountUpper : 275000) }}</strong>
             <button type="button" class="estimate-expand" :aria-expanded="expanded" aria-controls="launch-service-options" :aria-label="es ? 'Ver o editar los servicios de puesta en marcha' : 'View or edit launch services'" @click="expanded = !expanded"><svg :class="{ 'is-open': expanded }" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
@@ -762,7 +764,7 @@ function contact(event) {
             </template>
             <label v-if="group.id === 'configuration'" class="estimate-field">{{ es ? '¿Qué necesitás dejar funcionando?' : 'What needs configuring?' }}<textarea v-model="details.configurationNotes" rows="2" maxlength="400" :placeholder="es ? 'Ej.: conectar Mercado Libre o entregar en ciertas zonas' : 'Tell me if you already have the module or which delivery rules you need'"></textarea></label>
             <template v-if="group.id === 'automation'">
-              <label class="estimate-field">{{ es ? '¿De dónde salen los precios y las cantidades?' : 'Suppliers or information sources' }}<input v-model="details.suppliers" maxlength="300" :placeholder="es ? 'Ej.: dos proveedores, sus webs o listas de precios' : 'E.g. two suppliers, their websites or price lists'"></label>
+              <label class="estimate-field">{{ es ? '¿Dónde consultás hoy los precios y las cantidades?'  : 'Where do you check your prices and available quantities?' }}<input v-model="details.suppliers" maxlength="300" :placeholder="es ? 'Ej.: dos proveedores, sus webs o listas de precios' : 'E.g. two suppliers, their websites or price lists'"></label>
               <label class="estimate-field">{{ es ? '¿Cada cuánto querés actualizar? ¿Cómo calculás tus precios?' : 'How often, and using which rules?' }}<textarea v-model="details.frequency" rows="2" maxlength="500" :placeholder="es ? 'Ej.: cada mañana, con el margen de cada categoría' : 'E.g. every morning, using each category’s margin'"></textarea></label>
             </template>
             <template v-if="group.id === 'team'">
