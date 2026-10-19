@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { storePlatformPricing } from './storeServices';
 
 const props = defineProps({ language: { type: String, default: 'es' }, showPrices: { type: Boolean, default: false } });
@@ -382,7 +382,7 @@ const proRequired = computed(() => selectedModules.value.length > 0 || selected.
 function toggleModule(id, checked) {
   modules.value = checked ? [...new Set([...modules.value, id])] : modules.value.filter(value => value !== id);
 }
-const effectivePlatform = computed(() => proRequired.value ? 'pro' : platform.value);
+const effectivePlatform = computed(() => proRequired.value || catalogSize.value === 'over50' ? 'pro' : platform.value);
 const platformCost = computed(() => effectivePlatform.value === 'unsure' ? null : (effectivePlatform.value === 'pro' ? storePlatformPricing.plans.pro.monthly : 0) + selectedModules.value.reduce((sum, item) => sum + item.monthly, 0));
 const money = value => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(value);
 const moneyRange = (lower, upper) => lower === upper ? money(lower) : money(lower) + ' – ' + money(upper);
@@ -423,6 +423,7 @@ function clearServices() {
   selected.value = [];
   modules.value = [];
   platform.value = 'unsure';
+  catalogSize.value = 'unsure';
 }
 const contextLines = computed(() => {
   const lines = [];
@@ -443,20 +444,98 @@ const contextLines = computed(() => {
   if (selected.value.includes('technical-help')) add('Problema a resolver', 'Issue to resolve', details.value.issue);
   return lines.length ? ['', es.value ? 'Detalles de mi pedido:' : 'Request details:', ...lines] : [];
 });
+
+const goal = ref('');
+const helpKind = ref('');
+const catalogSize = ref('unsure');
+const workspace = ref(null);
+const savedChoices = ref({});
+const guidedGoals = [
+  { id: 'launch', es: 'Quiero mi propia tienda online', en: 'I want my own online store', descEs: 'Empezar a vender con una tienda preparada para mi negocio.', descEn: 'Start selling with a store prepared for my business.' },
+  { id: 'help', es: 'Ya tengo tienda y necesito ayuda', en: 'I have a store and need help', descEs: 'Hacer cambios, resolver un problema o recibir ayuda cada mes.', descEn: 'Make changes, fix an issue or get ongoing help.' },
+  { id: 'updates', es: 'Quiero dejar de actualizar datos a mano', en: 'I want to stop updating things manually', descEs: 'Mantener precios, cantidades o productos al día.', descEn: 'Keep prices, quantities or products up to date.' },
+  { id: 'custom', es: 'Elegir servicios de forma personalizada', en: 'Choose individual services', descEs: 'Ver todos los servicios por categoría y marcar los que me interesan.', descEn: 'See all services by category and select what interests me.' },
+];
+const helpOptions = [
+  { id: 'catalogue', es: 'Cambiar productos o el diseño', en: 'Change products or design' },
+  { id: 'problem', es: 'Resolver un problema', en: 'Resolve an issue' },
+  { id: 'monthly', es: 'Recibir ayuda todos los meses', en: 'Get help every month' },
+  { id: 'team', es: 'Preparar o ampliar mi equipo', en: 'Train or expand my team' },
+  { id: 'configuration', es: 'Mercado Libre, facturas o envíos', en: 'Mercado Libre, invoices or shipping' },
+];
+const currentGoal = computed(() => guidedGoals.find(item => item.id === goal.value));
+const relevantServices = computed(() => {
+  if (goal.value === 'updates') return pricedExtras.filter(item => item.group === 'automation');
+  if (goal.value !== 'help') return [];
+  if (helpKind.value === 'problem') return pricedExtras.filter(item => item.id === 'technical-help');
+  if (helpKind.value === 'monthly') return pricedExtras.filter(item => item.id === 'maintenance');
+  return pricedExtras.filter(item => item.group === helpKind.value);
+});
+const guidedTitles = {
+  'auto-prices': ['Los precios', 'Prices'],
+  'auto-stock': ['Las cantidades disponibles', 'Available quantities'],
+  'auto-new': ['Los productos nuevos de mis proveedores', 'New products from my suppliers'],
+  'auto-discontinued': ['Los productos que mis proveedores dejan de vender', 'Discontinued supplier products'],
+  'auto-offers': ['Las ofertas', 'Offers'],
+};
+const choiceTitle = item => guidedTitles[item.id] ? guidedTitles[item.id][es.value ? 0 : 1] : title(item);
+function saveGoalChoices() {
+  if (!goal.value) return;
+  savedChoices.value[goal.value] = { selected: [...selected.value], helpKind: helpKind.value, modules: [...modules.value], catalogSize: catalogSize.value, platform: platform.value };
+}
+async function chooseGoal(id) {
+  saveGoalChoices();
+  const saved = savedChoices.value[id];
+  goal.value = id;
+  helpKind.value = saved?.helpKind || '';
+  selected.value = saved ? [...saved.selected] : id === 'launch' ? options.map(item => item.id) : [];
+  modules.value = saved ? [...saved.modules] : [];
+  catalogSize.value = saved?.catalogSize || 'unsure';
+  await nextTick();
+  platform.value = saved?.platform || 'unsure';
+  workspace.value?.focus({ preventScroll: true });
+  workspace.value?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
+async function changeGoal() {
+  saveGoalChoices();
+  goal.value = '';
+  await nextTick();
+  document.getElementById('service-scope-title')?.focus({ preventScroll: true });
+  document.getElementById('service-scope-title')?.scrollIntoView({ block: 'start', behavior: 'auto' });
+}
+function chooseHelp(kind) {
+  helpKind.value = kind;
+  selected.value = kind === 'problem' ? ['technical-help'] : kind === 'monthly' ? ['maintenance'] : [];
+  modules.value = [];
+}
+watch([catalogSize, automationCount], ([size, automaticTasks]) => {
+  platform.value = size === 'over50' ? 'pro' : size === 'upto50' && !automaticTasks ? 'free' : 'unsure';
+});
+// Automated tasks need a confirmed platform scope before showing an all-in total.
+const platformPending = computed(() => platformCost.value === null || automationCount.value > 0);
+const monthlyTotalLower = computed(() => platformPending.value ? null : monthlyAmount.value + platformCost.value);
+const monthlyTotalUpper = computed(() => platformPending.value ? null : monthlyAmountUpper.value + platformCost.value);
+const guidanceUrl = computed(() => 'https://wa.me/5491158471048?text=' + encodeURIComponent(
+  (es.value ? 'Hola Pedro, quiero que me ayudes a elegir lo que necesita mi negocio.' : 'Hi Pedro, I would like help choosing what my business needs.') +
+  (currentGoal.value ? ' ' + (es.value ? 'Me interesa: ' : 'I am interested in: ') + title(currentGoal.value) : '')
+));
+
 const message = computed(() => {
   const lines = [
     es.value ? 'Hola Pedro, me interesan estos servicios para mi tienda:' : 'Hi Pedro, I am interested in these services for my store:',
+    ...(currentGoal.value ? [(es.value ? 'Lo que necesito: ' : 'What I need: ') + title(currentGoal.value)] : []),
     '',
     ...checkedBasics.value.map(item => '- ' + title(item) + (props.showPrices ? ': ' + basicFees(item) + (es.value ? ' una vez' : ' one-time') : '')),
     ...checkedExtras.value.map(item => '- ' + title(item) + (props.showPrices ? ': ' + itemFees(item) : '')),
     ...(props.showPrices && sharedInitialSaving.value ? [(es.value ? 'Preparación compartida (una fuente): -' : 'Shared setup (one source): -') + moneyRange(sharedInitialSaving.value, sharedInitialSavingUpper.value)] : []),
     ...(props.showPrices && sharedMonthlySaving.value ? [(es.value ? 'Descuento en el cuidado mensual: -' : 'Shared monthly review: -') + moneyRange(sharedMonthlySaving.value, sharedMonthlySavingUpper.value) + (es.value ? '/mes' : '/month')] : []),
+    ...(catalogSize.value !== 'unsure' ? [(es.value ? 'Productos que quiero vender: ' : 'Products I want to sell: ') + (catalogSize.value === 'upto50' ? (es.value ? 'hasta 50' : 'up to 50') : (es.value ? 'más de 50' : 'more than 50'))] : []),
     ...contextLines.value,
     '',
-    ...(props.showPrices ? [
+    ...(props.showPrices && hasSelection.value ? [
     (es.value ? 'Mi trabajo, una sola vez: ' : 'One-time service fees: ') + onceLabel.value,
     (es.value ? 'Mi trabajo, cada mes: ' : 'Monthly service fees: ') + monthlyLabel.value,
-    (es.value ? 'VendoAlgo mensual (se paga aparte): ' : 'VendoAlgo monthly (paid separately): ') + ((platformCost.value === null || automationCount.value) ? (es.value ? 'costo por confirmar' : 'cost to confirm') : money(platformCost.value)),
+    (es.value ? 'VendoAlgo mensual (se paga aparte): ' : 'VendoAlgo monthly (paid separately): ') + (platformPending.value ? (es.value ? 'costo por confirmar' : 'cost to be confirmed') : money(platformCost.value)),
     (es.value ? 'Plan: ' : 'Plan: ') + (effectivePlatform.value === 'unsure' ? (es.value ? 'necesito orientación' : 'I need advice') : effectivePlatform.value === 'pro' ? 'Pro' : (es.value ? 'Gratis (hasta 50 productos activos)' : 'Free (up to 50 active products)')),
     ...selectedModules.value.map(item => '- ' + item.name + ': ' + money(item.monthly) + (es.value ? '/mes' : '/month')),
     ] : []),
@@ -470,7 +549,7 @@ const message = computed(() => {
   return lines.join('\n');
 });
 function contact(event) {
-  if (!hasSelection.value) return;
+  if (!goal.value && !hasSelection.value) return;
   const channel = event.submitter?.value;
   if (channel === 'whatsapp') {
     window.open('https://wa.me/5491158471048?text=' + encodeURIComponent(message.value), '_blank', 'noopener,noreferrer');
@@ -478,24 +557,33 @@ function contact(event) {
     window.location.href = 'mailto:pedromendezcaraban@gmail.com?subject=' + encodeURIComponent(es.value ? 'Consulta por servicios para mi tienda' : 'Store services inquiry') + '&body=' + encodeURIComponent(message.value);
   }
 }
+
 </script>
 
+
 <template>
-  <div class="service-estimator" :class="{ 'without-prices': !showPrices }">
-    <header class="buyer-section-heading">
-      <p class="eyebrow">{{ es ? 'ELEGÍ LO QUE NECESITÁS' : 'CHOOSE WHAT YOU NEED' }}</p>
-      <h2 id="service-scope-title">{{ es ? '¿En qué te puedo ayudar?' : 'How can I help?' }}</h2>
-      <p>{{ es ? (showPrices ? 'Elegí los servicios para ver un rango de precio. El valor final depende del tamaño y las necesidades de tu negocio.' : 'Marcá lo que te interesa. Abrí la flecha para ver qué incluye.') : (showPrices ? 'Choose services to see a price range. Final pricing depends on your business size and needs.' : 'Choose what interests you. Open the arrow to see what is included.') }}</p>
+  <div class="guided-service service-estimator" :class="{ 'has-prices': showPrices, 'without-prices': !showPrices }">
+    <header v-if="!goal" class="guided-intro">
+      <p class="eyebrow">{{ es ? 'UN PASO A LA VEZ' : 'ONE STEP AT A TIME' }}</p>
+      <h2 id="service-scope-title" tabindex="-1">{{ es ? '¿Qué necesitás para tu negocio?' : 'What does your business need?' }}</h2>
+      <p>{{ es ? 'Elegí la opción que más se acerque a tu situación. Yo te ayudo con el resto.' : 'Choose the option closest to your situation. I will help with the rest.' }}</p>
     </header>
-    <div class="estimate-toolbar" aria-label="Selección de servicios">
-      <span class="estimate-toolbar-count" role="status" aria-live="polite">{{ selected.length }} {{ es ? 'servicios seleccionados' : 'services selected' }}</span>
-      <div class="estimate-toolbar-actions">
-        <button type="button" @click="selectAllServices" :disabled="allServicesSelected">{{ es ? 'Seleccionar todo' : 'Select all' }}</button>
-        <button type="button" @click="clearServices" :disabled="!hasSelection && !modules.length && platform === 'unsure'">{{ es ? 'Quitar todo' : 'Clear all' }}</button>
-      </div>
+    <div v-if="!goal" class="goal-list">
+      <button v-for="item in guidedGoals" :key="item.id" type="button" class="goal-choice" @click="chooseGoal(item.id)">
+        <span class="goal-copy"><strong>{{ title(item) }}</strong><span>{{ es ? item.descEs : item.descEn }}</span><small v-if="showPrices && item.id === 'launch'">{{ moneyRange(150000, 275000) }} · {{ es ? 'preparación inicial' : 'initial setup' }}</small></span>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+      </button>
     </div>
-    <div class="estimate-layout">
-      <div class="estimate-choices">
+    <p v-if="!goal" class="guided-help">{{ es ? '¿No sabés por dónde empezar?' : 'Not sure where to start?' }} <a :href="guidanceUrl" target="_blank" rel="noopener noreferrer">{{ es ? 'Escribime y te oriento' : 'Message me for guidance' }} ↗</a></p>
+
+    <section v-else ref="workspace" class="guided-workspace" tabindex="-1" aria-labelledby="guided-goal-title">
+      <div class="guided-current">
+        <div><p class="eyebrow">{{ es ? 'TU NEGOCIO' : 'YOUR BUSINESS' }}</p><h2 id="guided-goal-title">{{ title(currentGoal) }}</h2></div>
+        <button type="button" class="guided-text-button" @click="changeGoal">{{ es ? 'Cambiar mi respuesta' : 'Change my answer' }}</button>
+      </div>
+      <div class="guided-layout">
+        <div class="guided-main">
+          <div v-if="goal === 'custom'" class="estimate-choices guided-custom-catalog">
         <div class="estimate-package" :class="{ 'is-selected': checkedBasics.length }">
           <div class="estimate-package-heading">
             <label class="estimate-package-select">
@@ -558,74 +646,141 @@ function contact(event) {
           </div>
         </div>
 
-        <details v-if="showPrices" class="estimate-details">
-          <summary>{{ es ? 'Cuánto cuesta usar VendoAlgo' : 'VendoAlgo: plan and extra features' }}</summary>
-          <p class="estimate-note">{{ es ? 'VendoAlgo es donde funciona tu tienda. Su precio se paga aparte de mi trabajo. Si no sabés qué opción elegir, dejalo sin definir y te ayudo.' : 'Paid to VendoAlgo separately from my services. If you are unsure what you need, I can help you choose.' }}</p>
-          <label class="estimate-field">{{ es ? 'Opción de VendoAlgo' : 'Platform plan' }}
-            <select :value="effectivePlatform" :disabled="proRequired" @change="platform = $event.target.value">
-              <option value="unsure">{{ es ? 'No lo sé todavía' : 'Not sure yet' }}</option>
-              <option value="free">{{ es ? 'Gratis · hasta 50 productos activos' : 'Free · up to 50 active products' }}</option>
-              <option value="pro">Pro · {{ money(storePlatformPricing.plans.pro.monthly) }}/{{ es ? 'mes' : 'month' }}</option>
-            </select>
-          </label>
-          <p v-if="proRequired" class="estimate-note">{{ es ? 'Lo que elegiste necesita el plan Pro. La conexión con Mercado Libre y las facturas tienen un precio mensual extra, que ya aparece en el resumen. Si ya los pagás, no se cobran dos veces.' : 'The selected features require Pro. Mercado Libre and invoicing also include their monthly module in the summary. If you already pay for them, this is not an additional subscription.' }}</p>
-          <fieldset class="estimate-modules"><legend>{{ es ? 'Funciones extra · necesitan el plan Pro' : 'Optional modules · require Pro' }}</legend>
-            <label v-for="item in storePlatformPricing.modules" :key="item.id" class="estimate-module"><input type="checkbox" :checked="selectedModules.some(module => module.id === item.id)" :disabled="requiredModuleIds.includes(item.id)" @change="toggleModule(item.id, $event.target.checked)"><span>{{ platformFeatureName(item) }}</span><strong>{{ money(item.monthly) }}/{{ es ? 'mes' : 'month' }}</strong></label>
-          </fieldset>
-          <p class="estimate-note"><a :href="storePlatformPricing.sourceUrl" target="_blank" rel="noopener noreferrer">{{ es ? 'Consultar precios y condiciones de VendoAlgo' : 'See VendoAlgo pricing and terms' }} ↗</a></p>
-          <p class="estimate-note">{{ es ? 'Las comisiones por cobrar una venta, la dirección web propia y otros servicios que contrates se pagan aparte.' : 'Payment processing fees, domain registration and other external services, where applicable, are separate.' }}</p>
-        </details>
-        <p class="estimate-help">{{ es ? '¿No sabés qué elegir?' : 'Not sure what to choose?' }} <a :href="'https://wa.me/5491158471048?text=' + encodeURIComponent(es ? 'Hola Pedro, necesito ayuda para saber qué servicios me convienen para mi tienda.' : 'Hi Pedro, I would like help choosing services for my store.')" target="_blank" rel="noopener noreferrer">{{ es ? 'Escribime y te ayudo' : 'Message me for help' }} ↗</a></p>
 
-      </div>
-
-      <aside class="estimate-summary" aria-labelledby="estimate-summary-title">
-        <p class="eyebrow">{{ es ? 'TU SELECCIÓN' : 'YOUR SELECTION' }}</p>
-        <h3 id="estimate-summary-title">{{ es ? (showPrices ? 'Tu rango de precio' : 'Tu consulta') : (showPrices ? 'Your price range' : 'Your inquiry') }}</h3>
-        <p v-if="!hasSelection" class="estimate-note">{{ es ? (showPrices ? 'Elegí un servicio para ver el rango. Es solo una consulta.' : 'Elegí lo que te interesa y contame qué necesitás.') : 'Choose what interests you and tell me what you need.' }}</p>
-        <p v-if="hasSelection" class="estimate-selection-count">{{ selected.length }} {{ es ? 'servicios elegidos' : 'services in your proposal' }}</p>
-
-        <div v-if="showPrices && hasSelection" class="estimate-totals" role="status" aria-live="polite" aria-atomic="true">
-          <div><span>{{ es ? 'Mi trabajo · una sola vez' : 'My services · one-time' }}</span><strong>{{ onceLabel }}</strong></div>
-          <div><span>{{ es ? 'Mi trabajo · cada mes' : 'My services · per month' }}</span><strong>{{ monthlyLabel }}</strong></div>
-          <div class="estimate-platform-total"><span>{{ es ? 'VendoAlgo · cada mes, aparte' : 'VendoAlgo · per month, separate' }}</span><strong>{{ (platformCost === null || automationCount) ? (es ? 'Costo por confirmar' : 'Cost to confirm') : money(platformCost) }}</strong></div>
-        </div>
-        <details v-if="hasSelection" class="estimate-summary-detail">
-          <summary><span>{{ es ? 'Ver lo que elegí' : 'View selection details' }}</span><span class="estimate-count">{{ selected.length }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
-          <div class="estimate-detail-scroll" role="region" tabindex="0" :aria-label="es ? 'Servicios seleccionados y sus importes' : 'Selected services and fees'">
-        <ul class="estimate-selected-list">
-          <li v-for="item in checkedBasics" :key="item.id"><span>{{ title(item) }}</span><strong v-if="showPrices">{{ basicFees(item) }}</strong></li>
-          <li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}<small class="estimate-summary-mode">{{ modeLabel(item) }}</small></span><strong v-if="showPrices" class="estimate-summary-fee">{{ itemFees(item) }}</strong></li>
-          <li v-if="showPrices && sharedInitialSaving" class="estimate-saving"><span>{{ es ? 'Descuento por usar el mismo proveedor' : 'Shared setup · one source' }}</span><strong>−{{ moneyRange(sharedInitialSaving, sharedInitialSavingUpper) }}</strong></li>
-          <li v-if="showPrices && sharedMonthlySaving" class="estimate-saving"><span>{{ es ? 'Descuento en el cuidado mensual' : 'Shared monthly review' }}</span><strong>−{{ moneyRange(sharedMonthlySaving, sharedMonthlySavingUpper) }}/{{ es ? 'mes' : 'month' }}</strong></li>
-        </ul>
           </div>
-        </details>
+          <div v-if="goal === 'launch'" class="guided-panel">
+            <p class="guided-kicker">{{ es ? 'PUESTA EN MARCHA' : 'STORE SETUP' }}</p>
+            <h3>{{ es ? 'Tu tienda preparada para empezar' : 'Your store prepared to get started' }}</h3>
+            <div v-if="showPrices" class="guided-launch-price">
+              <strong>{{ amount ? onceLabel : (es ? 'Elegí las tareas que necesitás' : 'Choose the tasks you need') }}</strong>
+              <span>{{ es ? 'Estimado por mi trabajo inicial · VendoAlgo se paga aparte' : 'Estimated initial service fee · VendoAlgo is separate' }}</span>
+            </div>
+            <p>{{ es ? 'Preparo tu tienda en VendoAlgo y te enseño a usarla:' : 'I prepare your VendoAlgo store and show you how to use it:' }}</p>
+            <ul class="guided-benefits">
+              <li>{{ es ? 'Diseño con tu logo, colores y textos.' : 'Design using your logo, colors and content.' }}</li>
+              <li>{{ es ? 'Hasta 40 productos, con los datos y fotos que me pases.' : 'Upload of up to 40 products using the data and photos you provide.' }}</li>
+              <li>{{ es ? 'Pagos, envíos y retiro configurados.' : 'Payment, delivery and pickup options.' }}</li>
+              <li>{{ es ? 'Una hora de capacitación para manejar tu tienda.' : 'One hour to learn everyday tasks.' }}</li>
+            </ul>
+            <details class="guided-disclosure">
+              <summary>{{ es ? 'Ver o ajustar las tareas incluidas' : 'View or adjust included tasks' }}</summary>
+              <label v-for="item in options" :key="item.id" class="guided-option">
+                <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleBasic(item, $event.target.checked)">
+                <span><strong>{{ title(item) }}</strong><small>{{ description(item) }}</small><em v-if="showPrices">{{ basicFees(item) }} · {{ es ? 'una sola vez' : 'one-time' }}</em></span>
+              </label>
+            </details>
+          </div>
 
-        <p class="estimate-summary-footnote">{{ es ? (showPrices ? 'Rangos orientativos en pesos argentinos. Productos, proveedores y trabajo necesario pueden cambiar el precio. Te paso el presupuesto antes de empezar.' : 'Te paso un presupuesto según lo que necesites. Emito factura por mi trabajo.') : (showPrices ? 'Indicative ranges in ARS. Final price depends on your needs and is confirmed before starting.' : 'I provide a quote based on what you need and issue invoices for my work.') }}</p>
-        <details v-if="showPrices" class="estimate-summary-detail estimate-conditions">
-          <summary><span>{{ es ? 'Cómo se calcula el precio' : 'Estimate scope and terms' }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
-        <p v-if="hasSelection && !monthlyAmount && !pendingMonthly" class="estimate-note">{{ es ? 'Por los servicios que elegiste, no tenés que pagarme todos los meses.' : 'The selected services do not require a monthly service retainer.' }}</p>
-        <p v-if="pendingOnce || pendingMonthly" class="estimate-note">{{ es ? 'Hay conceptos pendientes de cotizar. Los importes numéricos solo suman los conceptos con precio definido.' : 'Some services need a quote: the final total is pending. Numeric amounts only include items with a defined price.' }}</p>
-        <p v-if="automationCount" class="estimate-note">{{ es ? 'Las actualizaciones automáticas se calculan para un proveedor, hasta 100 productos y una actualización al día. Si necesitás más, te paso el precio antes de empezar. Otros servicios pagos que hagan falta se suman aparte.' : 'Automations: estimate for one shared source, up to 100 products and one daily update. Extra sources, higher volumes, special rules or external service usage may change the price.' }}</p>
+          <div v-if="goal === 'help'" class="guided-panel">
+            <h3>{{ es ? '¿Con qué necesitás ayuda?' : 'What do you need help with?' }}</h3>
+            <div class="help-choice-list">
+              <button v-for="item in helpOptions" :key="item.id" type="button" :class="{ 'is-chosen': helpKind === item.id }" :aria-pressed="helpKind === item.id" @click="chooseHelp(item.id)">{{ title(item) }}<span aria-hidden="true">›</span></button>
+            </div>
+          </div>
 
-          <p class="estimate-note">{{ es ? 'VendoAlgo y sus funciones extra se pagan aparte de mi trabajo. También se pagan aparte las comisiones por venta y otros servicios que contrates. Tu mensaje incluye todo lo elegido, aunque el detalle esté cerrado.' : 'VendoAlgo, its modules, payment fees and external services are separate. Your inquiry includes the full list even when it is collapsed here.' }}</p>
-        </details>
-        <p v-if="!hasSelection" class="estimate-note"><a href="https://wa.me/5491158471048?text=Hola%20Pedro%2C%20quiero%20que%20me%20orientes%20sobre%20lo%20que%20necesita%20mi%20negocio." target="_blank" rel="noopener noreferrer">{{ es ? 'No sé qué elegir: quiero que me orientes' : 'Not sure what to choose: help me decide' }} ↗</a></p>
-        <p v-if="hasSelection" class="estimate-note">{{ es ? 'Reviso tu pedido y te confirmo por escrito las tareas, el precio y los tiempos antes de empezar. Emito factura por mi trabajo.' : 'I review your request and confirm the work, price and schedule in writing before starting. I issue invoices for my work.' }}</p>
-        <form class="estimate-contact-form" @submit.prevent="contact">
-          <label class="estimate-field">{{ es ? 'Tu nombre' : 'Your name' }}<input v-model="inquiry.name" autocomplete="name" required maxlength="100"></label>
-          <label class="estimate-field">{{ es ? 'Tu negocio y lo que necesitás (opcional)' : 'Your business and what you need (optional)' }}<textarea v-model="inquiry.message" rows="2" maxlength="1200"></textarea></label>
-          <button class="button button-primary" type="submit" value="whatsapp" :disabled="!hasSelection">{{ es ? 'Consultar por WhatsApp' : 'Ask via WhatsApp' }} ↗</button>
-          <button class="button button-secondary" type="submit" value="email" :disabled="!hasSelection">{{ es ? 'Consultar por correo' : 'Ask via email' }} ↗</button>
-          <p class="estimate-note">{{ es ? 'Revisá y enviá tu consulta desde WhatsApp o tu correo. No se envía automáticamente.' : 'Review and send your inquiry in WhatsApp or your email app. Nothing is sent automatically.' }}</p>
-        </form>
-      </aside>
-    </div>
+          <div v-if="goal === 'updates' || (goal === 'help' && helpKind)" class="guided-panel">
+            <h3>{{ goal === 'updates' ? (es ? '¿Qué querés mantener al día?' : 'What would you like to keep up to date?') : (es ? 'Estas opciones pueden ayudarte' : 'These options may help') }}</h3>
+            <p v-if="goal === 'updates'">{{ es ? 'Marcá solo lo que necesitás. Acordamos de dónde tomar la información y cuándo hacer los cambios.' : 'Choose only what you need. We agree where the information comes from and when updates happen.' }}</p>
+            <div v-for="item in relevantServices" :key="item.id" class="guided-service-item">
+              <label class="guided-option">
+                <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleExtra(item, $event.target.checked)">
+                <span><strong>{{ choiceTitle(item) }}</strong><em v-if="showPrices">{{ itemFees(item) }}</em></span>
+              </label>
+              <details class="guided-item-details"><summary>{{ es ? 'Qué incluye' : 'What is included' }}</summary><p>{{ description(item) }}</p><p>{{ itemScope(item) }}</p></details>
+            </div>
+          </div>
+
+          <div v-if="hasSelection && (goal === 'launch' || goal === 'updates' || groupSelected('catalogue').length)" class="guided-context">
+            <fieldset class="guided-size">
+              <legend>{{ es ? '¿Cuántos productos tiene tu negocio?' : 'How many products does your business have?' }} <span>{{ es ? '(opcional)' : '(optional)' }}</span></legend>
+              <label :class="{ active: catalogSize === 'upto50' }"><input v-model="catalogSize" type="radio" value="upto50" name="catalog-size">{{ es ? 'Hasta 50' : 'Up to 50' }}</label>
+              <label :class="{ active: catalogSize === 'over50' }"><input v-model="catalogSize" type="radio" value="over50" name="catalog-size">{{ es ? 'Más de 50' : 'More than 50' }}</label>
+              <label :class="{ active: catalogSize === 'unsure' }"><input v-model="catalogSize" type="radio" value="unsure" name="catalog-size">{{ es ? 'No lo sé todavía' : 'Not sure yet' }}</label>
+            </fieldset>
+            <label v-if="automationCount" class="guided-field">{{ es ? '¿Qué proveedor o lista usás? (opcional)' : 'Which supplier or price list do you use? (optional)' }}<input v-model="details.suppliers" maxlength="300" :placeholder="es ? 'Podés dejarlo para cuando conversemos' : 'You can leave this for our conversation'"></label>
+          </div>
+
+          <details v-if="goal !== 'custom'" class="guided-custom">
+            <summary>{{ es ? 'Personalizar mi pedido · ver todos los servicios' : 'Customize my request · see all services' }}</summary>
+            <p class="guided-muted">{{ es ? 'Podés agregar o quitar tareas. Si no sabés qué elegir, lo vemos juntos.' : 'Add or remove tasks. If you are unsure, we can choose together.' }}</p>
+            <div class="guided-bulk"><span>{{ selected.length }} {{ es ? 'elegidos' : 'selected' }}</span><button type="button" @click="selectAllServices" :disabled="allServicesSelected">{{ es ? 'Seleccionar todo' : 'Select all' }}</button><button type="button" @click="clearServices" :disabled="!hasSelection && !modules.length">{{ es ? 'Quitar todo' : 'Clear all' }}</button></div>
+            <details class="guided-category">
+              <summary>{{ es ? 'Crear mi tienda' : 'Create my store' }}<span>{{ checkedBasics.length }}/5</span></summary>
+              <label class="guided-all"><input type="checkbox" :checked="allBasics" :indeterminate.prop="partialBasics" @change="toggleBasics">{{ es ? 'Elegir las cinco tareas' : 'Choose all five tasks' }}</label>
+              <label v-for="item in options" :key="item.id" class="guided-option"><input type="checkbox" :checked="selected.includes(item.id)" @change="toggleBasic(item, $event.target.checked)"><span><strong>{{ title(item) }}</strong><em v-if="showPrices">{{ basicFees(item) }} · {{ es ? 'una sola vez' : 'one-time' }}</em></span></label>
+            </details>
+            <details v-for="group in serviceGroups" :key="group.id" class="guided-category">
+              <summary>{{ title(group) }}<span>{{ groupSelected(group.id).length }}/{{ groupOptions(group.id).length }}</span></summary>
+              <label class="guided-all"><input type="checkbox" :checked="groupAllSelected(group.id)" :indeterminate.prop="groupPartiallySelected(group.id)" @change="toggleGroup(group.id, $event.target.checked)">{{ es ? 'Elegir todo este grupo' : 'Choose this whole group' }}</label>
+              <div v-for="item in groupOptions(group.id)" :key="item.id" class="guided-service-item">
+                <label class="guided-option"><input type="checkbox" :checked="selected.includes(item.id)" @change="toggleExtra(item, $event.target.checked)"><span><strong>{{ title(item) }}</strong><em v-if="showPrices">{{ itemFees(item) }}</em></span></label>
+                <details class="guided-item-details"><summary>{{ es ? 'Qué incluye' : 'What is included' }}</summary><p>{{ description(item) }}</p><p>{{ itemScope(item) }}</p></details>
+              </div>
+            </details>
+          </details>
+
+          <fieldset v-if="selected.includes('hiring')" class="guided-staff">
+            <legend>{{ es ? '¿A quién necesitás? (opcional)' : 'Who do you need? (optional)' }}</legend>
+            <label v-for="role in staffRoles" :key="role.id"><input v-model="details.roles" type="checkbox" :value="role.id">{{ title(role) }}</label>
+          </fieldset>
+          <p class="guided-help">{{ es ? 'También podés dejar que te oriente.' : 'You can also ask me for guidance.' }} <a :href="guidanceUrl" target="_blank" rel="noopener noreferrer">{{ es ? 'Hablar con Pedro' : 'Talk to Pedro' }} ↗</a></p>
+        </div>
+
+        <aside class="guided-summary" aria-labelledby="guided-summary-title">
+          <p class="eyebrow">{{ es ? 'EL SIGUIENTE PASO' : 'THE NEXT STEP' }}</p>
+          <h3 id="guided-summary-title">{{ es ? (showPrices && hasSelection ? 'Tu estimado, por separado' : 'Lo vemos juntos') : (showPrices && hasSelection ? 'Your itemized estimate' : 'Let’s look at it together') }}</h3>
+          <template v-if="hasSelection">
+            <p class="guided-summary-count">{{ selected.length }} {{ es ? 'tareas elegidas' : 'tasks selected' }}</p>
+            <div v-if="showPrices" class="guided-costs" role="status" aria-live="polite" aria-atomic="true">
+              <div><span>{{ es ? 'Mi trabajo · al empezar' : 'My work · initially' }}</span><strong>{{ amount ? onceLabel : (es ? 'Sin pago inicial' : 'No initial fee') }}</strong></div>
+              <div><span>{{ es ? 'Mi trabajo · cada mes' : 'My work · monthly' }}</span><strong>{{ monthlyAmount ? monthlyLabel : (es ? 'Sin pago mensual' : 'No monthly fee') }}</strong></div>
+              <div class="guided-platform-cost"><span>{{ es ? 'VendoAlgo · cada mes, aparte' : 'VendoAlgo · monthly, separate' }}</span><strong>{{ platformPending ? (es ? 'Pendiente de definir' : 'To be confirmed') : money(platformCost) }}</strong></div>
+              <p v-if="platformPending" class="guided-pending">{{ es ? 'El estimado todavía no incluye el costo de VendoAlgo. Lo confirmo con vos antes de empezar.' : 'VendoAlgo is not yet included in the estimate. I confirm this cost with you before starting.' }}</p>
+              <div v-else class="guided-monthly-total"><span>{{ es ? 'Total mensual estimado' : 'Estimated monthly total' }}</span><strong>{{ moneyRange(monthlyTotalLower, monthlyTotalUpper) }}</strong></div>
+            </div>
+            <details class="guided-summary-details">
+              <summary>{{ es ? 'Ver las tareas que elegí' : 'View my selected tasks' }}</summary>
+              <div class="guided-summary-scroll" tabindex="0" role="region" :aria-label="es ? 'Listado de tareas elegidas' : 'Selected task list'">
+                <ul><li v-for="item in checkedBasics" :key="item.id"><span>{{ title(item) }}</span><small v-if="showPrices">{{ basicFees(item) }}</small></li><li v-for="item in checkedExtras" :key="item.id"><span>{{ title(item) }}</span><small v-if="showPrices">{{ itemFees(item) }}</small></li></ul>
+                <p v-if="showPrices && sharedInitialSaving" class="guided-muted">{{ es ? 'Preparación compartida descontada: ' : 'Shared setup discount: ' }}{{ moneyRange(sharedInitialSaving, sharedInitialSavingUpper) }}</p>
+                <p v-if="showPrices && sharedMonthlySaving" class="guided-muted">{{ es ? 'Cuidado mensual compartido descontado: ' : 'Shared monthly care discount: ' }}{{ moneyRange(sharedMonthlySaving, sharedMonthlySavingUpper) }}/{{ es ? 'mes' : 'month' }}</p>
+              </div>
+            </details>
+          </template>
+          <p v-else class="guided-muted">{{ es ? 'Podés elegir una tarea o contarme qué te pasa. No hace falta que sepas cómo resolverlo.' : 'Choose a task or tell me what is happening. You do not need to know how to solve it.' }}</p>
+
+          <p v-if="showPrices && hasSelection" class="guided-range-note">{{ es ? 'Rangos en pesos argentinos. El precio cambia con los productos, proveedores y trabajo necesario. Recibís un presupuesto antes de contratar.' : 'Ranges in Argentine pesos. Pricing varies with products, suppliers and work needed. You receive a quote before hiring.' }}</p>
+          <details v-if="showPrices && hasSelection" class="guided-price-details">
+            <summary>{{ es ? 'Qué incluye el precio y qué se paga aparte' : 'What is included and what costs extra' }}</summary>
+            <p>{{ es ? 'Los valores más bajos corresponden al trabajo base de cada tarea. Más productos, proveedores o condiciones especiales pueden aumentar el presupuesto. Si tu caso supera lo previsto, te lo aclaro antes de comenzar.' : 'Lower figures apply to each task’s base scope. Extra products, suppliers or special conditions may increase the quote. Work outside those scopes is confirmed before starting.' }}</p>
+            <p v-if="automationCount">{{ es ? 'Las tareas automáticas se estiman para un proveedor, hasta 100 productos y una actualización diaria. Las tareas que usan el mismo proveedor comparten parte de la preparación y revisión: esa parte se descuenta.' : 'Automations assume one supplier, up to 100 products and one daily update. Tasks using the same supplier share part of setup and review, which is discounted.' }}</p>
+            <p>{{ es ? 'VendoAlgo es donde funciona tu tienda. Su plan y las funciones extra se pagan aparte de mi trabajo. Las comisiones de cobro, la dirección web propia y otros servicios que hagan falta también van aparte.' : 'VendoAlgo is where your store runs. Its plan and extra features are paid separately from my work. Payment fees, your domain and other required services are also separate.' }}</p>
+            <label class="guided-field">{{ es ? 'Si ya conocés tu plan de VendoAlgo' : 'If you already know your VendoAlgo plan' }}<select :value="effectivePlatform" :disabled="proRequired || catalogSize === 'over50'" @change="platform = $event.target.value"><option value="unsure">{{ es ? 'Lo definimos juntos' : 'We will choose together' }}</option><option value="free">{{ es ? 'Gratis · hasta 50 productos activos' : 'Free · up to 50 active products' }}</option><option value="pro">Pro · {{ money(storePlatformPricing.plans.pro.monthly) }}/{{ es ? 'mes' : 'month' }}</option></select></label>
+            <p v-if="proRequired">{{ es ? 'Las tareas elegidas necesitan el plan Pro. Las funciones extra conocidas se suman a ese plan; cualquier costo pendiente se confirma antes de empezar.' : 'Selected tasks require Pro. Known extra features are added to that plan; any pending costs are confirmed before starting.' }}</p>
+            <details class="guided-platform-extras"><summary>{{ es ? 'Ver las funciones extra de VendoAlgo' : 'See extra VendoAlgo features' }}</summary>
+              <label v-for="item in storePlatformPricing.modules" :key="item.id" class="guided-platform-option"><input type="checkbox" :checked="selectedModules.some(module => module.id === item.id)" :disabled="requiredModuleIds.includes(item.id)" @change="toggleModule(item.id, $event.target.checked)"><span>{{ platformFeatureName(item) }}</span><small>{{ money(item.monthly) }}/{{ es ? 'mes' : 'month' }}</small></label>
+            </details>
+            <a :href="storePlatformPricing.sourceUrl" target="_blank" rel="noopener noreferrer">{{ es ? 'Ver precios oficiales de VendoAlgo' : 'See official VendoAlgo prices' }} ↗</a>
+          </details>
+
+          <div class="guided-handoff"><strong>{{ es ? '¿Cómo seguimos?' : 'What happens next?' }}</strong><p>{{ es ? 'Me llega tu pedido. Reviso lo que necesitás y te confirmo por escrito las tareas, el precio y la fecha acordada antes de empezar.' : 'I receive your request, review what you need and confirm the work, price and agreed schedule in writing before starting.' }}</p></div>
+          <form class="guided-contact" @submit.prevent="contact">
+            <label class="guided-field">{{ es ? 'Tu nombre' : 'Your name' }}<input v-model="inquiry.name" autocomplete="name" required maxlength="100"></label>
+            <label class="guided-field">{{ es ? 'Contame sobre tu negocio (opcional)' : 'Tell me about your business (optional)' }}<textarea v-model="inquiry.message" rows="3" maxlength="1200" :placeholder="es ? 'Qué vendés y qué te gustaría resolver' : 'What you sell and what you want to resolve'"></textarea></label>
+            <button type="submit" value="whatsapp" class="button button-primary">{{ es ? 'Preparar consulta por WhatsApp' : 'Prepare WhatsApp inquiry' }} ↗</button>
+            <button type="submit" value="email" class="guided-email-button">{{ es ? 'Prefiero consultar por correo' : 'I prefer email' }} ↗</button>
+            <p class="guided-contact-note">{{ es ? 'Revisás el mensaje y lo enviás desde WhatsApp o tu correo. Es solo una consulta, sin contratar ni pagar.' : 'Review and send the message in WhatsApp or your email app. This is an inquiry, without hiring or payment.' }}</p>
+          </form>
+          <p class="guided-invoice">{{ es ? 'Hablás conmigo, Pedro. Emito factura por mi trabajo.' : 'You speak directly with me, Pedro. I issue invoices for my work.' }}</p>
+        </aside>
+      </div>
+    </section>
   </div>
 </template>
 
+
 <style scoped>
+
 .estimate-layout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); align-items: start; gap: 24px; }
 .estimate-choices, .estimate-summary { min-width: 0; }
 .estimate-package { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
@@ -811,4 +966,153 @@ function contact(event) {
   .estimate-option-price { grid-column: 2; text-align: left; }
 }
 
+
+
+.guided-service { color: var(--ink); }
+.guided-intro { max-width: 43rem; margin-bottom: 2rem; }
+.guided-intro h2, .guided-current h2 { margin: .5rem 0 1rem; font-size: clamp(1.7rem, 3.4vw, 2.65rem); line-height: 1.13; letter-spacing: -.04em; }
+.guided-intro p:last-child { color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
+.goal-list { display: grid; gap: .85rem; max-width: 52rem; }
+.goal-choice { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; width: 100%; padding: 1.5rem; border: 1px solid var(--line); background: var(--surface); color: var(--ink); text-align: left; border-radius: .65rem; cursor: pointer; transition: border-color .15s, background .15s; }
+.goal-choice:hover { border-color: var(--ink); background: var(--soft); }
+.goal-choice svg { flex-shrink: 0; }
+.goal-copy { display: grid; gap: .5rem; }
+.goal-copy strong { font-size: 1.1rem; line-height: 1.4; }
+.goal-copy > span { color: var(--muted); line-height: 1.6; }
+.goal-copy small { font-size: .9rem; font-weight: 600; }
+.guided-help { margin: 1.5rem 0 0; color: var(--muted); font-size: .95rem; line-height: 1.8; }
+.guided-help a { color: var(--ink); font-weight: 650; text-underline-offset: .2rem; }
+.guided-workspace, #service-scope-title { scroll-margin-top: 7rem; }
+.guided-workspace:focus, #service-scope-title:focus { outline: none; }
+.guided-current { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.75rem; }
+.guided-current h2 { max-width: 40rem; margin-bottom: 0; }
+.guided-text-button { flex-shrink: 0; padding: .7rem 0; background: transparent; border: 0; color: var(--ink); font-size: .9rem; text-decoration: underline; text-underline-offset: .25rem; cursor: pointer; }
+.guided-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(20rem, .85fr); gap: 2rem; align-items: start; }
+.guided-main { min-width: 0; display: grid; gap: 1.25rem; }
+.guided-panel { padding: 1.65rem; border: 1px solid var(--line); border-radius: .65rem; background: var(--surface); }
+.guided-panel h3, .guided-summary h3 { margin: 0 0 .85rem; font-size: 1.35rem; line-height: 1.3; letter-spacing: -.025em; }
+.guided-panel > p:not(.guided-kicker) { color: var(--muted); line-height: 1.7; margin: 0 0 1rem; }
+.guided-kicker { font-size: .75rem; font-weight: 700; letter-spacing: .1em; color: var(--muted); margin: 0 0 .8rem; }
+.guided-benefits { padding-left: 1.2rem; margin: 1.25rem 0; line-height: 1.7; }
+.guided-benefits li + li { margin-top: .5rem; }
+.guided-service details { border-radius: 0; box-shadow: none; }
+.guided-service summary { cursor: pointer; line-height: 1.5; font-size: .95rem; font-weight: 600; padding: .85rem 0; }
+.guided-service details > summary::marker { color: var(--muted); }
+.guided-disclosure, .guided-summary-details, .guided-price-details { padding: 0; border: 0; border-top: 1px solid var(--line); background: transparent; }
+.guided-option { display: flex; align-items: flex-start; gap: .85rem; padding: 1rem 0; cursor: pointer; line-height: 1.5; }
+.guided-option input, .guided-all input, .guided-staff input, .guided-platform-option input { width: 1.15rem; height: 1.15rem; flex-shrink: 0; margin: .15rem 0 0; accent-color: #27565b; }
+.guided-option > span { display: grid; gap: .4rem; min-width: 0; }
+.guided-option strong { font-size: 1rem; font-weight: 650; }
+.guided-option small, .guided-option em { font-size: .9rem; color: var(--muted); font-style: normal; line-height: 1.6; }
+.guided-option em { color: var(--ink); }
+.help-choice-list { display: grid; gap: .5rem; }
+.help-choice-list button { display: flex; gap: 1rem; justify-content: space-between; align-items: center; padding: .9rem 1rem; min-height: 3rem; border: 1px solid var(--line); border-radius: .35rem; background: transparent; color: var(--ink); text-align: left; font-size: .95rem; line-height: 1.5; cursor: pointer; }
+.help-choice-list button.is-chosen { border-color: var(--ink); background: var(--soft); font-weight: 650; }
+.guided-service-item + .guided-service-item { border-top: 1px solid var(--line); }
+.guided-item-details { padding: 0 0 .8rem 2rem; border: 0; background: transparent; }
+.guided-item-details summary { font-weight: 400; font-size: .85rem; padding: 0; color: var(--muted); }
+.guided-item-details p { font-size: .9rem; color: var(--muted); line-height: 1.7; margin: .6rem 0 0; }
+.guided-context { padding: .25rem 0; }
+.guided-size, .guided-staff { border: 0; margin: 0; padding: 0; min-width: 0; }
+.guided-size legend, .guided-staff legend { padding: 0; font-weight: 600; font-size: .95rem; line-height: 1.6; margin-bottom: .85rem; }
+.guided-size legend span { color: var(--muted); font-weight: 400; }
+.guided-size label { display: inline-flex; align-items: center; gap: .5rem; padding: .7rem .8rem; min-height: 2.8rem; margin: 0 .35rem .5rem 0; border: 1px solid var(--line); border-radius: .35rem; cursor: pointer; font-size: .9rem; }
+.guided-size label.active { border-color: var(--ink); background: var(--soft); }
+.guided-size input { accent-color: #27565b; }
+.guided-field { display: grid; gap: .5rem; font-size: .9rem; font-weight: 600; line-height: 1.6; }
+.guided-context > .guided-field { margin-top: 1rem; }
+.guided-field input, .guided-field textarea, .guided-field select { box-sizing: border-box; width: 100%; min-width: 0; padding: .8rem .9rem; border: 1px solid var(--line); border-radius: .3rem; background: var(--surface); color: var(--ink); font: inherit; font-weight: 400; line-height: 1.5; }
+.guided-field textarea { resize: vertical; }
+.guided-field input::placeholder, .guided-field textarea::placeholder { color: var(--muted); opacity: 1; }
+.guided-custom { padding: .2rem 1.3rem; border: 1px solid var(--line); border-radius: .65rem !important; background: transparent; }
+.guided-muted { color: var(--muted); font-size: .9rem; line-height: 1.7; }
+.guided-bulk { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; padding: .6rem 0 1rem; font-size: .85rem; }
+.guided-bulk > span { margin-right: auto; color: var(--muted); }
+.guided-bulk button { padding: .65rem 0; border: 0; background: transparent; color: var(--ink); text-decoration: underline; text-underline-offset: .2rem; cursor: pointer; }
+.guided-bulk button:disabled { opacity: .45; cursor: default; }
+.guided-category { padding: 0; border: 0; border-top: 1px solid var(--line); background: transparent; }
+.guided-category > summary span { float: right; color: var(--muted); margin-left: .6rem; font-size: .85rem; font-weight: 400; }
+.guided-all { display: flex; align-items: center; gap: .85rem; padding: .75rem 0; font-size: .9rem; cursor: pointer; }
+.guided-staff { padding: 1rem 0; }
+.guided-staff label { display: flex; align-items: flex-start; gap: .8rem; padding: .7rem 0; font-size: .95rem; }
+.guided-summary { padding: 1.65rem; border: 1px solid var(--line); border-radius: .65rem; background: var(--soft); min-width: 0; }
+.guided-summary .eyebrow { font-size: .7rem; margin: 0 0 .85rem; }
+.guided-summary-count { color: var(--muted); font-size: .9rem; margin: .5rem 0 1.25rem; }
+.guided-costs { display: grid; gap: 1rem; margin-bottom: 1.25rem; }
+.guided-costs > div { display: grid; gap: .35rem; }
+.guided-costs span { font-size: .9rem; line-height: 1.5; color: var(--muted); }
+.guided-costs strong { font-size: 1.15rem; line-height: 1.5; overflow-wrap: anywhere; }
+.guided-platform-cost { padding-top: 1rem; border-top: 1px solid var(--line); }
+.guided-pending { font-size: .85rem; line-height: 1.6; margin: -.35rem 0 0; color: var(--muted); }
+.guided-monthly-total { border-top: 1px solid var(--line); padding-top: 1rem; }
+.guided-summary-scroll { max-height: 18rem; overflow-y: auto; overscroll-behavior: contain; }
+.guided-summary-scroll ul { list-style: none; padding: 0; margin: 0; }
+.guided-summary-scroll li { display: grid; gap: .25rem; padding: .65rem 0; font-size: .9rem; line-height: 1.6; }
+.guided-summary-scroll small { color: var(--muted); }
+.guided-range-note { font-size: .85rem; line-height: 1.7; color: var(--muted); }
+.guided-price-details p { color: var(--muted); font-size: .9rem; line-height: 1.7; }
+.guided-price-details > a { display: inline-block; padding: .75rem 0; font-size: .9rem; color: var(--ink); }
+.guided-platform-extras { border: 0; padding: .5rem 0; background: transparent; }
+.guided-platform-option { display: flex; align-items: flex-start; gap: .65rem; font-size: .85rem; padding: .7rem 0; line-height: 1.5; }
+.guided-platform-option span { flex: 1; }
+.guided-platform-option small { font-size: .8rem; white-space: nowrap; }
+.guided-handoff { margin-top: 1.25rem; }
+.guided-handoff > strong { font-size: 1rem; }
+.guided-handoff p { margin: .6rem 0 1.25rem; color: var(--muted); font-size: .9rem; line-height: 1.7; }
+.guided-contact { display: grid; gap: 1rem; }
+.guided-contact .button { width: 100%; white-space: normal; text-align: center; min-height: 3rem; line-height: 1.5; }
+.guided-email-button { border: 0; padding: .5rem; min-height: 2.75rem; background: transparent; color: var(--ink); text-decoration: underline; text-underline-offset: .2rem; cursor: pointer; font-size: .9rem; }
+.guided-contact-note, .guided-invoice { color: var(--muted); font-size: .8rem; line-height: 1.7; margin: 0; }
+.guided-invoice { border-top: 1px solid var(--line); margin-top: 1.25rem; padding-top: 1rem; }
+.guided-service button:focus-visible, .guided-service a:focus-visible, .guided-service summary:focus-visible, .guided-service input:focus-visible, .guided-service textarea:focus-visible, .guided-service select:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+@media(max-width: 960px) {
+  .guided-layout { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  .guided-summary { max-width: none; }
+}
+@media(max-width: 600px) {
+  .guided-current { display: grid; gap: .5rem; }
+  .guided-current h2 { font-size: 1.85rem; }
+  .guided-text-button { justify-self: start; min-height: 2.75rem; }
+  .goal-choice { padding: 1.15rem; gap: 1rem; }
+  .goal-copy strong { font-size: 1rem; }
+  .goal-copy > span { font-size: .9rem; }
+  .guided-panel, .guided-summary { padding: 1.2rem; }
+  .guided-custom { padding: .15rem 1rem; }
+  .guided-platform-option { flex-wrap: wrap; }
+  .guided-platform-option small { margin-left: 1.8rem; }
+}
+@media(prefers-reduced-motion: reduce) { .goal-choice { transition: none; } }
+
+/* Keep native choice controls independent of the site's full-width text inputs. */
+.guided-size { display: flex; flex-wrap: wrap; gap: .65rem; }
+.guided-size legend { float: none; width: 100%; margin-bottom: .85rem; }
+.guided-size label { flex: 0 1 auto; display: inline-flex; justify-content: flex-start; align-items: center; gap: .65rem; margin: 0; padding: .8rem 1rem; min-height: 3rem; line-height: 1.45; }
+.guided-size input[type="radio"] { appearance: auto; box-sizing: border-box; flex: 0 0 1.05rem; width: 1.05rem; height: 1.05rem; min-width: 1.05rem; padding: 0; margin: 0; border: 0; border-radius: 50%; accent-color: #71953b; }
+.guided-service input[type="checkbox"] { appearance: auto; padding: 0; border-radius: .15rem; }
+.guided-launch-price { display: grid; gap: .4rem; padding: 0 0 1.2rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--line); }
+.guided-launch-price strong { font-size: clamp(1.45rem, 3vw, 2rem); line-height: 1.25; letter-spacing: -.035em; }
+.guided-launch-price span { font-size: .85rem; line-height: 1.6; color: var(--muted); }
+.guided-panel .guided-benefits { display: grid; gap: .55rem; list-style: none; padding: 0; margin: 1.1rem 0; }
+.guided-benefits li { position: relative; padding-left: 1.45rem; line-height: 1.55; }
+.guided-benefits li::before { content: '✓'; position: absolute; left: 0; color: var(--muted); font-weight: 700; }
+.guided-benefits li + li { margin-top: 0; }
+@media(max-width: 960px) {
+  .guided-main { display: contents; }
+  .guided-panel { order: 1; }
+  .guided-context { order: 2; }
+  .guided-summary { order: 3; }
+  .guided-custom { order: 4; }
+  .guided-staff { order: 5; }
+  .guided-layout > .guided-help, .guided-main > .guided-help { order: 6; }
+  .guided-layout { gap: 1.25rem; }
+}
+@media(max-width: 420px) {
+  .guided-size label { flex: 1 1 calc(50% - .65rem); font-size: .9rem; }
+  .guided-size label:last-child { flex-basis: 100%; }
+}
+
+
+.guided-custom-catalog { display: grid; gap: 12px; }
+.guided-custom-catalog .estimate-package-heading { min-height: 80px; }
+@media(max-width:960px) { .guided-custom-catalog { order: 1; } }
 </style>
