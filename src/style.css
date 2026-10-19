@@ -634,8 +634,11 @@ details p { color: var(--muted); line-height: 1.6; }
 .buyer-case-details > summary { padding: 16px 0; }
 .buyer-case-details > summary::-webkit-details-marker, .buyer-more > summary::-webkit-details-marker { display: none; }
 .buyer-case-details > summary::marker, .buyer-more > summary::marker { content: ''; }
-.buyer-case-details > summary::after, .buyer-more > summary::after { flex: 0 0 9px; width: 9px; height: 9px; margin-right: 3px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; content: ''; transform: rotate(45deg); }
-.buyer-case-details[open] > summary::after, .buyer-more[open] > summary::after { transform: rotate(225deg); }
+.buyer-case-details > summary::after, .buyer-more > summary::after { flex: 0 0 9px; width: 9px; height: 9px; margin-right: 3px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; content: ''; }
+.buyer-case-details > summary::after { transform: rotate(225deg); }
+.buyer-more > summary::after { transform: rotate(45deg); }
+.buyer-case-details[open] > summary::after { transform: rotate(45deg); }
+.buyer-more[open] > summary::after { transform: rotate(225deg); }
 .buyer-case-details > summary:focus-visible, .buyer-more > summary:focus-visible { outline: 3px solid #749b2e; outline-offset: 4px; border-radius: 4px; }
 .buyer-case-details .buyer-work-grid { margin-top: 4px; gap: 16px; }
 .buyer-case-details .buyer-work-grid article { padding: 20px; border-radius: 8px; }
