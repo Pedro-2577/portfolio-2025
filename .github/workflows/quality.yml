@@ -3,6 +3,7 @@ on:
   workflow_call:
 permissions:
   contents: read
+  pages: read
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -23,14 +24,21 @@ jobs:
         run: npm test
       - name: Dependency advisories
         run: npm run audit:dependencies
+      - name: Read current Pages URL
+        id: pages
+        uses: actions/configure-pages@v5
       - name: Production build
         run: npm run build
+        env:
+          PORTFOLIO_BASE_PATH: ${{ steps.pages.outputs.base_path }}/
       - name: Validate public artifact
         run: npm run check:build
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Browser smoke tests
         run: npm run test:e2e
+        env:
+          PORTFOLIO_BASE_PATH: ${{ steps.pages.outputs.base_path }}/
       - name: Browser report on failure
         if: failure()
         uses: actions/upload-artifact@v4

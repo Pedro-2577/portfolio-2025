@@ -6,6 +6,7 @@ on:
     branches: ['codex/**']
 permissions:
   contents: read
+  pages: read
 concurrency:
   group: validate-${{ github.ref }}
   cancel-in-progress: true
