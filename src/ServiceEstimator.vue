@@ -583,14 +583,18 @@ function contact(event) {
       <div class="guided-layout">
         <div class="guided-main">
           <div v-if="goal === 'launch'" class="guided-panel">
-            <p class="guided-kicker">{{ es ? 'UN PUNTO DE PARTIDA' : 'A STARTING POINT' }}</p>
+            <p class="guided-kicker">{{ es ? 'PUESTA EN MARCHA' : 'STORE SETUP' }}</p>
             <h3>{{ es ? 'Tu tienda preparada para empezar' : 'Your store prepared to get started' }}</h3>
-            <p>{{ es ? 'Me ocupo de prepararla en VendoAlgo y de enseñarte a usarla. Esta base incluye:' : 'I prepare it in VendoAlgo and teach you how to use it. This starting point includes:' }}</p>
+            <div v-if="showPrices" class="guided-launch-price">
+              <strong>{{ amount ? onceLabel : (es ? 'Elegí las tareas que necesitás' : 'Choose the tasks you need') }}</strong>
+              <span>{{ es ? 'Estimado por mi trabajo inicial · VendoAlgo se paga aparte' : 'Estimated initial service fee · VendoAlgo is separate' }}</span>
+            </div>
+            <p>{{ es ? 'Preparo tu tienda en VendoAlgo y te enseño a usarla:' : 'I prepare your VendoAlgo store and show you how to use it:' }}</p>
             <ul class="guided-benefits">
-              <li>{{ es ? 'El diseño con tu logo, colores y textos.' : 'Design using your logo, colors and content.' }}</li>
-              <li>{{ es ? 'La carga de hasta 40 productos con los datos y fotos que me entregues.' : 'Upload of up to 40 products using the data and photos you provide.' }}</li>
-              <li>{{ es ? 'Las formas de pago, envío y retiro.' : 'Payment, delivery and pickup options.' }}</li>
-              <li>{{ es ? 'Una hora para aprender las tareas habituales.' : 'One hour to learn everyday tasks.' }}</li>
+              <li>{{ es ? 'Diseño con tu logo, colores y textos.' : 'Design using your logo, colors and content.' }}</li>
+              <li>{{ es ? 'Hasta 40 productos, con los datos y fotos que me pases.' : 'Upload of up to 40 products using the data and photos you provide.' }}</li>
+              <li>{{ es ? 'Pagos, envíos y retiro configurados.' : 'Payment, delivery and pickup options.' }}</li>
+              <li>{{ es ? 'Una hora de capacitación para manejar tu tienda.' : 'One hour to learn everyday tasks.' }}</li>
             </ul>
             <details class="guided-disclosure">
               <summary>{{ es ? 'Ver o ajustar las tareas incluidas' : 'View or adjust included tasks' }}</summary>
@@ -622,7 +626,7 @@ function contact(event) {
 
           <div v-if="hasSelection && (goal === 'launch' || goal === 'updates' || groupSelected('catalogue').length)" class="guided-context">
             <fieldset class="guided-size">
-              <legend>{{ es ? '¿Cuántos productos querés vender?' : 'How many products do you want to sell?' }} <span>{{ es ? '(opcional)' : '(optional)' }}</span></legend>
+              <legend>{{ es ? '¿Cuántos productos tiene tu negocio?' : 'How many products does your business have?' }} <span>{{ es ? '(opcional)' : '(optional)' }}</span></legend>
               <label :class="{ active: catalogSize === 'upto50' }"><input v-model="catalogSize" type="radio" value="upto50" name="catalog-size">{{ es ? 'Hasta 50' : 'Up to 50' }}</label>
               <label :class="{ active: catalogSize === 'over50' }"><input v-model="catalogSize" type="radio" value="over50" name="catalog-size">{{ es ? 'Más de 50' : 'More than 50' }}</label>
               <label :class="{ active: catalogSize === 'unsure' }"><input v-model="catalogSize" type="radio" value="unsure" name="catalog-size">{{ es ? 'No lo sé todavía' : 'Not sure yet' }}</label>
@@ -824,4 +828,33 @@ function contact(event) {
   .guided-platform-option small { margin-left: 1.8rem; }
 }
 @media(prefers-reduced-motion: reduce) { .goal-choice { transition: none; } }
+
+/* Keep native choice controls independent of the site's full-width text inputs. */
+.guided-size { display: flex; flex-wrap: wrap; gap: .65rem; }
+.guided-size legend { float: none; width: 100%; margin-bottom: .85rem; }
+.guided-size label { flex: 0 1 auto; display: inline-flex; justify-content: flex-start; align-items: center; gap: .65rem; margin: 0; padding: .8rem 1rem; min-height: 3rem; line-height: 1.45; }
+.guided-size input[type="radio"] { appearance: auto; box-sizing: border-box; flex: 0 0 1.05rem; width: 1.05rem; height: 1.05rem; min-width: 1.05rem; padding: 0; margin: 0; border: 0; border-radius: 50%; accent-color: #71953b; }
+.guided-service input[type="checkbox"] { appearance: auto; padding: 0; border-radius: .15rem; }
+.guided-launch-price { display: grid; gap: .4rem; padding: 0 0 1.2rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--line); }
+.guided-launch-price strong { font-size: clamp(1.45rem, 3vw, 2rem); line-height: 1.25; letter-spacing: -.035em; }
+.guided-launch-price span { font-size: .85rem; line-height: 1.6; color: var(--muted); }
+.guided-panel .guided-benefits { display: grid; gap: .55rem; list-style: none; padding: 0; margin: 1.1rem 0; }
+.guided-benefits li { position: relative; padding-left: 1.45rem; line-height: 1.55; }
+.guided-benefits li::before { content: '✓'; position: absolute; left: 0; color: var(--muted); font-weight: 700; }
+.guided-benefits li + li { margin-top: 0; }
+@media(max-width: 960px) {
+  .guided-main { display: contents; }
+  .guided-panel { order: 1; }
+  .guided-context { order: 2; }
+  .guided-summary { order: 3; }
+  .guided-custom { order: 4; }
+  .guided-staff { order: 5; }
+  .guided-layout > .guided-help, .guided-main > .guided-help { order: 6; }
+  .guided-layout { gap: 1.25rem; }
+}
+@media(max-width: 420px) {
+  .guided-size label { flex: 1 1 calc(50% - .65rem); font-size: .9rem; }
+  .guided-size label:last-child { flex-basis: 100%; }
+}
+
 </style>
