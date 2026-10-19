@@ -27,80 +27,350 @@ export const projects = [
     slug: 'vendoalgo',
     technicalCase: {
       "es": {
-        "eyebrow": "Caso técnico",
-        "title": "Facturación automática con ARCA",
-        "intro": "Desarrollé un servicio de facturación integrado con ARCA para VendoAlgo y otras plataformas autorizadas. Después lo integré en VendoAlgo, desde la emisión automática hasta las interfaces y el tratamiento de errores.",
-        "flowLabel": "Esquema de la integración",
-        "flow": [
-          "VendoAlgo y plataformas autorizadas",
-          "Servicio de facturación",
-          "ARCA"
-        ],
-        "sections": [
+        "eyebrow": "Decisiones e implementación",
+        "title": "Cómo resolví estos problemas en VendoAlgo",
+        "intro": "Estos son algunos de los desarrollos de los que me encargué dentro del equipo: operación en tiempo real, suscripciones, facturación y logística.",
+        "linkLabel": "Ver mis casos técnicos",
+        "cases": [
           {
-            "title": "Qué necesitaba resolver",
-            "body": "Permitir que distintas plataformas usaran un mismo servicio de facturación, restringiendo su consumo a las plataformas autorizadas. En VendoAlgo, ese servicio debía quedar integrado en el flujo de facturación automática."
-          },
-          {
-            "title": "Qué desarrollé",
-            "items": [
-              "El servicio de facturación con ARCA y la restricción de uso para las plataformas autorizadas.",
-              "La integración del servicio en VendoAlgo para emitir facturas automáticamente.",
-              "Las interfaces, los mensajes y el diseño responsive del flujo de facturación."
+            "id": "kanban",
+            "title": "Órdenes en tiempo real entre operadores",
+            "summary": "Respuesta inmediata sin perder el estado confirmado cuando dos personas actúan sobre la misma orden.",
+            "tags": [
+              "Laravel Reverb",
+              "Mercado Pago",
+              "Actualización optimista"
+            ],
+            "flowLabel": "Recorrido de una venta",
+            "flow": [
+              "Mercado Pago confirma el pago",
+              "La venta ingresa al tablero",
+              "Operadores sincronizados con Reverb"
+            ],
+            "sections": [
+              {
+                "title": "El problema que encontré",
+                "body": "Durante las pruebas detecté conflictos frecuentes entre acciones de distintos operadores. Rechazar la operación que llegaba después y corregir la tarjeta conservaba el estado correcto, pero interrumpía el trabajo: alguien podía estar gestionando una orden que otro ya había movido."
+              },
+              {
+                "title": "La decisión",
+                "body": "Prioricé reducir la demora de sincronización para que los operadores vieran los cambios cuanto antes. Implementé una actualización optimista: la tarjeta se mueve inmediatamente en la interfaz mientras el servidor procesa la acción."
+              },
+              {
+                "title": "Qué ocurre si dos personas actúan a la vez",
+                "body": "Prevalece la primera operación aceptada por el servidor. Si la otra interfaz ya había movido la tarjeta localmente, se corrige al estado confirmado y un toast explica el conflicto. La rapidez reduce las superposiciones; el control de conflictos resuelve las que igualmente suceden."
+              },
+              {
+                "title": "Cómo lo validé",
+                "body": "Probé el comportamiento de distintas formas y coordiné acciones simultáneas con un compañero cuando la baja demora hacía difícil reproducirlas manualmente. Verificamos la sincronización, la corrección de las tarjetas y la explicación al operador."
+              }
             ]
           },
           {
-            "title": "Cómo responde ante un fallo",
-            "body": "Cuando falla la emisión, el mensaje de error llega al feed. El usuario puede revisar el aviso y reintentar la operación estrictamente a mano: el flujo no dispara reintentos automáticos."
+            "id": "suscripciones",
+            "title": "Suscripciones y extras con Rebill",
+            "summary": "Cobros recurrentes, módulos opcionales y bonificaciones con reglas distintas para altas y bajas.",
+            "tags": [
+              "Rebill",
+              "Prorrateo",
+              "Reglas de negocio"
+            ],
+            "flowLabel": "Alta de un módulo",
+            "flow": [
+              "El dueño elige un extra",
+              "Paga el importe prorrateado",
+              "Se confirma el módulo"
+            ],
+            "sections": [
+              {
+                "title": "Mi responsabilidad",
+                "body": "Me encargué de la integración de Rebill para cobrar las suscripciones de los dueños de las tiendas, incluyendo las interfaces, errores, fallbacks e historial de pagos y eventos. Los pagos de los compradores usan una integración distinta con Mercado Pago, que también implementé."
+              },
+              {
+                "title": "Las reglas que implementé",
+                "items": [
+                  "Al agregar un módulo, primero se paga el importe proporcional hasta la próxima renovación. El nuevo módulo se confirma después de ese pago.",
+                  "Al quitar un extra, permanece activo hasta la siguiente renovación y después deja de renovarse.",
+                  "Incorporé la eximición de pago desde el panel de administración central y su presentación en la tienda, con módulos bonificados e historial de cambios."
+                ]
+              },
+              {
+                "title": "Una alternativa que descarté",
+                "body": "Evalué permitir que el usuario evitara el prorrateo y programara la activación para la próxima renovación. Descarté esa alternativa porque añadía estados y recorridos con poco valor para este producto. Elegí un alta inmediata condicionada al pago del prorrateo."
+              },
+              {
+                "title": "Conexión con la facturación",
+                "body": "Integré la facturación de los cobros de las suscripciones con el mismo servicio ARCA que desarrollé para VendoAlgo y otras plataformas autorizadas."
+              }
+            ]
           },
           {
-            "title": "Qué validé",
-            "body": "Probé los casos de uso del servicio y su integración en VendoAlgo, incluyendo permisos, fallos, mensajes de error y recuperación manual. También revisé el comportamiento de las interfaces en móvil y distintos tamaños de pantalla."
+            "id": "arca",
+            "eyebrow": "Caso técnico",
+            "title": "Facturación automática con ARCA",
+            "intro": "Desarrollé un servicio de facturación integrado con ARCA para VendoAlgo y otras plataformas autorizadas. Después lo integré en VendoAlgo, desde la emisión automática hasta las interfaces y el tratamiento de errores.",
+            "flowLabel": "Esquema de la integración",
+            "flow": [
+              "VendoAlgo y plataformas autorizadas",
+              "Servicio de facturación",
+              "ARCA"
+            ],
+            "sections": [
+              {
+                "title": "Qué necesitaba resolver",
+                "body": "Permitir que distintas plataformas usaran un mismo servicio de facturación, restringiendo su consumo a las plataformas autorizadas. En VendoAlgo, ese servicio debía quedar integrado en el flujo de facturación automática."
+              },
+              {
+                "title": "Qué desarrollé",
+                "items": [
+                  "El servicio de facturación con ARCA y la restricción de uso para las plataformas autorizadas.",
+                  "La integración del servicio en VendoAlgo para emitir facturas automáticamente.",
+                  "Las interfaces, los mensajes y el diseño responsive del flujo de facturación."
+                ]
+              },
+              {
+                "title": "Cómo responde ante un fallo",
+                "body": "Cuando falla la emisión, el mensaje de error llega al feed. El usuario puede revisar el aviso y reintentar la operación estrictamente a mano: el flujo no dispara reintentos automáticos."
+              },
+              {
+                "title": "Qué validé",
+                "body": "Probé los casos de uso del servicio y su integración en VendoAlgo, incluyendo permisos, fallos, mensajes de error y recuperación manual. También revisé el comportamiento de las interfaces en móvil y distintos tamaños de pantalla."
+              },
+              {
+                "title": "Resultado",
+                "body": "Un servicio de facturación compartido, de uso restringido a las plataformas autorizadas, con emisión automática integrada en VendoAlgo y un recorrido definido para informar errores y permitir el reintento manual."
+              }
+            ],
+            "linkLabel": "Ver caso de facturación",
+            "summary": "Un servicio compartido con acceso restringido, emisión automática y recuperación manual ante fallos.",
+            "tags": [
+              "ARCA",
+              "Integración de servicios",
+              "Facturación"
+            ]
           },
           {
-            "title": "Resultado",
-            "body": "Un servicio de facturación compartido, de uso restringido a las plataformas autorizadas, con emisión automática integrada en VendoAlgo y un recorrido definido para informar errores y permitir el reintento manual."
+            "id": "logistica",
+            "title": "Gestión de envíos sin salir del administrador",
+            "summary": "API de Correo Argentino y una automatización complementaria para operaciones que todavía exigían ir a su portal.",
+            "tags": [
+              "Correo Argentino",
+              "Playwright",
+              "Docker"
+            ],
+            "flowLabel": "Operación logística integrada",
+            "flow": [
+              "Orden en VendoAlgo",
+              "API y automatización complementaria",
+              "Gestión en Correo Argentino"
+            ],
+            "sections": [
+              {
+                "title": "El trabajo manual anterior",
+                "body": "La API generaba el envío, pero el operador tenía que abrir el portal de Correo Argentino para confirmarlo y completar su gestión por cada orden."
+              },
+              {
+                "title": "Qué implementé",
+                "body": "Integré la API y, mientras no contábamos con la versión que cubría esas operaciones, desarrollé una automatización de navegador con Playwright, ejecutada en Docker. Investigué cómo preparar el contenedor e incorporarlo a la solución."
+              },
+              {
+                "title": "Alcance de esa automatización",
+                "body": "La solución iniciaba sesión en el portal y permitía gestionar saldo, confirmar y cancelar envíos y consultar su estado. Era una automatización complementaria, distinta de los endpoints de la API."
+              },
+              {
+                "title": "Resultado para el operador",
+                "body": "Esas operaciones quedaron integradas en VendoAlgo, reduciendo pasos manuales y evitando tener que abandonar el administrador para gestionar cada envío. Este caso describe la solución de esa etapa, sin asumir que el portal o la API actuales mantengan el mismo funcionamiento."
+              }
+            ]
           }
         ],
-        "linkLabel": "Ver caso de facturación"
+        "sections": [
+          {
+            "title": "Usuarios, roles y permisos",
+            "body": "También integré Spatie Permission y desarrollé las interfaces para invitar o crear miembros, asignar roles y ajustar permisos individuales por función. Esto permite organizar el trabajo del equipo de cada tienda con accesos acordes a sus tareas."
+          },
+          {
+            "title": "Mi criterio para dar una tarea por terminada",
+            "items": [
+              "Primero, el código debe superar las pruebas automatizadas con Pest 5.",
+              "Después realizo revisión y pruebas asistidas por IA.",
+              "Finalmente valido a mano los casos de uso, UX, diseño, mensajes de error, situaciones límite y recuperación. Si encuentro un problema, lo corrijo y repito las verificaciones correspondientes."
+            ]
+          }
+        ]
       },
       "en": {
-        "eyebrow": "Technical case",
-        "title": "Automatic invoicing with ARCA",
-        "intro": "I developed an ARCA-integrated invoicing service for VendoAlgo and other authorized platforms. I then integrated it into VendoAlgo, covering automatic issuance, interfaces and error handling.",
-        "flowLabel": "Integration overview",
-        "flow": [
-          "VendoAlgo and authorized platforms",
-          "Invoicing service",
-          "ARCA"
-        ],
-        "sections": [
+        "eyebrow": "Decisions and implementation",
+        "title": "How I solved these problems at VendoAlgo",
+        "intro": "Some of the features I owned within the team: real-time operations, subscriptions, invoicing and shipping.",
+        "linkLabel": "View my technical cases",
+        "cases": [
           {
-            "title": "The problem",
-            "body": "Allow different platforms to use a shared invoicing service while restricting its use to authorized platforms. In VendoAlgo, the service needed to be integrated into the automatic invoicing workflow."
-          },
-          {
-            "title": "What I developed",
-            "items": [
-              "The ARCA invoicing service and restrictions on use by authorized platforms.",
-              "The VendoAlgo integration for automatic invoice issuance.",
-              "The interfaces, user messages and responsive design for the invoicing workflow."
+            "id": "kanban",
+            "title": "Real-time orders across operators",
+            "summary": "Immediate feedback while preserving the confirmed state when two people act on the same order.",
+            "tags": [
+              "Laravel Reverb",
+              "Mercado Pago",
+              "Optimistic updates"
+            ],
+            "flowLabel": "Sales workflow",
+            "flow": [
+              "Mercado Pago confirms payment",
+              "The sale enters the board",
+              "Operators stay in sync with Reverb"
+            ],
+            "sections": [
+              {
+                "title": "The problem I found",
+                "body": "During testing, I found frequent conflicts between actions from different operators. Rejecting the later action and correcting its card preserved the correct state, but interrupted work: someone could be handling an order that another operator had already moved."
+              },
+              {
+                "title": "The decision",
+                "body": "I focused on reducing synchronization delay so operators would see changes sooner. I implemented optimistic updates: the card moves immediately in the interface while the server processes the action."
+              },
+              {
+                "title": "When two people act at once",
+                "body": "The first operation accepted by the server takes precedence. If the other interface has already moved the card locally, it returns to the confirmed state and a toast explains the conflict. Fast updates reduce overlaps; conflict handling resolves those that still occur."
+              },
+              {
+                "title": "How I validated it",
+                "body": "I tested the behavior in several ways and coordinated simultaneous actions with a colleague when the low delay made them difficult to reproduce manually. We checked synchronization, card reconciliation and the explanation shown to the operator."
+              }
             ]
           },
           {
-            "title": "What happens when it fails",
-            "body": "If invoice issuance fails, an error message appears in the feed. The user can review the notification and retry the operation manually. The workflow does not trigger automatic retries."
+            "id": "suscripciones",
+            "title": "Subscriptions and add-ons with Rebill",
+            "summary": "Recurring payments, optional modules and fee exemptions, with different rules for adding and removing features.",
+            "tags": [
+              "Rebill",
+              "Proration",
+              "Business rules"
+            ],
+            "flowLabel": "Adding a module",
+            "flow": [
+              "The owner chooses an add-on",
+              "Pays the prorated amount",
+              "The module is confirmed"
+            ],
+            "sections": [
+              {
+                "title": "My responsibility",
+                "body": "I owned the Rebill integration for store owners' subscriptions, including interfaces, errors, fallback behavior and payment and event history. Buyers' payments use a separate Mercado Pago integration, which I also implemented."
+              },
+              {
+                "title": "The rules I implemented",
+                "items": [
+                  "Adding a module requires paying the prorated amount through the next renewal date. The new module is confirmed after that payment.",
+                  "Removing an add-on keeps it active until the next renewal, when it stops renewing.",
+                  "I added payment exemptions through the central administration panel and their store-facing presentation, including waived module charges and a history of changes."
+                ]
+              },
+              {
+                "title": "An alternative I rejected",
+                "body": "I considered allowing users to skip proration and schedule activation for the next renewal. I rejected that option because it introduced states and flows with little value for this product. I chose immediate activation conditional on payment of the prorated amount."
+              },
+              {
+                "title": "Connecting payments to invoicing",
+                "body": "I integrated subscription payment invoicing with the same ARCA service I developed for VendoAlgo and other authorized platforms."
+              }
+            ]
           },
           {
-            "title": "What I validated",
-            "body": "I tested the service's use cases and its VendoAlgo integration, including permissions, failures, error messages and manual recovery. I also reviewed how the interfaces behave on mobile and across screen sizes."
+            "id": "arca",
+            "eyebrow": "Technical case",
+            "title": "Automatic invoicing with ARCA",
+            "intro": "I developed an ARCA-integrated invoicing service for VendoAlgo and other authorized platforms. I then integrated it into VendoAlgo, covering automatic issuance, interfaces and error handling.",
+            "flowLabel": "Integration overview",
+            "flow": [
+              "VendoAlgo and authorized platforms",
+              "Invoicing service",
+              "ARCA"
+            ],
+            "sections": [
+              {
+                "title": "The problem",
+                "body": "Allow different platforms to use a shared invoicing service while restricting its use to authorized platforms. In VendoAlgo, the service needed to be integrated into the automatic invoicing workflow."
+              },
+              {
+                "title": "What I developed",
+                "items": [
+                  "The ARCA invoicing service and restrictions on use by authorized platforms.",
+                  "The VendoAlgo integration for automatic invoice issuance.",
+                  "The interfaces, user messages and responsive design for the invoicing workflow."
+                ]
+              },
+              {
+                "title": "What happens when it fails",
+                "body": "If invoice issuance fails, an error message appears in the feed. The user can review the notification and retry the operation manually. The workflow does not trigger automatic retries."
+              },
+              {
+                "title": "What I validated",
+                "body": "I tested the service's use cases and its VendoAlgo integration, including permissions, failures, error messages and manual recovery. I also reviewed how the interfaces behave on mobile and across screen sizes."
+              },
+              {
+                "title": "Outcome",
+                "body": "A shared invoicing service restricted to authorized platforms, with automatic issuance integrated into VendoAlgo and a defined flow for reporting errors and allowing manual retries."
+              }
+            ],
+            "linkLabel": "View invoicing case",
+            "summary": "A shared service with restricted access, automatic issuance and manual recovery when it fails.",
+            "tags": [
+              "ARCA",
+              "Service integration",
+              "Invoicing"
+            ]
           },
           {
-            "title": "Outcome",
-            "body": "A shared invoicing service restricted to authorized platforms, with automatic issuance integrated into VendoAlgo and a defined flow for reporting errors and allowing manual retries."
+            "id": "logistica",
+            "title": "Managing shipments inside the admin",
+            "summary": "The Correo Argentino API plus complementary automation for operations that still required visiting its portal.",
+            "tags": [
+              "Correo Argentino",
+              "Playwright",
+              "Docker"
+            ],
+            "flowLabel": "Integrated shipping operations",
+            "flow": [
+              "Order in VendoAlgo",
+              "API and complementary automation",
+              "Operations in Correo Argentino"
+            ],
+            "sections": [
+              {
+                "title": "The previous manual workflow",
+                "body": "The API created the shipment, but the operator had to open Correo Argentino's portal to confirm it and complete its management for each order."
+              },
+              {
+                "title": "What I implemented",
+                "body": "I integrated the API and, while we did not yet have the version covering those operations, built browser automation with Playwright running in Docker. I researched how to prepare the container and incorporate it into the solution."
+              },
+              {
+                "title": "The automation's scope",
+                "body": "It logged into the portal and supported balance management, shipment confirmation and cancellation, and status checks. This was complementary browser automation, separate from the API endpoints."
+              },
+              {
+                "title": "Outcome for the operator",
+                "body": "Those operations became available through VendoAlgo, reducing manual steps and the need to leave the admin for each shipment. This case describes the solution at that stage without assuming the current portal or API behaves the same way."
+              }
+            ]
           }
         ],
-        "linkLabel": "View invoicing case"
+        "sections": [
+          {
+            "title": "Users, roles and permissions",
+            "body": "I also integrated Spatie Permission and built interfaces for inviting or creating members, assigning roles and adjusting individual permissions by function. This lets each store organize its team's access around their responsibilities."
+          },
+          {
+            "title": "My criteria for completing a task",
+            "items": [
+              "First, the code must pass the automated tests with Pest 5.",
+              "Next, I perform AI-assisted review and testing.",
+              "Finally, I manually validate use cases, UX, design, error messages, edge cases and recovery. When I find a problem, I fix it and repeat the relevant checks."
+            ]
+          }
+        ]
       }
     },
     description: 'Plataforma para crear y gestionar tiendas online, con catálogo de productos, medios de pago, opciones de envío y personalización de la tienda.',
@@ -115,15 +385,15 @@ export const projects = [
     descriptionEn: 'A platform for creating and managing online stores, with product catalogs, payment methods, shipping options and store customization.',
     shortDescriptionEn: 'My current role: end-to-end development of an e-commerce platform',
     categoryEn: 'Current role',
-    technologies: ['Laravel', 'PHP', 'MySQL', 'SEO'],
+    technologies: ['Laravel', 'PHP', 'MySQL', 'JavaScript'],
     demoType: 'live',
     startDate: '2025',
     academic: false,
     importance: 1,
     role: 'Programador full stack dentro del equipo de VendoAlgo. Desarrollo de la plataforma desde cero hasta su versión actual, con participación en frontend, backend, APIs, diseño visual, UX y marketing.',
     roleEn: 'Full-stack developer on the VendoAlgo team. Development of the platform from scratch to its current version, contributing to frontend, backend, APIs, visual design, UX and marketing.',
-    highlights: ['Desarrollo del frontend y backend desde cero', 'Servicio de facturación con ARCA para plataformas autorizadas e integración de emisión automática en VendoAlgo', 'Diseño visual y experiencia de usuario', 'Participación en marketing y evolución del producto junto al equipo', 'Integración de IA y automatización de procesos', 'Codificación segura y revisión de código'],
-    highlightsEn: ['Frontend and backend development from scratch', 'ARCA invoicing service for authorized platforms and automatic invoice issuance in VendoAlgo', 'Visual design and user experience', 'Contributions to marketing and ongoing product development with the team', 'AI integration and process automation', 'Secure coding and code review'],
+    highlights: ["Suscripciones con Rebill y facturación con ARCA","Órdenes en tiempo real con Reverb e integración de Mercado Pago","Integración logística con Correo Argentino, Playwright y Docker","Gestión de usuarios, roles y permisos con Spatie"],
+    highlightsEn: ["Rebill subscriptions and ARCA invoicing","Real-time orders with Reverb and Mercado Pago integration","Shipping integration with Correo Argentino, Playwright and Docker","User, role and permission management with Spatie"],
     outcome: 'Una plataforma de comercio electrónico en producción que desarrollé desde cero dentro del equipo y en la que sigo trabajando actualmente.',
     outcomeEn: 'A production e-commerce platform that I developed from scratch as part of the team and continue to work on today.',
   },

@@ -13,7 +13,7 @@ const copy = {
     expand: 'Ver mis aportes',
     collapse: 'Ocultar aportes',
     entries: [
-      { match: 'VendoAlgo', title: 'VendoAlgo', summary: 'Participé en la construcción de la plataforma desde cero y sigo trabajando en su evolución junto al equipo.', route: 'project/vendoalgo', link: 'Ver el proyecto' },
+      { match: 'VendoAlgo', title: 'VendoAlgo', summary: 'Participé en la construcción de la plataforma desde cero. Me encargué de suscripciones, facturación, pagos, logística y un tablero de órdenes en tiempo real.', route: 'project/vendoalgo', link: 'Ver mis casos técnicos' },
       { match: 'Proyectos independientes', title: 'Trabajo freelance', summary: 'Desarrollo web para clientes, una extensión para Chrome y gestión de tiendas. En FumigAR me ocupo de la configuración y el acompañamiento de la operación.', route: 'projects', link: 'Ver mis proyectos', serviceLink: 'Gestión de tiendas y caso FumigAR', extensionLink: 'Ver mi extensión publicada' },
     ],
   },
@@ -25,7 +25,7 @@ const copy = {
     expand: 'See my contributions',
     collapse: 'Hide contributions',
     entries: [
-      { match: 'VendoAlgo', title: 'VendoAlgo', summary: 'I helped build the platform from scratch and continue developing it with the team.', route: 'project/vendoalgo', link: 'View the project' },
+      { match: 'VendoAlgo', title: 'VendoAlgo', summary: 'I helped build the platform from scratch, owning subscriptions, invoicing, payments, shipping and a real-time order board.', route: 'project/vendoalgo', link: 'View my technical cases' },
       { match: 'Independent projects', title: 'Freelance work', summary: 'Client web development, a Chrome extension and store management. At FumigAR, I handle configuration and ongoing operational support.', route: 'projects', link: 'View my projects', serviceLink: 'Store management and the FumigAR case', extensionLink: 'View my published extension' },
     ],
   },

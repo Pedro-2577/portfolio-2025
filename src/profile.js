@@ -1,4 +1,4 @@
-// Professional background based on Pedro's CV, LinkedIn profile and academic record.
+// Professional background based on Pedro's CV, LinkedIn profile and confirmed contributions.
 export const professionalProfile = {
   "es": {
     "experienceTitle": "Experiencia profesional",
@@ -14,10 +14,10 @@ export const professionalProfile = {
         "role": "Desarrollador full stack e integración de IA",
         "organization": "VendoAlgo · Trabajo actual",
         "items": [
-          "Desarrollé la plataforma desde cero hasta su versión actual dentro del equipo, trabajando en frontend, backend, APIs y arquitectura.",
-          "Participo en diseño visual, experiencia de usuario, marketing y evolución del producto.",
-          "Integro soluciones de IA y automatización para mejorar procesos internos, con prácticas de codificación segura y revisión de código.",
-          "Trabajo en rendimiento y respuesta del servidor, con foco en escalabilidad y mantenibilidad."
+          "Desarrollé la plataforma desde cero dentro del equipo, trabajando en frontend, backend, APIs, diseño y UX.",
+          "Integré suscripciones con Rebill y facturación con un servicio ARCA para plataformas autorizadas.",
+          "Implementé pagos con Mercado Pago y un kanban con Reverb, actualizaciones optimistas y manejo de conflictos entre operadores.",
+          "Integré Correo Argentino, automatización con Playwright en Docker y gestión de usuarios, roles y permisos con Spatie."
         ]
       },
       {
@@ -237,10 +237,10 @@ export const professionalProfile = {
         "role": "Full-stack developer & AI integration",
         "organization": "VendoAlgo · Current role",
         "items": [
-          "Developed the platform from scratch to its current version as part of the team, working across frontend, backend, APIs and architecture.",
-          "Contribute to visual design, user experience, marketing and ongoing product development.",
-          "Integrate AI and automation to improve internal processes, applying secure coding practices and code review.",
-          "Work on performance and server response, focusing on scalability and maintainability."
+          "Developed the platform from scratch within the team, working across frontend, backend, APIs, design and UX.",
+          "Integrated Rebill subscriptions and invoicing through an ARCA service for authorized platforms.",
+          "Implemented Mercado Pago payments and a Reverb kanban with optimistic updates and conflict handling across operators.",
+          "Integrated Correo Argentino, Playwright automation in Docker and user, role and permission management with Spatie."
         ]
       },
       {
