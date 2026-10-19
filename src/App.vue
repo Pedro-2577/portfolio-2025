@@ -42,8 +42,8 @@ const text = {
     hero: 'Me importa cómo está programado un proyecto, pero también cómo se ve, qué comunica y cómo se usa en cada pantalla. Pienso en quien compra, quien vende, quien administra, quien se pierde y quien intenta encontrar una falla. Me gusta recorrer esas situaciones y cuidar que cada persona reciba la respuesta que necesita.',
     viewProjects: 'Ver proyectos', talk: 'Hablemos', featured: 'Proyectos destacados',
     featuredIntro: 'Una selección curada de demos públicas y proyectos profesionales. El resto del catálogo separa claramente trabajos académicos y experiencias privadas.',
-    allProjects: 'Ver todos los proyectos', skills: 'Tecnologías con las que trabajo',
-    skillsIntro: 'Frontend, backend, datos, seguridad e inteligencia artificial: áreas que conecto para desarrollar y mejorar productos web.',
+    allProjects: 'Ver todos los proyectos', skills: 'Desarrollo full stack, IA y seguridad',
+    skillsIntro: 'Combino desarrollo de producto, integración de servicios y automatización. Estas son las áreas en las que puedo aportar, con ejemplos de mi trabajo.',
     availability: 'Disponible para nuevos desafíos',
     availabilityText: 'Trabajo remoto desde Buenos Aires. Me interesan oportunidades en desarrollo full stack, integración de IA y ciberseguridad.',
     myProjects: 'Mis proyectos', projectsIntro: 'Proyectos profesionales, demos públicas y trabajos académicos, con enlaces y alcance identificados para revisar cada experiencia con contexto.',
@@ -79,8 +79,8 @@ const text = {
     hero: 'I care about how a project is built, but also how it looks, what it communicates and how it works on every screen. I think about the buyer, the seller, the administrator, someone who gets lost and someone looking for a vulnerability. I like working through those situations and making sure each person gets the response they need.',
     viewProjects: 'View projects', talk: "Let's talk", featured: 'Featured projects',
     featuredIntro: 'A curated selection of public demos and professional projects. The full catalog clearly separates academic work and private experience.',
-    allProjects: 'View all projects', skills: 'Technologies I work with',
-    skillsIntro: 'Frontend, backend, data, security and artificial intelligence: the areas I connect to build and improve web products.',
+    allProjects: 'View all projects', skills: 'Full-stack development, AI and security',
+    skillsIntro: 'I combine product development, service integration and automation. Here are the areas where I contribute, with examples of my work.',
     availability: 'Available for new challenges',
     availabilityText: 'I work remotely from Buenos Aires and am open to opportunities in full-stack development, AI integration and cybersecurity.',
     myProjects: 'My projects', projectsIntro: 'Professional projects, public demos and academic work, with scope and links identified so each experience can be reviewed in context.',
@@ -408,11 +408,25 @@ onUnmounted(() => {
 
       <template v-if="currentRoute === 'home'">
         <PortfolioWorkbench :language="language" v-reveal @navigate="navigate" />
-        <section class="section">
+        <section class="section capability-section" aria-labelledby="home-capabilities-title">
           <div class="container">
-            <div class="section-heading section-heading-left" v-reveal><p class="eyebrow">01 / {{ t.skills }}</p><h2>{{ t.skills }}</h2><p>{{ t.skillsIntro }}</p></div>
-            <div class="skill-grid">
-              <div v-for="(area, index) in profile.skills.slice(0, 4)" :key="area.title" class="skill-card" v-reveal="index * 50"><span class="skill-number" aria-hidden="true">0{{ index + 1 }}</span><strong>{{ area.title }}</strong><span>{{ (area.homeItems || area.items.slice(0, 3)).join(' · ') }}</span><small v-if="area.focus">{{ area.focus }}</small></div>
+            <div class="section-heading section-heading-left" v-reveal>
+              <p class="eyebrow">{{ language === 'es' ? '01 / LO QUE PUEDO APORTAR' : '01 / HOW I CONTRIBUTE' }}</p>
+              <h2 id="home-capabilities-title">{{ t.skills }}</h2>
+              <p>{{ t.skillsIntro }}</p>
+            </div>
+            <div class="capability-grid">
+              <article v-for="(area, index) in profile.homeCapabilities" :key="area.id" class="capability-card" v-reveal="index * 50">
+                <div class="capability-top"><span class="capability-number" aria-hidden="true">0{{ index + 1 }}</span><span>{{ area.label }}</span></div>
+                <h3>{{ area.title }}</h3>
+                <p class="capability-description">{{ area.body }}</p>
+                <ul class="capability-tags" :aria-label="language === 'es' ? 'Tecnologías y prácticas' : 'Technologies and practices'"><li v-for="item in area.tags" :key="item">{{ item }}</li></ul>
+                <div class="capability-evidence"><p>{{ area.context }}</p><a :href="'#' + area.route" @click.prevent="navigate(area.route)">{{ area.link }} <span aria-hidden="true">↗</span></a></div>
+              </article>
+            </div>
+            <div class="capability-practices">
+              <p>{{ language === 'es' ? 'Trabajo con Git y GitHub, diseño UX/UI y publicación de aplicaciones web.' : 'My work includes Git and GitHub, UX/UI design and publishing web applications.' }}</p>
+              <details><summary>{{ language === 'es' ? 'En qué estoy profundizando' : 'What I am learning next' }}</summary><p>{{ language === 'es' ? 'RAG, agentes y evaluación de respuestas de IA. Son áreas de aprendizaje, diferenciadas de las implementaciones que ya están en uso.' : 'RAG, agents and AI response evaluation. These are learning areas, separate from the implementations already in use.' }}</p></details>
             </div>
           </div>
         </section>
