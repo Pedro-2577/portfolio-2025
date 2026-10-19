@@ -73,7 +73,12 @@ export const professionalProfile = {
           "UX/UI",
           "AJAX"
         ],
-        "homeItems": ["JavaScript · TypeScript", "Vue.js · Nuxt", "React", "HTML5 · CSS3"]
+        "homeItems": [
+          "JavaScript · TypeScript",
+          "Vue.js · Nuxt",
+          "React",
+          "HTML5 · CSS3"
+        ]
       },
       {
         "title": "Backend y bases de datos",
@@ -88,10 +93,15 @@ export const professionalProfile = {
           "APIs REST",
           "Arquitectura de software"
         ],
-        "homeItems": ["PHP", "Node.js", "Laravel", "MySQL · SQL · APIs REST"]
+        "homeItems": [
+          "PHP",
+          "Node.js",
+          "Laravel",
+          "MySQL · SQL · APIs REST"
+        ]
       },
       {
-        "title": "Seguridad y DevSecOps",
+        "title": "Seguridad de aplicaciones",
         "items": [
           "Bug bounty",
           "Seguridad ofensiva",
@@ -108,7 +118,12 @@ export const professionalProfile = {
           "Diseño de prompts y contexto",
           "Validación de resultados"
         ],
-        "homeItems": ["LLMs en producto", "Automatización de flujos", "Prompts y contexto", "Validación de resultados"],
+        "homeItems": [
+          "LLMs en producto",
+          "Automatización de flujos",
+          "Prompts y contexto",
+          "Validación de resultados"
+        ],
         "focus": "En actualización: RAG, agentes y evaluación de respuestas."
       },
       {
@@ -142,7 +157,69 @@ export const professionalProfile = {
       }
     ],
     "languages": "Español nativo. Inglés intermedio, con foco en lectura de documentación técnica y mejora continua.",
-    "strengths": "Pensamiento analítico para depurar y auditar código, investigación independiente, autonomía y adaptación a nuevas tecnologías."
+    "strengths": "Pensamiento analítico para depurar y auditar código, investigación independiente, autonomía y adaptación a nuevas tecnologías.",
+    "homeCapabilities": [
+      {
+        "id": "frontend",
+        "label": "INTERFACES",
+        "title": "Frontend y experiencia de usuario",
+        "body": "Desarrollo interfaces responsive y conecto las pantallas con los datos y las acciones del producto.",
+        "tags": [
+          "TypeScript",
+          "Vue.js",
+          "Nuxt",
+          "React"
+        ],
+        "context": "Aplicado en proyectos web y productos propios.",
+        "link": "Ver proyectos",
+        "route": "projects"
+      },
+      {
+        "id": "backend",
+        "label": "APLICACIONES",
+        "title": "Backend, datos e integraciones",
+        "body": "Construyo APIs, lógica de negocio e integraciones para que una aplicación funcione de punta a punta.",
+        "tags": [
+          "Laravel",
+          "PHP",
+          "Node.js",
+          "MySQL",
+          "APIs REST"
+        ],
+        "context": "Trabajo actual: desarrollo de VendoAlgo dentro del equipo.",
+        "link": "Ver mi trabajo en VendoAlgo",
+        "route": "project/vendoalgo"
+      },
+      {
+        "id": "ai",
+        "label": "IA EN USO REAL",
+        "title": "IA aplicada y automatización",
+        "body": "Integro modelos de IA y automatizo tareas del negocio, como mantener precios y productos actualizados.",
+        "tags": [
+          "Integración de LLMs",
+          "Automatización",
+          "APIs",
+          "Validación de resultados"
+        ],
+        "context": "Caso real: actualización automática de precios en FumigAR.",
+        "link": "Conocer el caso y el servicio",
+        "route": "services"
+      },
+      {
+        "id": "security",
+        "label": "INVESTIGACIÓN",
+        "title": "Seguridad de aplicaciones",
+        "body": "Investigo fallos de autenticación, permisos y lógica de negocio. Documento su impacto y cómo reproducirlos.",
+        "tags": [
+          "OWASP Top 10",
+          "Auditoría de código",
+          "Bug bounty"
+        ],
+        "context": "Investigación independiente y formación continua.",
+        "link": "Ver mi recorrido",
+        "route": "about"
+      }
+    ]
   },
   "en": {
     "experienceTitle": "Professional experience",
@@ -217,7 +294,12 @@ export const professionalProfile = {
           "UX/UI",
           "AJAX"
         ],
-        "homeItems": ["JavaScript · TypeScript", "Vue.js · Nuxt", "React", "HTML5 · CSS3"]
+        "homeItems": [
+          "JavaScript · TypeScript",
+          "Vue.js · Nuxt",
+          "React",
+          "HTML5 · CSS3"
+        ]
       },
       {
         "title": "Backend & databases",
@@ -232,10 +314,15 @@ export const professionalProfile = {
           "REST APIs",
           "Software architecture"
         ],
-        "homeItems": ["PHP", "Node.js", "Laravel", "MySQL · SQL · REST APIs"]
+        "homeItems": [
+          "PHP",
+          "Node.js",
+          "Laravel",
+          "MySQL · SQL · REST APIs"
+        ]
       },
       {
-        "title": "Security & DevSecOps",
+        "title": "Application security",
         "items": [
           "Bug bounty",
           "Offensive security",
@@ -252,7 +339,12 @@ export const professionalProfile = {
           "Prompt and context design",
           "Output validation"
         ],
-        "homeItems": ["LLMs in product features", "Workflow automation", "Prompts & context", "Output validation"],
+        "homeItems": [
+          "LLMs in product features",
+          "Workflow automation",
+          "Prompts & context",
+          "Output validation"
+        ],
         "focus": "Keeping current: RAG, agents and response evaluation."
       },
       {
@@ -286,6 +378,68 @@ export const professionalProfile = {
       }
     ],
     "languages": "Native Spanish. Intermediate English, focused on reading technical documentation and continuous improvement.",
-    "strengths": "Analytical problem solving for debugging and code auditing, independent research, autonomy and adaptability to new technologies."
+    "strengths": "Analytical problem solving for debugging and code auditing, independent research, autonomy and adaptability to new technologies.",
+    "homeCapabilities": [
+      {
+        "id": "frontend",
+        "label": "INTERFACES",
+        "title": "Frontend and user experience",
+        "body": "I develop responsive interfaces and connect screens to product data and actions.",
+        "tags": [
+          "TypeScript",
+          "Vue.js",
+          "Nuxt",
+          "React"
+        ],
+        "context": "Applied in web projects and personal products.",
+        "link": "View projects",
+        "route": "projects"
+      },
+      {
+        "id": "backend",
+        "label": "APPLICATIONS",
+        "title": "Backend, data and integrations",
+        "body": "I build APIs, business logic and integrations to make applications work end to end.",
+        "tags": [
+          "Laravel",
+          "PHP",
+          "Node.js",
+          "MySQL",
+          "REST APIs"
+        ],
+        "context": "Current role: developing VendoAlgo as part of the team.",
+        "link": "See my work on VendoAlgo",
+        "route": "project/vendoalgo"
+      },
+      {
+        "id": "ai",
+        "label": "AI IN PRACTICE",
+        "title": "Applied AI and automation",
+        "body": "I integrate AI models and automate business tasks, including keeping prices and products up to date.",
+        "tags": [
+          "LLM integration",
+          "Automation",
+          "APIs",
+          "Output validation"
+        ],
+        "context": "Real example: automatic price updates for FumigAR.",
+        "link": "Explore the case and service",
+        "route": "services"
+      },
+      {
+        "id": "security",
+        "label": "RESEARCH",
+        "title": "Application security",
+        "body": "I investigate authentication, authorization and business logic flaws, documenting their impact and reproduction steps.",
+        "tags": [
+          "OWASP Top 10",
+          "Code auditing",
+          "Bug bounty"
+        ],
+        "context": "Independent research and ongoing training.",
+        "link": "See my background",
+        "route": "about"
+      }
+    ]
   }
 };
