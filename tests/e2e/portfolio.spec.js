@@ -90,6 +90,10 @@ test('main routes fit the viewport and outbound tabs isolate their opener', asyn
   for (const route of ['home', 'projects', 'project/vendoalgo', 'about', 'contact', 'services', 'precios', 'emprendimientos']) {
     await page.goto('./#' + route);
     await expect(page.locator('main')).toBeVisible();
+    await expect(page.locator('.site-footer .footer-cv')).toHaveCount(1);
+    await expect(page.locator('.site-footer')).not.toContainText('Vue · Vite');
+    await expect(page.locator('.availability')).toHaveCount(['home', 'projects', 'project/vendoalgo', 'about', 'emprendimientos'].includes(route) ? 1 : 0);
+    await expect(page.locator('body')).not.toContainText('Disponible para nuevos desafíos');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
     for (const link of await page.locator('a[target="_blank"]').all()) {
       const rel = (await link.getAttribute('rel') || '').split(/\s+/);

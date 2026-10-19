@@ -80,12 +80,12 @@ export function usePortfolioMotion(route) {
 
   function onDisclosure(event) {
     const details = event.target;
-    if (!(details instanceof Element) || !details.matches('.technical-case-item')) return;
+    if (!(details instanceof Element) || !details.matches('.technical-case-item, .experience-preview-details, .guide-faq details, .guide-payment details, .capability-practices details')) return;
     if (!details.open) {
       for (const animation of details.getAnimations({ subtree: true })) if (animation.id === 'portfolio-decoration') animation.cancel();
       return;
     }
-    animateDecoration(details.querySelector('.technical-case-body'),
+    animateDecoration(details.querySelector('.technical-case-body') || details.querySelector(':scope > :not(summary)'),
       [{ opacity: .2, translate: '0 -8px' }, { opacity: 1, translate: '0 0' }],
       { duration: 360 },
     );
@@ -170,8 +170,8 @@ export function usePortfolioMotion(route) {
     const name = element?.closest('.hero-name');
     if (name && name !== heroName) waveName(name, element);
     heroName = name;
-    const nextSurface = element?.closest('.hero-portrait, .project-card:not(.academic-card), .skill-card, .capability-card, .workbench, .contact-method') || null;
-    const nextMagnet = element?.closest('.hero-main .button:not(.button-outline), .availability .button') || null;
+    const nextSurface = element?.closest('.hero-portrait, .project-card:not(.academic-card), .skill-card, .capability-card, .workbench, .contact-method, .venture-card:not(.venture-card-locked), .buyer-store-card:not(.buyer-store-locked)') || null;
+    const nextMagnet = element?.closest('.hero-main .button:not(.button-outline), .availability .button, .buyer-final .button, .contact-hero .button') || null;
     if (nextSurface !== surface) { resetSurface(); surface = nextSurface; }
     if (nextMagnet !== magnet) { resetMagnet(); magnet = nextMagnet; }
     pointer = { x: event.clientX, y: event.clientY, surfaceDirty: true };

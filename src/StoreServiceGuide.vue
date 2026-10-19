@@ -1,4 +1,5 @@
 <script setup>
+import { vReveal } from './portfolioMotion';
 import { computed, ref } from 'vue';
 const props = defineProps({ language: { type: String, default: 'es' }, part: { type: String, default: 'tour' }, showPrices: { type: Boolean, default: false } });
 const copy = {
@@ -265,7 +266,7 @@ function openImage() { zoom.value?.showModal(); }
 
 <template>
   <section v-if="part === 'tour'" class="service-guide service-tour" aria-labelledby="service-tour-title">
-    <header class="guide-heading">
+    <header class="guide-heading" v-reveal>
       <p class="eyebrow">{{ text.tourLabel }}</p>
       <h2 id="service-tour-title">{{ text.tourTitle }}</h2>
       <p>{{ text.tourIntro }}</p>
@@ -273,7 +274,7 @@ function openImage() { zoom.value?.showModal(); }
     <div class="tour-steps" :aria-label="es ? 'Pasos del recorrido' : 'Store walkthrough steps'">
       <button v-for="(step, index) in text.steps" :key="step.id" type="button" :aria-pressed="active === index" :class="{ active: active === index }" aria-controls="service-tour-screen" @click="active = index"><span class="tour-number">0{{ index + 1 }}</span>{{ step.short }}<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
     </div>
-    <div id="service-tour-screen" class="tour-screen">
+    <div id="service-tour-screen" class="tour-screen" v-reveal>
       <div class="tour-browser" aria-hidden="true"><span>fumig.ar</span><span>{{ es ? 'TIENDA REAL' : 'REAL STORE' }}</span></div>
       <button v-if="!imageFailed[screen.id]" type="button" class="tour-image-button" @click="openImage" :aria-label="(es ? 'Ampliar captura: ' : 'Enlarge screenshot: ') + screen.title"><img :src="assetBase + screen.image" :alt="screen.alt" width="1920" height="889" loading="lazy" @error="imageFailed[screen.id] = true"><span class="tour-enlarge">{{ es ? 'Ampliar captura' : 'Enlarge screenshot' }} ↗</span></button>
       <p v-else class="tour-fallback">{{ es ? 'Podés ver este paso directamente en la tienda real con el enlace de abajo.' : 'Use the link below to explore this step in the real store.' }}</p>
@@ -283,7 +284,7 @@ function openImage() { zoom.value?.showModal(); }
       </div>
     </div>
     <p class="guide-small">{{ text.captureNote }}</p>
-    <aside class="case-result">
+    <aside class="case-result" v-reveal>
       <p class="eyebrow">{{ text.caseLabel }}</p><h3>{{ text.caseTitle }}</h3><p>{{ text.caseText }}</p><strong>{{ text.caseResult }}</strong><p class="guide-small">{{ text.caseScope }}</p>
     </aside>
     <dialog ref="zoom" class="tour-dialog" @click="($event.target === $event.currentTarget) && zoom.close()">
@@ -294,12 +295,12 @@ function openImage() { zoom.value?.showModal(); }
   </section>
 
   <section v-else-if="part === 'process'" class="service-guide guide-process" aria-labelledby="service-process-title">
-    <header class="guide-heading"><p class="eyebrow">{{ text.processLabel }}</p><h2 id="service-process-title">{{ text.processTitle }}</h2></header>
-    <ol class="guide-process-list"><li v-for="(step, index) in text.process" :key="index"><span class="guide-step-number">0{{ index + 1 }}</span><h3>{{ step.title }}</h3><p>{{ step.body }}</p></li></ol>
+    <header class="guide-heading" v-reveal><p class="eyebrow">{{ text.processLabel }}</p><h2 id="service-process-title">{{ text.processTitle }}</h2></header>
+    <ol class="guide-process-list"><li v-for="(step, index) in text.process" :key="index" v-reveal="index * 55"><span class="guide-step-number">0{{ index + 1 }}</span><h3>{{ step.title }}</h3><p>{{ step.body }}</p></li></ol>
   </section>
 
   <section v-else-if="part === 'faq'" class="service-guide guide-faq" aria-labelledby="service-faq-title">
-    <header class="guide-heading"><p class="eyebrow">{{ text.faqLabel }}</p><h2 id="service-faq-title">{{ text.faqTitle }}</h2><p>{{ es ? 'Abrí solo la pregunta que necesites.' : 'Open only the question you need.' }}</p></header>
+    <header class="guide-heading" v-reveal><p class="eyebrow">{{ text.faqLabel }}</p><h2 id="service-faq-title">{{ text.faqTitle }}</h2><p>{{ es ? 'Abrí solo la pregunta que necesites.' : 'Open only the question you need.' }}</p></header>
     <details v-if="!showPrices"><summary>{{ text.pricingFaq }}</summary><p>{{ text.pricingAnswer }}</p></details>
     <details v-for="item in text.faq" :key="item.q"><summary>{{ item.q }}</summary><p>{{ item.a }}</p></details>
   </section>
