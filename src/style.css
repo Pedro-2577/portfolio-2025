@@ -593,3 +593,27 @@ details p { color: var(--muted); line-height: 1.6; }
 
 .site-nav { gap: clamp(10px, 1.2vw, 18px); }
 .site-nav > a, .nav-ventures-heading > a { white-space: nowrap; }
+
+/* Capabilities connect technical keywords to work and context. */
+.capability-section .section-heading { max-width: 760px; }
+.capability-section .section-heading h2 { max-width: 23ch; }
+.capability-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.capability-card { min-width: 0; display: flex; flex-direction: column; padding: clamp(24px, 3vw, 32px); border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.capability-top { display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: .7rem; font-weight: 600; letter-spacing: .08em; }
+.capability-number { color: #5a7130; font-variant-numeric: tabular-nums; }
+.dark .capability-number { color: var(--accent); }
+.capability-card h3 { margin: 18px 0 12px; font-size: clamp(1.2rem, 2vw, 1.4rem); line-height: 1.25; letter-spacing: -.035em; }
+.capability-description { margin: 0; max-width: 60ch; color: var(--muted); font-size: .94rem; line-height: 1.7; }
+.capability-tags { display: flex; flex-wrap: wrap; gap: 7px; padding: 0; margin: 20px 0 24px; list-style: none; }
+.capability-tags li { padding: 5px 9px; border: 1px solid var(--line); border-radius: 5px; background: var(--soft); font-size: .76rem; line-height: 1.4; }
+.capability-evidence { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line); }
+.capability-evidence p { margin: 0 0 10px; color: var(--muted); font-size: .8rem; line-height: 1.6; }
+.capability-evidence a { display: inline-flex; align-items: center; gap: 8px; font-size: .84rem; font-weight: 600; line-height: 1.5; }
+.capability-evidence a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.capability-evidence a:focus-visible { outline: 3px solid #749b2e; outline-offset: 4px; }
+.capability-practices { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+.capability-practices > p { margin: 0; color: var(--muted); font-size: .86rem; line-height: 1.7; }
+.capability-practices details { padding: 12px 0 0; border: 0; }
+.capability-practices summary { cursor: pointer; font-size: .8rem; color: var(--muted); }
+.capability-practices details p { max-width: 80ch; color: var(--muted); font-size: .84rem; line-height: 1.7; margin: 12px 0 0; }
+@media (max-width: 700px) { .capability-grid { grid-template-columns: 1fr; gap: 16px; } .capability-card { padding: 24px; } }
