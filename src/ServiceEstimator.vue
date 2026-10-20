@@ -762,22 +762,22 @@ function contact(event) {
     <div v-if="!goal" class="business-questionnaire">
       <div class="questionnaire-progress">
         <span aria-live="polite">{{ es ? 'Pregunta' : 'Question' }} {{ questionnaireStep + 1 }} {{ es ? 'de' : 'of' }} {{ businessQuestions.length }}</span>
-        <button v-if="questionnaireStep > 0" type="button" @click="questionnaireStep -= 1">{{ es ? '← Anterior' : '← Back' }}</button>
+        <div class="questionnaire-actions"><button v-if="questionnaireStep > 0" type="button" @click="questionnaireStep -= 1">{{ es ? '← Anterior' : '← Back' }}</button><button type="button" class="guided-reset" :disabled="!businessAnswers.website && !hasSelection" :title="es ? 'Borrar las respuestas y los servicios guardados y volver a la primera pregunta' : 'Clear saved answers and services and return to the first question'" @click="restartQuestionnaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11a9 9 0 1 1 2.6 6.4"/><path d="M3 4v7h7"/></svg><span>{{ es ? 'Reiniciar preguntas' : 'Restart questions' }}</span></button></div>
       </div>
-      <h3 id="business-question-title">{{ es ? activeQuestion.es : activeQuestion.en }}</h3>
+      <h3 id="business-question-title" tabindex="-1">{{ es ? activeQuestion.es : activeQuestion.en }}</h3>
       <div class="questionnaire-options" role="group" aria-labelledby="business-question-title">
         <button v-for="option in activeQuestion.options" :key="option.id" type="button" :aria-pressed="businessAnswers[activeQuestion.id] === option.id" :class="{ 'is-selected': businessAnswers[activeQuestion.id] === option.id }" @click="answerQuestion(option.id)">
           {{ es ? option.es : option.en }}
         </button>
       </div>
-      <p class="guided-save-note">{{ es ? 'Tus respuestas y servicios elegidos se guardan en este navegador.' : 'Your answers and selected services are saved in this browser.' }} <button v-if="questionnaireStep > 0 || businessAnswers.website" type="button" class="guided-text-button" @click="restartQuestionnaire">{{ es ? 'Empezar de nuevo' : 'Start over' }}</button></p>
+      <p class="guided-save-note">{{ es ? 'Tus respuestas y servicios elegidos se guardan en este navegador.' : 'Your answers and selected services are saved in this browser.' }}</p>
       <p class="guided-help">{{ es ? '¿Preferís hablarlo? ' : 'Would you rather talk it through? ' }}<a :href="guidanceUrl" target="_blank" rel="noopener noreferrer">{{ es ? 'Escribime y te oriento' : 'Message me for guidance' }} ↗</a></p>
     </div>
 
     <section v-else ref="workspace" class="guided-workspace" tabindex="-1" aria-labelledby="guided-goal-title">
       <div class="guided-current">
         <div><p class="eyebrow">{{ es ? 'TU NEGOCIO' : 'YOUR BUSINESS' }}</p><h2 id="guided-goal-title">{{ title(currentGoal) }}</h2></div>
-        <div class="guided-draft-actions"><button type="button" class="guided-text-button" @click="changeGoal">{{ es ? 'Editar mis respuestas' : 'Edit my answers' }}</button><button type="button" class="guided-text-button" @click="restartQuestionnaire">{{ es ? 'Empezar de nuevo' : 'Start over' }}</button></div>
+        <div class="guided-draft-actions"><button type="button" class="guided-text-button" @click="changeGoal">{{ es ? 'Editar mis respuestas' : 'Edit my answers' }}</button><button type="button" class="guided-reset" :title="es ? 'Borrar las respuestas y los servicios guardados y volver a la primera pregunta' : 'Clear saved answers and services and return to the first question'" @click="restartQuestionnaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11a9 9 0 1 1 2.6 6.4"/><path d="M3 4v7h7"/></svg><span>{{ es ? 'Reiniciar preguntas' : 'Restart questions' }}</span></button></div>
       </div>
       <p class="guided-save-note">{{ es ? 'Tu selección se guarda en este navegador para que puedas retomarla.' : 'Your selection is saved in this browser so you can return to it.' }}</p>
       <section v-if="businessAnswers.website" class="guided-recommendation" aria-labelledby="guidance-result-title">
@@ -1196,7 +1196,17 @@ function contact(event) {
 .guided-current h2 { max-width: 40rem; margin-bottom: 0; }
 .guided-draft-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .25rem 1rem; }
 .guided-save-note { margin: 0 0 1.75rem; color: var(--muted); font-size: .82rem; line-height: 1.6; }
-.guided-save-note .guided-text-button { padding: .25rem 0; font-size: inherit; }
+.questionnaire-actions { display: flex; align-items: center; justify-content: flex-end; gap: .9rem; }
+.guided-draft-actions { align-items: center; }
+.guided-reset, .questionnaire-progress .guided-reset { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 44px; padding: .65rem .85rem; border: 1px solid var(--ink); border-radius: .45rem; background: var(--soft); color: var(--ink); font: inherit; font-size: .875rem; font-weight: 600; line-height: 1.25; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.guided-reset svg { flex: 0 0 auto; }
+.guided-reset:hover:not(:disabled) { background: var(--surface); }
+.guided-reset:focus-visible { outline: 3px solid #749b2e; outline-offset: 3px; }
+.guided-reset:disabled { opacity: .45; cursor: default; border-color: var(--line); }
+@media (max-width: 600px) {
+  .questionnaire-progress { flex-wrap: wrap; gap: .5rem; }
+  .questionnaire-actions { width: 100%; justify-content: space-between; }
+}
 @media (max-width: 700px) { .guided-draft-actions { justify-content: flex-start; } }
 .guided-recommendation { max-width: 63%; margin: -.75rem 0 1.5rem; padding: .9rem 1.1rem; border-left: 3px solid #718c38; background: var(--soft); border-radius: .35rem; }
 .guided-recommendation h3 { margin: 0 0 .35rem; font-size: 1rem; }
