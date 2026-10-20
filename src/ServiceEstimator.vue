@@ -342,7 +342,10 @@ function toggleGroup(group, checked) {
 }
 const groupCaption = group => {
   const count = groupOptions(group).length;
-  return count + (es.value ? ' servicios' : ' services');
+  const picked = groupSelected(group).length;
+  return picked
+    ? picked + (es.value ? ' de ' : ' of ') + count + (es.value ? ' servicios elegidos' : ' services selected')
+    : count + (es.value ? ' servicios disponibles' : ' services available');
 };const modeLabel = item => item.mode === 'both' ? (es.value ? 'Preparación inicial + cuidado mensual' : 'Setup + monthly maintenance') : item.mode === 'monthly' ? (es.value ? 'Servicio mensual' : 'Monthly service') : (es.value ? 'Se paga una sola vez' : 'One-time service');
 function toggleExtra(item, checked) {
   selected.value = checked ? [...new Set([...selected.value, item.id])] : selected.value.filter(id => id !== item.id);
@@ -785,24 +788,29 @@ function contact(event) {
         <p>{{ guidanceSummary }}</p>
       </section>
       <div class="guided-layout">
+        <div v-if="goal === 'custom'" class="guided-bulk guided-catalog-toolbar"><span role="status" aria-live="polite">{{ selected.length }} {{ es ? 'elegidos' : 'selected' }}</span><button type="button" @click="selectAllServices" :disabled="allServicesSelected">{{ es ? 'Seleccionar todo' : 'Select all' }}</button><button type="button" @click="clearServices" :disabled="!hasSelection && !modules.length">{{ es ? 'Quitar todo' : 'Clear all' }}</button></div>
         <div class="guided-main">
           <div v-if="goal === 'custom'" class="estimate-choices guided-custom-catalog">
-            <div class="guided-bulk"><span role="status" aria-live="polite">{{ selected.length }} {{ es ? 'elegidos' : 'selected' }}</span><button type="button" @click="selectAllServices" :disabled="allServicesSelected">{{ es ? 'Seleccionar todo' : 'Select all' }}</button><button type="button" @click="clearServices" :disabled="!hasSelection && !modules.length">{{ es ? 'Quitar todo' : 'Clear all' }}</button></div>
         <div class="estimate-package" :class="{ 'is-selected': checkedBasics.length }">
           <div class="estimate-package-heading">
             <label class="estimate-package-select">
               <input type="checkbox" :checked="allBasics" :indeterminate.prop="partialBasics" @change="toggleBasics">
-              <span><strong>{{ es ? 'Crear tienda en VendoAlgo' : 'Create a VendoAlgo store' }}</strong><span class="estimate-caption">{{ es ? '5 tareas · pago por única vez' : '5 tasks · one-time payment' }}</span></span>
+              <span><strong>{{ es ? 'Crear tienda en VendoAlgo' : 'Create a VendoAlgo store' }}</strong><span class="estimate-caption">{{ checkedBasics.length ? checkedBasics.length + (es ? ' de ' : ' of ') + options.length + (es ? ' tareas elegidas · por única vez' : ' tasks selected · one-time') : (es ? '5 tareas disponibles · por única vez' : '5 tasks available · one-time') }}</span></span>
             </label>
             <strong v-if="showPrices" class="estimate-package-price">{{ moneyRange(partialBasics ? basicAmount : 150000, partialBasics ? basicAmountUpper : 275000) }}</strong>
             <button type="button" class="estimate-expand" :aria-expanded="expanded" aria-controls="launch-service-options" :aria-label="es ? 'Ver o editar los servicios de puesta en marcha' : 'View or edit launch services'" @click="expanded = !expanded"><svg :class="{ 'is-open': expanded }" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
           </div>
           <div v-show="expanded" id="launch-service-options" class="estimate-options">
-            <label v-for="item in options" :key="item.id" class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
-              <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleBasic(item, $event.target.checked)">
-              <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><span>{{ description(item) }}</span></span>
-              <strong v-if="showPrices" class="estimate-option-price">{{ basicFees(item) }}</strong>
-            </label>
+            <div v-for="item in options" :key="item.id" class="estimate-service-item estimate-launch-item" :class="{ 'is-selected': selected.includes(item.id) }">
+              <label class="estimate-option">
+                <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleBasic(item, $event.target.checked)">
+                <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><em v-if="showPrices" class="estimate-service-fee">{{ basicFees(item) }} · {{ es ? 'por única vez' : 'one-time' }}</em></span>
+              </label>
+              <details class="estimate-item-details">
+                <summary>{{ es ? 'Qué incluye' : 'What is included' }}</summary>
+                <p>{{ description(item) }}</p>
+              </details>
+            </div>
           </div>
         </div>
 
@@ -818,7 +826,7 @@ function contact(event) {
             </button>
           </div>
           <div v-show="expandedGroups[group.id]" :id="'service-group-' + group.id" class="estimate-options estimate-category-options">
-          <div v-for="item in pricedExtras.filter(service => service.group === group.id)" :key="item.id" class="estimate-service-item">
+          <div v-for="item in pricedExtras.filter(service => service.group === group.id)" :key="item.id" class="estimate-service-item" :class="{ 'is-selected': selected.includes(item.id) }">
             <label class="estimate-option" :class="{ 'is-selected': selected.includes(item.id) }">
               <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleExtra(item, $event.target.checked)">
               <span class="estimate-option-copy"><strong>{{ title(item) }}</strong><em v-if="showPrices" class="estimate-service-fee">{{ itemFees(item) }}</em></span>
@@ -1331,4 +1339,41 @@ function contact(event) {
 .guided-custom-catalog .estimate-package-heading { min-height: 80px; }
 @media(max-width:1100px) { .guided-custom-catalog { order: 1; } }
 .guided-payment-link { display: block; border: 0; background: transparent; padding: .65rem 0; margin: .5rem 0; color: var(--ink); text-align: left; text-decoration: underline; text-underline-offset: .2rem; font-size: .9rem; line-height: 1.6; cursor: pointer; }
+
+/* Keep services readable as cards, with one aligned column for the inquiry. */
+.guided-recommendation { max-width: none; }
+.guided-layout > .guided-catalog-toolbar { grid-column: 1 / -1; margin: 0; padding: 0; min-height: 44px; }
+.guided-custom-catalog { gap: 1rem; }
+.guided-custom-catalog .estimate-category { margin-top: 0; }
+.guided-custom-catalog .estimate-package-heading { min-height: 80px; padding: 1rem; }
+.guided-custom-catalog .estimate-package-select > span { min-width: 0; }
+.guided-custom-catalog .estimate-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: .75rem; padding: 1rem; border-top: 1px solid var(--line); }
+.guided-custom-catalog .estimate-option { grid-template-columns: 20px minmax(0, 1fr); gap: .75rem; min-width: 0; }
+.guided-custom-catalog .estimate-service-item { margin: 0; padding: 0; border: 1px solid var(--line); border-radius: .55rem; background: var(--surface); min-width: 0; transition: border-color .15s, background-color .15s; }
+.guided-custom-catalog .estimate-service-item.is-selected { border-color: #879b3d; background: var(--soft); }
+.guided-custom-catalog .estimate-service-item:hover { border-color: var(--ink); }
+.guided-custom-catalog #launch-service-options > .estimate-launch-item:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.guided-custom-catalog .estimate-option-copy strong { font-size: .96rem; line-height: 1.45; }
+.guided-custom-catalog .estimate-option-copy > span { font-size: .86rem; line-height: 1.65; }
+.guided-custom-catalog .estimate-option-price { grid-column: 2; text-align: left; font-size: .88rem; }
+.guided-custom-catalog .estimate-service-item .estimate-option { padding: 1rem 1rem .5rem; border: 0; }
+.guided-custom-catalog .estimate-item-details { padding: 0 1rem 1rem 3rem; }
+.guided-custom-catalog .estimate-item-details summary { min-height: 32px; padding: .25rem 0; font-size: .83rem; }
+.guided-custom-catalog .estimate-item-details p { font-size: .86rem; overflow-wrap: anywhere; }
+.guided-custom-catalog .estimate-context-disclosure { grid-column: 1 / -1; margin: .25rem 0 0; padding: .75rem 0 0; border-top: 1px solid var(--line); }
+.guided-custom-catalog .estimate-context-disclosure > summary { padding: .5rem 0; font-size: .86rem; }
+.guided-custom-catalog .estimate-field { min-width: 0; }
+@media (min-width: 1101px) {
+  .guided-layout { grid-template-columns: minmax(0, 1fr) minmax(19rem, 21rem); gap: 1.5rem; }
+  .guided-summary { padding: 1.5rem; }
+}
+@media (max-width: 600px) {
+  .guided-custom-catalog .estimate-options { grid-template-columns: minmax(0, 1fr); gap: .65rem; padding: .75rem; }
+  .guided-custom-catalog .estimate-package-heading { padding: .75rem; }
+  .guided-layout > .guided-catalog-toolbar { gap: .25rem .8rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guided-custom-catalog .estimate-option, .guided-custom-catalog .estimate-service-item { transition: none; }
+}
+
 </style>
