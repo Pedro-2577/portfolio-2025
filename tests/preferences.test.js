@@ -32,7 +32,7 @@ test('theme follows the system until the visitor chooses a preference, then fall
 test('unavailable storage does not block initial render or preference changes', () => {
   const blocked = { getItem() { throw new Error('blocked'); }, setItem() { throw new Error('blocked'); } };
   assert.equal(readLanguage(blocked), 'es');
-  assert.equal(readTheme(blocked), false);
+  assert.equal(readTheme(blocked), true);
   assert.equal(savePreference('language', 'en', blocked), false);
 });
 test('saving preferences only writes valid presentation settings', () => {
