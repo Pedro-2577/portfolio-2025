@@ -10,13 +10,17 @@ export function readServiceDraft(schema, storage) {
     if (!raw || raw.length > 20000) return null;
     const data = JSON.parse(raw);
     if (!isRecord(data) || data.version !== 1 || !isRecord(data.answers)) return null;
-    const answers = Object.fromEntries(schema.questions.map(question => [
-      question.id, oneOf(data.answers[question.id], question.options.map(option => option.id), ''),
-    ]));
+    const answers = Object.fromEntries(schema.questions.map(question => {
+      // Previous completed drafts stored product count separately from the questionnaire.
+      const savedAnswer = question.id === 'catalogSize' && data.answers.catalogSize === undefined && data.completed === true
+        ? data.catalogSize : data.answers[question.id];
+      return [question.id, oneOf(savedAnswer, question.options.map(option => option.id), '')];
+    }));
     const firstUnanswered = schema.questions.findIndex(question => !answers[question.id]);
     const complete = firstUnanswered === -1;
     const lastReachable = complete ? schema.questions.length - 1 : firstUnanswered;
-    const step = Number.isInteger(data.step) ? Math.max(0, Math.min(data.step, lastReachable)) : lastReachable;
+    const step = !complete && data.completed === true ? firstUnanswered
+      : Number.isInteger(data.step) ? Math.max(0, Math.min(data.step, lastReachable)) : lastReachable;
     let selected = knownIds(data.selected, schema.services);
     // Preserve the same mutually exclusive alternatives as the checkbox controls.
     if (selected.includes('migration')) selected = selected.filter(id => id !== 'catalog');
@@ -27,7 +31,7 @@ export function readServiceDraft(schema, storage) {
       completed: complete && data.completed === true,
       selected,
       modules: knownIds(data.modules, schema.modules),
-      catalogSize: oneOf(data.catalogSize, ['unsure', 'upto50', 'over50'], 'unsure'),
+      catalogSize: oneOf(answers.catalogSize || data.catalogSize, ['unsure', 'upto50', 'over50'], 'unsure'),
       platform: oneOf(data.platform, ['unsure', 'free', 'pro'], 'unsure'),
       expanded: data.expanded === true,
       expandedGroups: Object.fromEntries(schema.groups.map(id => [id, data.expandedGroups?.[id] === true])),

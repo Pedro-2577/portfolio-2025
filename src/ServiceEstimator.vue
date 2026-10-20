@@ -426,7 +426,7 @@ function clearServices() {
   selected.value = [];
   modules.value = [];
   platform.value = 'unsure';
-  catalogSize.value = 'unsure';
+  catalogSize.value = businessAnswers.value.catalogSize || 'unsure';
 }
 const contextLines = computed(() => {
   const lines = [];
@@ -455,7 +455,7 @@ const workspace = ref(null);
 const customServicesDetails = ref(null);
 const openCustomGroups = ref([]);
 const questionnaireStep = ref(0);
-const businessAnswers = ref({ website: '', marketplace: '', products: '' });
+const businessAnswers = ref({ website: '', marketplace: '', products: '', catalogSize: '' });
 const businessQuestions = [
   {
     id: 'website',
@@ -491,6 +491,16 @@ const businessQuestions = [
       { id: 'unsure', es: 'Todavía no vendo o no lo decidí', en: 'I do not sell yet or have not decided' },
     ],
   },
+  {
+    id: 'catalogSize',
+    es: '¿Cuántos productos querés ofrecer en la tienda?',
+    en: 'How many products would you like to offer in your store?',
+    options: [
+      { id: 'upto50', es: 'Hasta 50 productos', en: 'Up to 50 products' },
+      { id: 'over50', es: 'Más de 50 productos', en: 'More than 50 products' },
+      { id: 'unsure', es: 'No lo sé todavía', en: 'I am not sure yet' },
+    ],
+  },
 ];
 const activeQuestion = computed(() => businessQuestions[questionnaireStep.value]);
 const recommendation = computed(() => recommendServices(businessAnswers.value));
@@ -515,11 +525,17 @@ const answerLabels = {
     unsure: ['Todavía no vendés o no decidiste qué productos ofrecer', 'You are not selling yet or have not decided which products to offer'],
   },
 };
+const catalogSizeLabels = {
+  upto50: ['Querés ofrecer hasta 50 productos', 'You want to offer up to 50 products'],
+  over50: ['Querés ofrecer más de 50 productos', 'You want to offer more than 50 products'],
+  unsure: ['La cantidad de productos está por definir', 'The product count is still to be decided'],
+};
 const guidanceSummary = computed(() => [
   ['website', businessAnswers.value.website],
   ['marketplace', businessAnswers.value.marketplace],
   ['products', businessAnswers.value.products],
-].map(([question, answer]) => answerLabels[question][answer]?.[es.value ? 0 : 1]).filter(Boolean).join(' · '));
+  ['catalogSize', businessAnswers.value.catalogSize],
+].map(([question, answer]) => (question === 'catalogSize' ? catalogSizeLabels : answerLabels[question])[answer]?.[es.value ? 0 : 1]).filter(Boolean).join(' · '));
 const savedChoices = ref({});
 const guidedGoals = [
   { id: 'launch', es: 'Quiero crear una tienda online en VendoAlgo', en: 'I want to create an online store on VendoAlgo', descEs: 'Empezar a vender con una tienda preparada para mi negocio.', descEn: 'Start selling with a store prepared for my business.' },
@@ -593,6 +609,7 @@ async function answerQuestion(optionId) {
   const suggestion = recommendation.value;
   await chooseGoal('custom');
   selected.value = [...suggestion.selected];
+  catalogSize.value = businessAnswers.value.catalogSize || 'unsure';
   expanded.value = suggestion.expandLaunch;
   expandedGroups.value = {};
   openCustomGroups.value = [...suggestion.openGroups];
@@ -658,7 +675,7 @@ watch(draftSnapshot, draft => {
 
 async function restartQuestionnaire() {
   clearServiceDraft();
-  businessAnswers.value = { website: '', marketplace: '', products: '' };
+  businessAnswers.value = { website: '', marketplace: '', products: '', catalogSize: '' };
   questionnaireStep.value = 0;
   goal.value = '';
   helpKind.value = '';
@@ -740,7 +757,7 @@ function contact(event) {
     <header v-if="!goal" class="guided-intro">
       <p class="eyebrow">{{ es ? 'UN PASO A LA VEZ' : 'ONE STEP AT A TIME' }}</p>
       <h2 id="service-scope-title" tabindex="-1">{{ es ? 'Te ayudo a encontrar por dónde empezar' : 'Let’s find a good place to start' }}</h2>
-      <p>{{ es ? 'Trabajo preparando y gestionando tiendas online en VendoAlgo. Respondé tres preguntas para orientarte; no necesitás conocer la plataforma ni saber de tecnología.' : 'I prepare and manage online stores on VendoAlgo. Answer three questions so I can guide you; you do not need to know the platform or have technical knowledge.' }}</p>
+      <p>{{ es ? 'Trabajo preparando y gestionando tiendas online en VendoAlgo. Respondé cuatro preguntas para orientarte; no necesitás conocer la plataforma ni saber de tecnología.' : 'I prepare and manage online stores on VendoAlgo. Answer four questions so I can guide you; you do not need to know the platform or have technical knowledge.' }}</p>
     </header>
     <div v-if="!goal" class="business-questionnaire">
       <div class="questionnaire-progress">
@@ -877,15 +894,7 @@ function contact(event) {
             </div>
           </div>
 
-          <div v-if="hasSelection && (goal === 'launch' || goal === 'updates' || groupSelected('catalogue').length)" class="guided-context">
-            <fieldset class="guided-size">
-              <legend>{{ es ? '¿Cuántos productos tiene tu negocio?' : 'How many products does your business have?' }} <span>{{ es ? '(opcional)' : '(optional)' }}</span></legend>
-              <label :class="{ active: catalogSize === 'upto50' }"><input v-model="catalogSize" type="radio" value="upto50" name="catalog-size">{{ es ? 'Hasta 50' : 'Up to 50' }}</label>
-              <label :class="{ active: catalogSize === 'over50' }"><input v-model="catalogSize" type="radio" value="over50" name="catalog-size">{{ es ? 'Más de 50' : 'More than 50' }}</label>
-              <label :class="{ active: catalogSize === 'unsure' }"><input v-model="catalogSize" type="radio" value="unsure" name="catalog-size">{{ es ? 'No lo sé todavía' : 'Not sure yet' }}</label>
-            </fieldset>
-            <label v-if="automationCount" class="guided-field">{{ es ? '¿Qué proveedor o lista usás? (opcional)' : 'Which supplier or price list do you use? (optional)' }}<input v-model="details.suppliers" maxlength="300" :placeholder="es ? 'Podés dejarlo para cuando conversemos' : 'You can leave this for our conversation'"></label>
-          </div>
+
 
           <details v-if="goal !== 'custom'" id="guided-custom-services" ref="customServicesDetails" class="guided-custom">
             <summary>{{ es ? 'Elegir otros servicios' : 'Choose other services' }}</summary>
@@ -1218,15 +1227,9 @@ function contact(event) {
 .guided-item-details { padding: 0 0 .8rem 2rem; border: 0; background: transparent; }
 .guided-item-details summary { font-weight: 400; font-size: .85rem; padding: 0; color: var(--muted); }
 .guided-item-details p { font-size: .9rem; color: var(--muted); line-height: 1.7; margin: .6rem 0 0; }
-.guided-context { padding: .25rem 0; }
-.guided-size, .guided-staff { border: 0; margin: 0; padding: 0; min-width: 0; }
-.guided-size legend, .guided-staff legend { padding: 0; font-weight: 600; font-size: .95rem; line-height: 1.6; margin-bottom: .85rem; }
-.guided-size legend span { color: var(--muted); font-weight: 400; }
-.guided-size label { display: inline-flex; align-items: center; gap: .5rem; padding: .7rem .8rem; min-height: 2.8rem; margin: 0 .35rem .5rem 0; border: 1px solid var(--line); border-radius: .35rem; cursor: pointer; font-size: .9rem; }
-.guided-size label.active { border-color: var(--ink); background: var(--soft); }
-.guided-size input { accent-color: #27565b; }
+.guided-staff { border: 0; margin: 0; padding: 0; min-width: 0; }
+.guided-staff legend { padding: 0; font-weight: 600; font-size: .95rem; line-height: 1.6; margin-bottom: .85rem; }
 .guided-field { display: grid; gap: .5rem; font-size: .9rem; font-weight: 600; line-height: 1.6; }
-.guided-context > .guided-field { margin-top: 1rem; }
 .guided-field input, .guided-field textarea, .guided-field select { box-sizing: border-box; width: 100%; min-width: 0; padding: .8rem .9rem; border: 1px solid var(--line); border-radius: .3rem; background: var(--surface); color: var(--ink); font: inherit; font-weight: 400; line-height: 1.5; }
 .guided-field textarea { resize: vertical; }
 .guided-field input::placeholder, .guided-field textarea::placeholder { color: var(--muted); opacity: 1; }
@@ -1292,10 +1295,6 @@ function contact(event) {
 @media(prefers-reduced-motion: reduce) { .goal-choice { transition: none; } }
 
 /* Keep native choice controls independent of the site's full-width text inputs. */
-.guided-size { display: flex; flex-wrap: wrap; gap: .65rem; }
-.guided-size legend { float: none; width: 100%; margin-bottom: .85rem; }
-.guided-size label { flex: 0 1 auto; display: inline-flex; justify-content: flex-start; align-items: center; gap: .65rem; margin: 0; padding: .8rem 1rem; min-height: 3rem; line-height: 1.45; }
-.guided-size input[type="radio"] { appearance: auto; box-sizing: border-box; flex: 0 0 1.05rem; width: 1.05rem; height: 1.05rem; min-width: 1.05rem; padding: 0; margin: 0; border: 0; border-radius: 50%; accent-color: #71953b; }
 .guided-service input[type="checkbox"] { appearance: auto; padding: 0; border-radius: .15rem; }
 .guided-launch-price { display: grid; gap: .4rem; padding: 0 0 1.2rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--line); }
 .guided-launch-price strong { font-size: clamp(1.45rem, 3vw, 2rem); line-height: 1.25; letter-spacing: -.035em; }
@@ -1308,7 +1307,6 @@ function contact(event) {
   .guided-recommendation { max-width: 100%; }
   .guided-main { display: contents; }
   .guided-panel { order: 1; }
-  .guided-context { order: 2; }
   .guided-summary { order: 3; }
   .guided-custom { order: 4; }
   .guided-staff { order: 5; }
@@ -1316,8 +1314,6 @@ function contact(event) {
   .guided-layout { gap: 1.25rem; }
 }
 @media(max-width: 420px) {
-  .guided-size label { flex: 1 1 calc(50% - .65rem); font-size: .9rem; }
-  .guided-size label:last-child { flex-basis: 100%; }
 }
 
 

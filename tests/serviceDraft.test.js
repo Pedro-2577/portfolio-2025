@@ -82,3 +82,35 @@ test('start over removes this draft while retaining unrelated browser preference
   assert.equal(readServiceDraft(schema, storage), null);
   assert.equal(storage.getItem('unrelated'), 'keep');
 });
+
+const countSchema = { ...schema, questions: [...schema.questions, { id: 'catalogSize', options: [{ id: 'upto50' }, { id: 'over50' }, { id: 'unsure' }] }] };
+
+test('the fourth answer supplies product count when a different count was stored separately', () => {
+  const storage = memoryStorage();
+  saveServiceDraft({ answers: { ...answers, catalogSize: 'over50' }, completed: true, step: 3, catalogSize: 'upto50', selected: ['design'] }, storage);
+  const restored = readServiceDraft(countSchema, storage);
+  assert.equal(restored.answers.catalogSize, 'over50');
+  assert.equal(restored.catalogSize, 'over50');
+  assert.equal(restored.completed, true);
+});
+
+test('completed drafts from the three-question flow retain their count and edited services', () => {
+  for (const count of ['upto50', 'over50', 'unsure']) {
+    const storage = memoryStorage();
+    saveServiceDraft({ answers, completed: true, step: 2, catalogSize: count, selected: ['migration', 'ml'] }, storage);
+    const restored = readServiceDraft(countSchema, storage);
+    assert.equal(restored.answers.catalogSize, count);
+    assert.equal(restored.catalogSize, count);
+    assert.equal(restored.completed, true);
+    assert.deepEqual(restored.selected, ['migration', 'ml']);
+  }
+});
+
+test('older drafts with no valid count resume at the new fourth question', () => {
+  const storage = memoryStorage();
+  saveServiceDraft({ answers, completed: true, step: 2, selected: ['migration'] }, storage);
+  const restored = readServiceDraft(countSchema, storage);
+  assert.equal(restored.completed, false);
+  assert.equal(restored.step, 3);
+  assert.deepEqual(restored.selected, ['migration']);
+});
