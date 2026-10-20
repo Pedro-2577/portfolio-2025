@@ -30,7 +30,9 @@ test('project and nested pricing aliases keep their distinct destination', () =>
     assert.equal(normalizeRoute(service + '/' + price), 'precios');
     assert.equal(resolveRouteStatus(service + '/' + price), null);
   }
-  assert.equal(normalizeRoute('p'), 'projects');
+  assert.equal(normalizeRoute('p'), 'precios');
+  assert.equal(normalizeRoute('p/vendoalgo'), 'project/vendoalgo');
+  assert.equal(resolveRouteStatus('p/vendoalgo', ['vendoalgo']), null);
   assert.equal(normalizeRoute('pr'), 'precios');
   assert.equal(normalizeRoute('s'), 'services');
 });

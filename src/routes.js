@@ -6,7 +6,7 @@ export const routeAliases = Object.freeze({
   about: ['about', 'about-me', 'sobre-mi', 'sobremi', 'acerca-de-mi', 'perfil', 'profile', 'sm', 'a'],
   contact: ['contact', 'contacts', 'contacto', 'contactos', 'contactame', 'contactarme', 'ct', 'c'],
   emprendimientos: ['emprendimientos', 'emprendimiento', 'mis-emprendimientos', 'ventures', 'venture', 'emp', 'e'],
-  precios: ['precios', 'precio', 'prices', 'price', 'pricing', 'tarifas', 'tarifa', 'presupuesto', 'presupuestos', 'cotizacion', 'cotizador', 'pr'],
+  precios: ['precios', 'precio', 'prices', 'price', 'pricing', 'tarifas', 'tarifa', 'presupuesto', 'presupuestos', 'cotizacion', 'cotizador', 'pr', 'p'],
 });
 for (const aliases of Object.values(routeAliases)) Object.freeze(aliases);
 
