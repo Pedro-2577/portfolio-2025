@@ -64,7 +64,8 @@ function addPdfLink(page, x, yTop, width, size, url) {
 }
 
 function pdfLiteral(value) {
-  return '(' + String(value ?? '').replace(/[\\()]/g, '\\function box(page, x, yTop, width, height, color) {') + ')';
+  const escaped = String(value ?? '').replaceAll('\\', '\\\\').replaceAll('(', '\\(').replaceAll(')', '\\)');
+  return '(' + escaped + ')';
 }
 
 function box(page, x, yTop, width, height, color) {
