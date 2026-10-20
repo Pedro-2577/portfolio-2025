@@ -2,6 +2,7 @@
 import { computed, nextTick, ref, watch } from 'vue';
 import { storePlatformPricing } from './storeServices';
 import { recommendServices } from './serviceGuidance';
+import { readServiceDraft, saveServiceDraft, clearServiceDraft } from './serviceDraft';
 
 const props = defineProps({ language: { type: String, default: 'es' }, showPrices: { type: Boolean, default: false } });
 const es = computed(() => props.language !== 'en');
@@ -620,6 +621,59 @@ function chooseHelp(kind) {
   selected.value = kind === 'problem' ? ['technical-help'] : kind === 'monthly' ? ['maintenance'] : [];
   modules.value = [];
 }
+const draftSchema = {
+  questions: businessQuestions,
+  services: [...options, ...pricedExtras].map(item => item.id),
+  modules: storePlatformPricing.modules.map(item => item.id),
+  groups: serviceGroups.map(item => item.id),
+};
+const restoredDraft = readServiceDraft(draftSchema);
+if (restoredDraft) {
+  businessAnswers.value = restoredDraft.answers;
+  questionnaireStep.value = restoredDraft.step;
+  goal.value = restoredDraft.completed ? 'custom' : '';
+  selected.value = restoredDraft.selected;
+  modules.value = restoredDraft.modules;
+  catalogSize.value = restoredDraft.catalogSize;
+  platform.value = restoredDraft.platform;
+  expanded.value = restoredDraft.expanded;
+  expandedGroups.value = restoredDraft.expandedGroups;
+}
+const draftSnapshot = computed(() => ({
+  answers: { ...businessAnswers.value },
+  step: questionnaireStep.value,
+  completed: Boolean(goal.value),
+  selected: [...selected.value],
+  modules: [...modules.value],
+  catalogSize: catalogSize.value,
+  platform: platform.value,
+  expanded: expanded.value,
+  expandedGroups: { ...expandedGroups.value },
+}));
+watch(draftSnapshot, draft => {
+  const started = Object.values(draft.answers).some(Boolean) || draft.selected.length > 0;
+  if (started) saveServiceDraft(draft);
+  else clearServiceDraft();
+}, { deep: true, flush: 'post' });
+
+async function restartQuestionnaire() {
+  clearServiceDraft();
+  businessAnswers.value = { website: '', marketplace: '', products: '' };
+  questionnaireStep.value = 0;
+  goal.value = '';
+  helpKind.value = '';
+  savedChoices.value = {};
+  clearServices();
+  expanded.value = false;
+  expandedGroups.value = {};
+  openCustomGroups.value = [];
+  details.value = { productCount: '', source: '', suppliers: '', frequency: '', teamSize: '', roles: [], issue: '', catalogueNotes: '', configurationNotes: '', supportNotes: '' };
+  inquiry.value = { name: '', business: '', message: '' };
+  await nextTick();
+  document.getElementById('business-question-title')?.focus({ preventScroll: true });
+  document.getElementById('service-scope-title')?.scrollIntoView({ block: 'start', behavior: 'auto' });
+}
+
 watch([catalogSize, automationCount], ([size, automaticTasks]) => {
   platform.value = size === 'over50' ? 'pro' : size === 'upto50' && !automaticTasks ? 'free' : 'unsure';
 });
@@ -699,14 +753,16 @@ function contact(event) {
           {{ es ? option.es : option.en }}
         </button>
       </div>
+      <p class="guided-save-note">{{ es ? 'Tus respuestas y servicios elegidos se guardan en este navegador.' : 'Your answers and selected services are saved in this browser.' }} <button v-if="questionnaireStep > 0 || businessAnswers.website" type="button" class="guided-text-button" @click="restartQuestionnaire">{{ es ? 'Empezar de nuevo' : 'Start over' }}</button></p>
       <p class="guided-help">{{ es ? '¿Preferís hablarlo? ' : 'Would you rather talk it through? ' }}<a :href="guidanceUrl" target="_blank" rel="noopener noreferrer">{{ es ? 'Escribime y te oriento' : 'Message me for guidance' }} ↗</a></p>
     </div>
 
     <section v-else ref="workspace" class="guided-workspace" tabindex="-1" aria-labelledby="guided-goal-title">
       <div class="guided-current">
         <div><p class="eyebrow">{{ es ? 'TU NEGOCIO' : 'YOUR BUSINESS' }}</p><h2 id="guided-goal-title">{{ title(currentGoal) }}</h2></div>
-        <button type="button" class="guided-text-button" @click="changeGoal">{{ es ? 'Editar mis respuestas' : 'Edit my answers' }}</button>
+        <div class="guided-draft-actions"><button type="button" class="guided-text-button" @click="changeGoal">{{ es ? 'Editar mis respuestas' : 'Edit my answers' }}</button><button type="button" class="guided-text-button" @click="restartQuestionnaire">{{ es ? 'Empezar de nuevo' : 'Start over' }}</button></div>
       </div>
+      <p class="guided-save-note">{{ es ? 'Tu selección se guarda en este navegador para que puedas retomarla.' : 'Your selection is saved in this browser so you can return to it.' }}</p>
       <section v-if="businessAnswers.website" class="guided-recommendation" aria-labelledby="guidance-result-title">
         <h3 id="guidance-result-title">{{ es ? 'Tu situación' : 'Your situation' }}</h3>
         <p>{{ guidanceSummary }}</p>
@@ -1129,6 +1185,10 @@ function contact(event) {
 .guided-workspace:focus, #service-scope-title:focus { outline: none; }
 .guided-current { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.75rem; }
 .guided-current h2 { max-width: 40rem; margin-bottom: 0; }
+.guided-draft-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .25rem 1rem; }
+.guided-save-note { margin: 0 0 1.75rem; color: var(--muted); font-size: .82rem; line-height: 1.6; }
+.guided-save-note .guided-text-button { padding: .25rem 0; font-size: inherit; }
+@media (max-width: 700px) { .guided-draft-actions { justify-content: flex-start; } }
 .guided-recommendation { max-width: 63%; margin: -.75rem 0 1.5rem; padding: .9rem 1.1rem; border-left: 3px solid #718c38; background: var(--soft); border-radius: .35rem; }
 .guided-recommendation h3 { margin: 0 0 .35rem; font-size: 1rem; }
 .guided-recommendation p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.6; }

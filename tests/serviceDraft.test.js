@@ -1,0 +1,84 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readServiceDraft, saveServiceDraft, clearServiceDraft } from '../src/serviceDraft.js';
+
+const schema = {
+  questions: [
+    { id: 'website', options: [{ id: 'new' }, { id: 'other-platform' }, { id: 'yes' }] },
+    { id: 'marketplace', options: [{ id: 'interested' }, { id: 'not-now' }] },
+    { id: 'products', options: [{ id: 'suppliers' }, { id: 'made-here' }] },
+  ],
+  services: ['design', 'catalog', 'payments', 'shipping', 'training', 'migration', 'visual-changes', 'ml', 'auto-prices', 'auto-stock'],
+  modules: ['ai', 'mercadolibre'],
+  groups: ['catalogue', 'automation', 'configuration'],
+};
+function memoryStorage(raw = null) {
+  const items = new Map([['unrelated', 'keep']]);
+  const store = { getItem: key => items.get(key) ?? null, setItem: (key, value) => items.set(key, value), removeItem: key => items.delete(key) };
+  if (raw !== null) store.setItem('portfolio.store-services.draft.v1', raw);
+  return store;
+}
+const answers = { website: 'other-platform', marketplace: 'interested', products: 'suppliers' };
+
+test('a migration draft restores edited choices and budget inputs without stored prices or contact data', () => {
+  const storage = memoryStorage();
+  const draft = { answers, step: 2, completed: true, selected: ['design', 'payments', 'shipping', 'training', 'migration', 'ml', 'auto-prices', 'auto-stock'], modules: ['ai'], catalogSize: 'over50', platform: 'pro', expanded: true, expandedGroups: { automation: true } };
+  saveServiceDraft(draft, storage);
+  const restored = readServiceDraft(schema, storage);
+  assert.deepEqual(restored.selected, draft.selected);
+  assert.deepEqual(restored.answers, answers);
+  assert.equal(restored.completed, true);
+  assert.equal(restored.catalogSize, 'over50');
+  assert.equal(restored.platform, 'pro');
+  assert.equal(restored.expandedGroups.automation, true);
+  const extra = memoryStorage(JSON.stringify({ ...draft, version: 1, amount: 123, showPrices: true, inquiry: { name: 'Private' } }));
+  assert.equal('amount' in readServiceDraft(schema, extra), false);
+  assert.equal('showPrices' in readServiceDraft(schema, extra), false);
+  assert.equal('inquiry' in readServiceDraft(schema, extra), false);
+});
+
+test('clearing all services stays empty after reload instead of reapplying suggestions', () => {
+  const storage = memoryStorage();
+  saveServiceDraft({ answers, completed: true, selected: [] }, storage);
+  const restored = readServiceDraft(schema, storage);
+  assert.deepEqual(restored.selected, []);
+  assert.equal(restored.completed, true);
+});
+
+test('unfinished or invalid answers cannot skip unanswered questions', () => {
+  const storage = memoryStorage(JSON.stringify({ version: 1, answers: { website: 'new', marketplace: 'removed-answer' }, step: 999, completed: true }));
+  const restored = readServiceDraft(schema, storage);
+  assert.equal(restored.completed, false);
+  assert.equal(restored.step, 1);
+  assert.equal(restored.answers.marketplace, '');
+  assert.equal(restored.answers.products, '');
+});
+
+test('obsolete service IDs and conflicting alternatives are removed safely', () => {
+  const storage = memoryStorage(JSON.stringify({ version: 1, answers, selected: ['catalog', 'migration', 'design', 'visual-changes', 'obsolete', 'ml', 'ml'], modules: ['unknown', 'ai'], platform: 'unknown' }));
+  const restored = readServiceDraft(schema, storage);
+  assert.deepEqual(restored.selected, ['migration', 'design', 'ml']);
+  assert.deepEqual(restored.modules, ['ai']);
+  assert.equal(restored.platform, 'unsure');
+});
+
+test('corrupt, unsupported, missing and oversized drafts are ignored', () => {
+  for (const raw of [null, '{broken', 'null', '[]', JSON.stringify({ version: 2, answers }), JSON.stringify({ version: 1 }), 'x'.repeat(20001)]) {
+    assert.equal(readServiceDraft(schema, memoryStorage(raw)), null);
+  }
+});
+
+test('blocked storage does not break reading, saving or resetting', () => {
+  const blocked = { getItem() { throw new Error('blocked'); }, setItem() { throw new Error('full'); }, removeItem() { throw new Error('blocked'); } };
+  assert.equal(readServiceDraft(schema, blocked), null);
+  assert.doesNotThrow(() => saveServiceDraft({ answers }, blocked));
+  assert.doesNotThrow(() => clearServiceDraft(blocked));
+});
+
+test('start over removes this draft while retaining unrelated browser preferences', () => {
+  const storage = memoryStorage();
+  saveServiceDraft({ answers }, storage);
+  clearServiceDraft(storage);
+  assert.equal(readServiceDraft(schema, storage), null);
+  assert.equal(storage.getItem('unrelated'), 'keep');
+});
