@@ -103,6 +103,30 @@ test('main routes fit the viewport and outbound tabs isolate their opener', asyn
   }
 });
 
+test('representative views remain within the viewport across narrow, tablet and wide screens', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'The viewport matrix runs once; the mobile project covers Pixel 7.');
+  const widths = [320, 360, 390, 430, 600, 768, 900, 1024, 1280, 1440, 1920];
+  const routes = [
+    'home', 'projects', 'project/citarme', 'project/vendoalgo',
+    'project/portales-comercio-electronico', 'about', 'contact',
+    'services', 'precios', 'emprendimientos'
+  ];
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const route of routes) {
+      await page.goto('./#' + route);
+      await expect(page.locator('main')).toBeVisible();
+      const dimensions = await page.evaluate(() => ({
+        viewport: document.documentElement.clientWidth,
+        document: document.documentElement.scrollWidth,
+        body: document.body.scrollWidth
+      }));
+      expect(dimensions.document, route + ' overflows at ' + width + 'px').toBeLessThanOrEqual(dimensions.viewport);
+      expect(dimensions.body, route + ' body overflows at ' + width + 'px').toBeLessThanOrEqual(dimensions.viewport);
+    }
+  }
+});
+
 test('production CSP allows the application and blocks an injected inline script', async ({ page }) => {
   await page.goto('./#home');
   const policy = page.locator('meta[http-equiv="Content-Security-Policy"]');
