@@ -119,9 +119,13 @@ test('representative views remain within the viewport across narrow, tablet and 
       const dimensions = await page.evaluate(() => ({
         viewport: document.documentElement.clientWidth,
         document: document.documentElement.scrollWidth,
-        body: document.body.scrollWidth
+        body: document.body.scrollWidth,
+        offenders: [...document.querySelectorAll('body *')].map(element => {
+          const rect = element.getBoundingClientRect();
+          return { tag: element.tagName, className: typeof element.className === 'string' ? element.className : '', right: Math.round(rect.right), width: Math.round(rect.width) };
+        }).filter(item => item.width > 0 && item.right > document.documentElement.clientWidth + 1).slice(0, 8)
       }));
-      expect(dimensions.document, route + ' overflows at ' + width + 'px').toBeLessThanOrEqual(dimensions.viewport);
+      expect(dimensions.document, route + ' overflows at ' + width + 'px: ' + JSON.stringify(dimensions.offenders)).toBeLessThanOrEqual(dimensions.viewport);
       expect(dimensions.body, route + ' body overflows at ' + width + 'px').toBeLessThanOrEqual(dimensions.viewport);
     }
   }
