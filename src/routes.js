@@ -53,6 +53,8 @@ export function routeFromLocation(location, base = '/') {
 export function staticRoutePaths(projectSlugs = []) {
   const paths = new Map();
   for (const [route, names] of Object.entries(routeAliases)) for (const name of names) paths.set(name, route);
+  // The short /p/ alias means pricing; /p/<slug>/ remains a project route.
+  paths.set('p', 'precios');
   for (const service of routeAliases.services) {
     for (const price of routeAliases.precios) paths.set(service + '/' + price, 'precios');
   }
