@@ -1,5 +1,40 @@
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
+import { staticRoutePaths } from '../../src/routes.js';
+import { projects } from '../../src/data.js';
+
+test('every friendly direct URL has a real static entry in the production artifact', async () => {
+  for (const [path, route] of staticRoutePaths(projects.map(project => project.slug))) {
+    const html = await readFile('dist/' + path + '/index.html', 'utf8');
+    expect(html, path).toContain('rel="canonical"');
+    expect(html, path).toContain(route + '/">');
+    expect(html, path).not.toContain('data-http-status="404"');
+  }
+});
+
+test('Spanish and abbreviated URLs open directly, reload and navigate back correctly', async ({ page }) => {
+  for (const path of ['servicios', 'servicio', 'sv', 's', 'proyectos', 'sobre-mi', 'contacto', 'ventures', 'tarifas', 'servicios/precios', 'proyecto/vendoalgo']) {
+    const response = await page.goto('./' + path + '/?source=alias');
+    expect(response.status(), path).toBe(200);
+    await expect(page.locator('main')).toBeVisible();
+    await expect(page.locator('main')).not.toContainText('Esta página se salió del mapa.');
+    await expect(page.locator('html')).not.toHaveAttribute('data-http-status', '404');
+    await page.reload();
+    await expect(page.locator('main')).not.toContainText('Esta página se salió del mapa.');
+  }
+  await page.goto('./servicios/');
+  await expect(page.locator('.buyer-page')).toBeVisible();
+  await page.locator('.brand').click();
+  await expect(page.locator('.hero')).toBeVisible();
+  await page.goBack();
+  await expect(page.locator('.buyer-page')).toBeVisible();
+  await page.goto('./#sobre-mi');
+  await expect(page.locator('.cv-about')).toBeVisible();
+  await page.goto('./#s');
+  await expect(page.locator('.buyer-page')).toBeVisible();
+  await page.goto('./#proyecto/vendoalgo');
+  await expect(page.getByRole('heading', { name: 'VendoAlgo', level: 1, exact: true })).toBeVisible();
+});
 
 test.beforeEach(async ({ page, baseURL }) => {
   // Keep smoke tests deterministic and do not contact demos, payment services or people.
@@ -204,3 +239,4 @@ test.describe('optional motion', () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
   });
 });
+

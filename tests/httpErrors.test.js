@@ -11,7 +11,8 @@ test('existing public pages and pricing aliases remain available', () => {
 test('only existing project routes resolve to project pages', () => {
   assert.equal(resolveRouteStatus('project/vendoalgo', ['vendoalgo']), null);
   assert.equal(resolveRouteStatus('/project/vendoalgo', ['vendoalgo']), null);
-  for (const route of ['project/missing', 'project', 'project/vendoalgo/extra', 'unknown/vendoalgo', 'missing']) {
+  assert.equal(resolveRouteStatus('project', ['vendoalgo']), null);
+  for (const route of ['project/missing', 'project/vendoalgo/extra', 'unknown/vendoalgo', 'missing']) {
     assert.equal(resolveRouteStatus(route, ['vendoalgo']), 404, route);
   }
 });
@@ -25,3 +26,4 @@ test('malformed or unsupported error routes fall back to not-found', () => {
     assert.equal(resolveRouteStatus(route), 404, route);
   }
 });
+

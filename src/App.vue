@@ -14,13 +14,14 @@ import { appFailure } from './appFailure';
 import { professionalProfile, skillAreaFor } from './profile';
 import { downloadResumePdf } from './resumePdf';
 import { readLanguage, readTheme, savePreference } from './preferences';
+import { normalizeRoute, routeFromLocation } from './routes';
 
 const assetBase = import.meta.env.BASE_URL;
 
 const language = ref(readLanguage());
 const darkMode = ref(readTheme());
-const currentRoute = ref(window.location.hash.slice(1) || 'home');
-const showServicePrices = computed(() => ['precios', '/precios', 'services/precios'].includes(currentRoute.value));
+const currentRoute = ref(routeFromLocation(window.location, assetBase));
+const showServicePrices = computed(() => currentRoute.value === 'precios');
 const isServiceRoute = computed(() => currentRoute.value === 'services' || showServicePrices.value);
 usePortfolioMotion(currentRoute);
 const search = ref('');
@@ -252,6 +253,7 @@ function removePreviewVersion() {
 }
 
 function navigate(route) {
+  route = normalizeRoute(route) || 'home';
   venturesMenuOpen.value = false;
   removePreviewVersion();
   if (hostedNotFound) {
@@ -301,7 +303,7 @@ function closeVenturesOnFocusOut(event) {
 
 function onHashChange() {
   venturesMenuOpen.value = false;
-  currentRoute.value = window.location.hash.slice(1) || 'home';
+  currentRoute.value = routeFromLocation(window.location, assetBase);
 }
 
 watch(language, (value) => {
@@ -674,3 +676,4 @@ onUnmounted(() => {
     </footer>
   </div>
 </template>
+

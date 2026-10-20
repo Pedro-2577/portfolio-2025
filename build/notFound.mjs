@@ -1,5 +1,14 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { staticRoutePaths } from '../src/routes.js';
+import { projects } from '../src/data.js';
+
+export function createRouteHtml(index, base, route) {
+  if (!/^\/(?:[\w.-]+\/)*$/.test(base)) throw new Error('Routes require an absolute site base path');
+  if (!index.includes('<head>') || !index.includes('<div id="app"></div>')) throw new Error('Cannot generate route: expected HTML structure was not found');
+  if (!/^[a-z0-9-]+(?:\/[a-z0-9-]+)*$/.test(route)) throw new Error('Unsafe canonical route');
+  return index.replace('<head>', '<head>\n<base href="' + base + '">\n<link rel="canonical" href="' + base + route + '/">');
+}
 
 export function create404Html(index, base) {
   if (!/^\/(?:[\w.-]+\/)*$/.test(base)) throw new Error('404 requires an absolute site base path');
@@ -27,6 +36,13 @@ export function custom404Page() {
     async closeBundle() {
       const index = await readFile(resolve(outputDirectory, 'index.html'), 'utf8');
       await writeFile(resolve(outputDirectory, '404.html'), create404Html(index, base));
+      // Pages has no rewrite rules: real entry files let direct URLs return HTTP 200.
+      for (const [path, route] of staticRoutePaths(projects.map(project => project.slug))) {
+        const directory = resolve(outputDirectory, path);
+        await mkdir(directory, { recursive: true });
+        await writeFile(resolve(directory, 'index.html'), createRouteHtml(index, base, route));
+      }
     },
   };
 }
+
