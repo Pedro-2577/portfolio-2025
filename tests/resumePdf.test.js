@@ -30,7 +30,7 @@ for (const language of ['es', 'en']) test('CV ' + language + ' has a named, vali
   assert.equal(result.type, 'application/pdf');
   assert.equal(result.filename, 'CV-Pedro-Martin-Mendez-Caraban-' + language.toUpperCase() + '.pdf');
   assert.ok(result.clicked && result.appended && result.removed);
-  assert.match(result.raw, /^%PDF-1\\.4/);
+  assert.match(result.raw, /^%PDF-1\.4/);
   assert.equal((result.raw.split('/Subtype /Link').length - 1), 3);
   const text = [...result.raw.matchAll(/<([0-9A-F]+)> Tj/g)].map(m => new TextDecoder('windows-1252').decode(Buffer.from(m[1], 'hex'))).join(' ');
   for (const expected of ['Pedro Martín Méndez Carabán', 'Rebill', 'ARCA', 'Reverb', 'Playwright', 'Spatie']) assert.ok(text.includes(expected), expected);
@@ -46,9 +46,9 @@ for (const language of ['es', 'en']) test('CV ' + language + ' has a named, vali
     'https://github.com/Pedro-2577'
   ]) assert.ok(text.includes(expected) || result.raw.includes(expected), expected);
   assert.equal((result.raw.split('/Subtype /Link').length - 1), 3);
-  for (const m of result.raw.matchAll(/1 0 0 1 ([\\d.]+) ([\\d.-]+) Tm/g)) assert.ok(+m[2] >= 0 && +m[2] <= 841.89, 'Text outside page');
-  const xref = Number(result.raw.match(/startxref\\n(\\d+)/)[1]);
+  for (const m of result.raw.matchAll(/1 0 0 1 ([\d.]+) ([\d.-]+) Tm/g)) assert.ok(+m[2] >= 0 && +m[2] <= 841.89, 'Text outside page');
+  const xref = Number(result.raw.match(/startxref\n(\d+)/)[1]);
   assert.equal(result.raw.slice(xref, xref + 4), 'xref');
-  const offsets = result.raw.slice(xref).split('\\n').slice(3).filter(line => /^\\d{10} 00000 n/.test(line));
+  const offsets = result.raw.slice(xref).split('\n').slice(3).filter(line => /^\d{10} 00000 n/.test(line));
   offsets.forEach((line, i) => assert.equal(result.raw.slice(Number(line.slice(0, 10)), Number(line.slice(0, 10)) + String(i + 1).length + 6), (i + 1) + ' 0 obj'));
 });
