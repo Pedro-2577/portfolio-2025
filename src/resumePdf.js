@@ -143,7 +143,7 @@ function projectEntry(page, x, y, width, project, language, labels) {
 
 function addFooter(page, number, language) {
   rule(page, M, H - 34, W - M, C.line, .7);
-  colorText(page, M, H - 27, 'pedro-2577.github.io/portfolio-2025', 7, false, C.muted);
+  colorText(page, M, H - 27, 'pedromendezcaraban.com.ar', 7, false, C.muted);
   colorText(page, W - M - 48, H - 27, (language === 'es' ? 'Página ' : 'Page ') + number + ' / 2', 7, false, C.muted);
 }
 
@@ -205,7 +205,7 @@ export function downloadResumePdf({ language, profile, text, contact, projects }
   const cityLabel = language === 'es' ? 'Ciudad: ' : 'City: ';
   const countryLabel = language === 'es' ? 'País: ' : 'Country: ';
   const phoneLabel = language === 'es' ? 'Teléfono: ' : 'Phone: ';
-  const portfolioUrl = 'https://pedro-2577.github.io/portfolio-2025/';
+  const portfolioUrl = 'https://pedromendezcaraban.com.ar/';
   const lines = [
     { y: contactY, text: cityLabel + 'Buenos Aires  ·  ' + countryLabel + 'Argentina' },
     { y: contactY + 11, text: 'Email: ' + contact.email + '  ·  ' + phoneLabel + contact.phone },
