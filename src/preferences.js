@@ -10,7 +10,14 @@ export function readLanguage(storage) {
 }
 
 export function readTheme(storage) {
-  return readStored('darkMode', storage) === 'true';
+  const stored = readStored('darkMode', storage);
+  if (stored === 'true') return true;
+  if (stored === 'false') return false;
+  try {
+    return globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true;
+  } catch {
+    return true;
+  }
 }
 
 export function savePreference(key, value, storage) {
