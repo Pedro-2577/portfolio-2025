@@ -1196,7 +1196,7 @@ function contact(event) {
 .guided-current h2 { max-width: 40rem; margin-bottom: 0; }
 .guided-draft-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .25rem 1rem; }
 .guided-save-note { margin: 0 0 1.75rem; color: var(--muted); font-size: .82rem; line-height: 1.6; }
-.questionnaire-actions { display: flex; align-items: center; justify-content: flex-end; gap: .9rem; }
+.questionnaire-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .9rem; }
 .guided-draft-actions { align-items: center; }
 .guided-reset, .questionnaire-progress .guided-reset { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 44px; padding: .65rem .85rem; border: 1px solid var(--ink); border-radius: .45rem; background: var(--soft); color: var(--ink); font: inherit; font-size: .875rem; font-weight: 600; line-height: 1.25; text-decoration: none; cursor: pointer; white-space: nowrap; }
 .guided-reset svg { flex: 0 0 auto; }
