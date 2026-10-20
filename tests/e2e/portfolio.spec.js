@@ -56,7 +56,7 @@ for (const language of ['es', 'en']) test('the actual ' + language + ' CV downlo
   await page.goto('./#home');
   if (language === 'en') await page.getByRole('button', { name: 'Cambiar idioma a inglés' }).click();
   const pending = page.waitForEvent('download');
-  await page.getByRole('button', { name: language === 'es' ? 'Descargar CV (PDF)' : 'Download CV (PDF)', exact: true }).click();
+  await page.getByRole('button', { name: language === 'es' ? 'Descargar CV (PDF)' : 'Download resume (PDF)', exact: true }).click();
   const download = await pending;
   expect(download.suggestedFilename()).toBe('CV-Pedro-Martin-Mendez-Caraban-' + language.toUpperCase() + '.pdf');
   const raw = (await readFile(await download.path())).toString('utf8');
