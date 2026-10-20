@@ -56,7 +56,7 @@ const emit = defineEmits(['navigate']);
 
 <style scoped>
 .ventures-intro { max-width: 650px; margin-bottom: 36px; }
-.ventures-intro h1 { font-size: clamp(2.3rem, 5vw, 4rem); margin: 8px 0 20px; line-height: 1.05; letter-spacing: -.055em; }
+.ventures-intro h1 { overflow-wrap: anywhere; font-size: clamp(2.3rem, 5vw, 4rem); margin: 8px 0 20px; line-height: 1.05; letter-spacing: -.055em; }
 .ventures-intro > p:last-child { color: var(--muted); line-height: 1.7; font-size: 1.05rem; }
 .ventures-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .venture-card { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
