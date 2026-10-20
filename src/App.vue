@@ -108,7 +108,7 @@ const text = {
     faqTwo: 'What kind of projects interest you?', faqTwoAnswer: 'Full-stack development, AI integration, automation and cybersecurity projects, as well as web products that solve real problems.',
     workflowTitle: 'How I validate a delivery', workflowText: 'First, the code must pass the automated tests with Pest. Next, I perform AI-assisted review and testing. Finally, I manually validate use cases, UX, design, errors and recovery. If I find a problem, I fix it and repeat the relevant checks.',
     footer: 'Pedro Méndez Carabán', tagline: 'I like being involved in every detail of a project.', sourceCode: 'View source', liveDemo: 'Open demo', privateCode: 'Private code', privateDemo: 'Private demo', phpWarning: 'Academic demo built with Laravel/PHP. The server starts when visited; the first load may take about a minute. Data is for demonstration and may reset.', nodeWarning: 'This project needs a Node.js server to run; there is no public demo configured yet.', noDemo: 'There is no public demo configured for this project yet.',
-    viewProject: 'View project', visitPublicSite: 'Visit public site', privateSourceNote: 'The source code is in VendoAlgo’s private repository. These case studies describe my contribution without exposing internal code.', demo: 'View demo', repository: 'View repository', resumeDownload: 'Download CV (PDF)', resumeSummary: 'Full-stack developer experienced in web products, AI integration and application security. I work across frontend, APIs and backend, focusing on user experience, performance and maintainability.', resumeProjectsTitle: 'Selected projects', resumeGitHub: 'GitHub', resumeSite: 'Portfolio', resumePage: 'Portfolio', projectCount: 'cataloged projects', publicEvidence: 'reviewable public demos', stackLabel: 'Work across', stackText: 'code · UX · AI', openToWork: 'Professional inquiries',
+    viewProject: 'View project', visitPublicSite: 'Visit public site', privateSourceNote: 'The source code is in VendoAlgo’s private repository. These case studies describe my contribution without exposing internal code.', demo: 'View demo', repository: 'View repository', resumeDownload: 'Download resume (PDF)', resumeSummary: 'Full-stack developer experienced in web products, AI integration and application security. I work across frontend, APIs and backend, focusing on user experience, performance and maintainability.', resumeProjectsTitle: 'Selected projects', resumeGitHub: 'GitHub', resumeSite: 'Portfolio', resumePage: 'Portfolio', projectCount: 'cataloged projects', publicEvidence: 'reviewable public demos', stackLabel: 'Work across', stackText: 'code · UX · AI', openToWork: 'Professional inquiries',
     roleLabel: 'My responsibility', highlightsLabel: 'What I delivered', outcomeLabel: 'Outcome', academicProjects: 'Academic projects', professionalProjects: 'Professional and personal projects', currentSite: 'You are viewing this project', inDevelopment: 'In development', developmentNotice: 'Project in development. A public presentation will be available after launch.',
   },
 };
@@ -401,7 +401,7 @@ onUnmounted(() => {
           </div>
           <p class="hero-copy">{{ t.hero }}</p>
           <div class="button-row">
-            <button class="button button-download" type="button" :aria-label="t.resumeDownload" @click="downloadResume"><span class="hero-desktop-only">{{ t.resumeDownload }}</span><span class="hero-mobile-only">CV (PDF) <span aria-hidden="true">↓</span></span></button>
+            <button class="button button-download" type="button" :aria-label="t.resumeDownload" @click="downloadResume"><span class="hero-desktop-only">{{ t.resumeDownload }}</span><span class="hero-mobile-only">{{ language === 'es' ? 'CV (PDF)' : 'Resume (PDF)' }} <span aria-hidden="true">↓</span></span></button>
             <a class="button button-light" href="#projects" @click.prevent="navigate('projects')">{{ t.viewProjects }}</a>
             <a class="button button-outline" href="#contact" @click.prevent="navigate('contact')">{{ t.talk }}</a>
           </div>
@@ -668,7 +668,7 @@ onUnmounted(() => {
           <a class="footer-email" :href="`mailto:${contact.email}`">{{ contact.email }}</a>
           <a :href="contact.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
           <a :href="contact.github" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
-          <button class="footer-cv" type="button" :aria-label="language === 'es' ? 'Descargar CV en español (PDF)' : 'Download CV in English (PDF)'" @click="downloadResume">CV (PDF) <span aria-hidden="true">↓</span></button>
+          <button class="footer-cv" type="button" :aria-label="language === 'es' ? 'Descargar CV en español (PDF)' : 'Download resume in English (PDF)'" @click="downloadResume">{{ language === 'es' ? 'CV (PDF)' : 'Resume (PDF)' }} <span aria-hidden="true">↓</span></button>
         </nav>
       </div>
     </footer>
