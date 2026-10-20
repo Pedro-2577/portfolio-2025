@@ -35,6 +35,17 @@ for (const language of ['es', 'en']) test('CV ' + language + ' has a named, vali
   const text = [...result.raw.matchAll(/<([0-9A-F]+)> Tj/g)].map(m => new TextDecoder('windows-1252').decode(Buffer.from(m[1], 'hex'))).join(' ');
   for (const expected of ['Pedro Martín Méndez Carabán', 'Rebill', 'ARCA', 'Reverb', 'Playwright', 'Spatie']) assert.ok(text.includes(expected), expected);
   assert.ok(text.includes(language === 'es' ? 'Inglés intermedio' : 'Intermediate English'));
+  for (const expected of [
+    language === 'es' ? 'Ciudad: Buenos Aires  ·  País: Argentina' : 'City: Buenos Aires  ·  Country: Argentina',
+    'pedromendezcaraban@gmail.com',
+    'LinkedIn: www.linkedin.com/in/pedro-mendez-caraban',
+    'Portfolio: pedro-2577.github.io/portfolio-2025',
+    'GitHub: github.com/Pedro-2577',
+    'https://www.linkedin.com/in/pedro-mendez-caraban/',
+    'https://pedro-2577.github.io/portfolio-2025/',
+    'https://github.com/Pedro-2577'
+  ]) assert.ok(text.includes(expected) || result.raw.includes(expected), expected);
+  assert.equal((result.raw.match(/\\/Subtype \\/Link/g) || []).length, 3);
   for (const m of result.raw.matchAll(/1 0 0 1 ([\d.]+) ([\d.-]+) Tm/g)) assert.ok(+m[2] >= 0 && +m[2] <= 841.89, 'Text outside page');
   const xref = Number(result.raw.match(/startxref\n(\d+)/)[1]);
   assert.equal(result.raw.slice(xref, xref + 4), 'xref');
