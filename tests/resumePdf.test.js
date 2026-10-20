@@ -39,10 +39,10 @@ for (const language of ['es', 'en']) test('CV ' + language + ' has a named, vali
     language === 'es' ? 'Ciudad: Buenos Aires  ·  País: Argentina' : 'City: Buenos Aires  ·  Country: Argentina',
     'pedromendezcaraban@gmail.com',
     'LinkedIn: www.linkedin.com/in/pedro-mendez-caraban',
-    'Portfolio: pedro-2577.github.io/portfolio-2025',
+    'Portfolio: pedromendezcaraban.com.ar',
     'GitHub: github.com/Pedro-2577',
     'https://www.linkedin.com/in/pedro-mendez-caraban/',
-    'https://pedro-2577.github.io/portfolio-2025/',
+    'https://pedromendezcaraban.com.ar/',
     'https://github.com/Pedro-2577'
   ]) assert.ok(text.includes(expected) || result.raw.includes(expected), expected);
   assert.equal((result.raw.split('/Subtype /Link').length - 1), 3);
