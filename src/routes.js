@@ -1,7 +1,7 @@
 // One registry for fragment aliases, direct URLs and generated GitHub Pages entries.
 export const routeAliases = Object.freeze({
   home: ['home', 'inicio', 'in', 'i', 'h'],
-  projects: ['projects', 'project', 'proyectos', 'proyecto', 'trabajos', 'p', 'proy', 'py'],
+  projects: ['projects', 'project', 'proyectos', 'proyecto', 'trabajos', 'proy', 'py'],
   services: ['services', 'service', 'servicios', 'servicio', 'gestion-de-tiendas', 'tiendas', 'sv', 's'],
   about: ['about', 'about-me', 'sobre-mi', 'sobremi', 'acerca-de-mi', 'perfil', 'profile', 'sm', 'a'],
   contact: ['contact', 'contacts', 'contacto', 'contactos', 'contactame', 'contactarme', 'ct', 'c'],
