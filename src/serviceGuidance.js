@@ -2,9 +2,11 @@
 export function recommendServices({ website, marketplace, products } = {}) {
   const launch = website === 'new';
   const hasOtherStore = website === 'other-platform';
+  // Moving an existing shop still needs VendoAlgo setup. Migration replaces
+  // the standard initial product upload for the same catalog.
   const selected = [
     ...(launch ? ['design', 'catalog', 'payments', 'shipping', 'training'] : []),
-    ...(hasOtherStore ? ['migration'] : []),
+    ...(hasOtherStore ? ['design', 'payments', 'shipping', 'training', 'migration'] : []),
     ...(['already', 'interested'].includes(marketplace) ? ['ml'] : []),
     ...(['suppliers', 'both'].includes(products) ? ['auto-prices', 'auto-stock'] : []),
   ];
@@ -17,6 +19,6 @@ export function recommendServices({ website, marketplace, products } = {}) {
     goal: 'custom',
     selected,
     openGroups,
-    expandLaunch: launch,
+    expandLaunch: launch || hasOtherStore,
   };
 }
