@@ -123,9 +123,16 @@ test('representative views remain within the viewport across narrow, tablet and 
         offenders: [...document.querySelectorAll('body *')].map(element => {
           const rect = element.getBoundingClientRect();
           return { tag: element.tagName, className: typeof element.className === 'string' ? element.className : '', right: Math.round(rect.right), width: Math.round(rect.width) };
-        }).filter(item => item.width > 0 && item.right > document.documentElement.clientWidth + 1).slice(0, 8)
+        }).filter(item => item.width > 0 && item.right > document.documentElement.clientWidth + 1).slice(0, 8),
+        overflowing: [...document.querySelectorAll('body *')].map(element => ({
+          tag: element.tagName,
+          className: typeof element.className === 'string' ? element.className : '',
+          scrollWidth: element.scrollWidth,
+          clientWidth: element.clientWidth,
+          left: Math.round(element.getBoundingClientRect().left)
+        })).filter(item => item.scrollWidth > item.clientWidth + 1).slice(0, 12)
       }));
-      expect(dimensions.document, route + ' overflows at ' + width + 'px: ' + JSON.stringify(dimensions.offenders)).toBeLessThanOrEqual(dimensions.viewport);
+      expect(dimensions.document, route + ' overflows at ' + width + 'px: ' + JSON.stringify({offenders: dimensions.offenders, overflowing: dimensions.overflowing})).toBeLessThanOrEqual(dimensions.viewport);
       expect(dimensions.body, route + ' body overflows at ' + width + 'px').toBeLessThanOrEqual(dimensions.viewport);
     }
   }
