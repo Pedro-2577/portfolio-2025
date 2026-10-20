@@ -106,10 +106,16 @@ test('main routes fit the viewport and outbound tabs isolate their opener', asyn
 test('representative views remain within the viewport across narrow, tablet and wide screens', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'The viewport matrix runs once; the mobile project covers Pixel 7.');
   const widths = [320, 360, 390, 430, 600, 768, 900, 1024, 1280, 1440, 1920];
+  const projectSlugs = [
+    'citarme', 'vendoalgo', 'kalua', 'wecanagro', 'portales-comercio-electronico',
+    'portfolio-2025', 'aplicaciones-hibridas', 'aplicaciones-moviles-vue-parcial-1',
+    'aplicaciones-moviles-vue-parcial-2', 'final-php', 'pwa-projects', 'wordpress',
+    'pwa-parcial-2', 'api-base-de-datos', 'aplicaciones-hibridas-express',
+    'clientes-web', 'proyecto-git'
+  ];
   const routes = [
-    'home', 'projects', 'project/citarme', 'project/vendoalgo',
-    'project/portales-comercio-electronico', 'about', 'contact',
-    'services', 'precios', 'emprendimientos'
+    'home', 'projects', 'about', 'contact', 'services', 'precios', 'emprendimientos',
+    ...projectSlugs.map(slug => 'project/' + slug)
   ];
   for (const width of widths) {
     await page.setViewportSize({ width, height: 900 });
