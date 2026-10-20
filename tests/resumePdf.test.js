@@ -31,7 +31,7 @@ for (const language of ['es', 'en']) test('CV ' + language + ' has a named, vali
   assert.equal(result.filename, 'CV-Pedro-Martin-Mendez-Caraban-' + language.toUpperCase() + '.pdf');
   assert.ok(result.clicked && result.appended && result.removed);
   assert.match(result.raw, /^%PDF-1\.4/);
-  assert.equal((result.raw.match(/\/Type \/Page\b/g) || []).length, 2);
+  assert.equal((result.raw.split('/Subtype /Link').length - 1), 3);
   const text = [...result.raw.matchAll(/<([0-9A-F]+)> Tj/g)].map(m => new TextDecoder('windows-1252').decode(Buffer.from(m[1], 'hex'))).join(' ');
   for (const expected of ['Pedro Martín Méndez Carabán', 'Rebill', 'ARCA', 'Reverb', 'Playwright', 'Spatie']) assert.ok(text.includes(expected), expected);
   assert.ok(text.includes(language === 'es' ? 'Inglés intermedio' : 'Intermediate English'));
