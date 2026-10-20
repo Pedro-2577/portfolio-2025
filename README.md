@@ -2,7 +2,7 @@
 
 Portfolio público con Vue 3 y Vite: experiencia profesional, casos técnicos, proyectos, servicios y CV generado en español e inglés.
 
-[Ver portfolio](https://pedro-2577.github.io/portfolio-2025/)
+[Ver portfolio](https://pedromendezcaraban.com.ar/)
 
 ## Desarrollo
 
