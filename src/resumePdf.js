@@ -56,6 +56,17 @@ function colorText(page, x, yTop, value, size, bold = false, color = C.body) {
   page.push('BT /' + font + ' ' + size + ' Tf ' + rgb(color) + ' 1 0 0 1 ' + x.toFixed(2) + ' ' + y.toFixed(2) + ' Tm <' + hex(value) + '> Tj ET');
 }
 
+function addPdfLink(page, x, yTop, width, size, url) {
+  if (!url || width <= 0) return;
+  const baseline = H - yTop - size;
+  page.links ||= [];
+  page.links.push({ rect: [x, baseline - 1, x + width, baseline + size + 1], url });
+}
+
+function pdfLiteral(value) {
+  return '(' + String(value ?? '').replace(/[\\()]/g, '\\function box(page, x, yTop, width, height, color) {') + ')';
+}
+
 function box(page, x, yTop, width, height, color) {
   page.push('q ' + rgb(color) + ' ' + x + ' ' + (H - yTop - height).toFixed(2) + ' ' + width + ' ' + height + ' re f Q');
 }
@@ -141,12 +152,19 @@ function makePdf(pages) {
   objects[3] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
   objects[4] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
   const kids = [];
-  pages.forEach((page, i) => {
-    const pageId = 5 + i * 2;
-    const streamId = pageId + 1;
+  let nextId = 5;
+  pages.forEach((page) => {
+    const pageId = nextId++;
+    const streamId = nextId++;
+    const links = (page.links || []).map((link) => ({ ...link, id: nextId++ }));
     const stream = page.join('\n');
-    objects[pageId] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + W + ' ' + H + '] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ' + streamId + ' 0 R >>';
+    const annotations = links.length ? ' /Annots [' + links.map((link) => link.id + ' 0 R').join(' ') + ']' : '';
+    objects[pageId] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + W + ' ' + H + '] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ' + streamId + ' 0 R' + annotations + ' >>';
     objects[streamId] = '<< /Length ' + stream.length + ' >>\nstream\n' + stream + '\nendstream';
+    for (const link of links) {
+      const rect = link.rect.map((value) => value.toFixed(2)).join(' ');
+      objects[link.id] = '<< /Type /Annot /Subtype /Link /Rect [' + rect + '] /Border [0 0 0] /A << /S /URI /URI ' + pdfLiteral(link.url) + ' >> >>';
+    }
     kids.push(pageId + ' 0 R');
   });
   objects[2] = '<< /Type /Pages /Kids [' + kids.join(' ') + '] /Count ' + pages.length + ' >>';
@@ -172,23 +190,37 @@ export function downloadResumePdf({ language, profile, text, contact, projects }
   const rightW = W - M - rightX;
   const labels = { outcome: text.outcomeLabel || (language === 'es' ? 'Resultado' : 'Outcome') };
 
-  box(first, 0, 0, W, 158, C.navy);
-  box(first, M, 24, 34, 3, C.lime);
-  colorText(first, M, 36, 'Pedro Martín Méndez Carabán', 23, true, C.white);
-  colorText(first, M, 68, text.role, 10.5, true, C.lime);
-  let summaryY = 88;
-  for (const row of linesFor(text.resumeSummary, W - 2 * M, 8.2).slice(0, 3)) {
-    colorText(first, M, summaryY, row, 8.2, false, C.white);
-    summaryY += 11;
+  box(first, 0, 0, W, 188, C.navy);
+  box(first, M, 18, 34, 3, C.lime);
+  colorText(first, M, 27, 'Pedro Martín Méndez Carabán', 21, true, C.white);
+  colorText(first, M, 54, text.role, 10, true, C.lime);
+  let summaryY = 71;
+  for (const row of linesFor(text.resumeSummary, W - 2 * M, 7.8).slice(0, 2)) {
+    colorText(first, M, summaryY, row, 7.8, false, C.white);
+    summaryY += 10;
   }
-  colorText(first, M, 125, contact.email + '  ·  ' + contact.phone, 7.2, false, C.white);
-  colorText(first, M, 138, 'LinkedIn: ' + contact.linkedin.replace(/^https?:\/\//, '') + '  ·  GitHub: ' + contact.github.replace(/^https?:\/\//, ''), 7, false, C.white);
-  colorText(first, W - M - 175, 138, 'Portfolio: pedro-2577.github.io/portfolio-2025', 6.4, false, C.white);
+  const contactY = 96;
+  const contactSize = 7.1;
+  const cityLabel = language === 'es' ? 'Ciudad: ' : 'City: ';
+  const countryLabel = language === 'es' ? 'País: ' : 'Country: ';
+  const phoneLabel = language === 'es' ? 'Teléfono: ' : 'Phone: ';
+  const portfolioUrl = 'https://pedro-2577.github.io/portfolio-2025/';
+  const lines = [
+    { y: contactY, text: cityLabel + 'Buenos Aires  ·  ' + countryLabel + 'Argentina' },
+    { y: contactY + 11, text: 'Email: ' + contact.email + '  ·  ' + phoneLabel + contact.phone },
+    { y: contactY + 22, label: 'LinkedIn: ', url: contact.linkedin, value: contact.linkedin.replace(/^https?:\/\//, '').replace(/\/$/, '') },
+    { y: contactY + 33, label: 'Portfolio: ', url: portfolioUrl, value: portfolioUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') },
+    { y: contactY + 44, label: 'GitHub: ', url: contact.github, value: contact.github.replace(/^https?:\/\//, '').replace(/\/$/, '') }
+  ];
+  for (const line of lines) {
+    colorText(first, M, line.y, line.label ? line.label + line.value : line.text, contactSize, false, C.white);
+    if (line.url) addPdfLink(first, M + widthOf(line.label, contactSize), line.y, widthOf(line.value, contactSize), contactSize, line.url);
+  }
 
-  let leftY = heading(first, leftX, 180, leftW, profile.experienceTitle);
+  let leftY = heading(first, leftX, 200, leftW, profile.experienceTitle);
   for (const entry of profile.experience) leftY = experienceEntry(first, leftX, leftY, leftW, entry);
 
-  let rightY = heading(first, rightX, 180, rightW, profile.skillsTitle);
+  let rightY = heading(first, rightX, 200, rightW, profile.skillsTitle);
   for (const area of profile.skills) {
     rightY = paragraph(first, rightX, rightY, rightW, area.title, { size: 7.5, bold: true, color: C.ink, after: .5 });
     rightY = paragraph(first, rightX, rightY, rightW, area.items.join(' · '), { size: 7.2, after: 5 });
