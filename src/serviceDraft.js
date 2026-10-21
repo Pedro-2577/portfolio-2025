@@ -10,9 +10,10 @@ export function readServiceDraft(schema, storage) {
     if (!raw || raw.length > 20000) return null;
     const data = JSON.parse(raw);
     if (!isRecord(data) || data.version !== 1 || !isRecord(data.answers)) return null;
+    const mode = oneOf(data.mode, ['guided', 'manual'], 'guided');
     const answers = Object.fromEntries(schema.questions.map(question => {
       // Previous completed drafts stored product count separately from the questionnaire.
-      const savedAnswer = question.id === 'catalogSize' && data.answers.catalogSize === undefined && data.completed === true
+      const savedAnswer = question.id === 'catalogSize' && data.answers.catalogSize === undefined && data.completed === true && mode !== 'manual'
         ? data.catalogSize : data.answers[question.id];
       return [question.id, oneOf(savedAnswer, question.options.map(option => option.id), '')];
     }));
@@ -26,9 +27,11 @@ export function readServiceDraft(schema, storage) {
     if (selected.includes('migration')) selected = selected.filter(id => id !== 'catalog');
     if (selected.includes('design')) selected = selected.filter(id => id !== 'visual-changes');
     return {
+      mode,
+      started: data.started === true || Object.values(answers).some(Boolean),
       answers,
       step,
-      completed: complete && data.completed === true,
+      completed: (mode === 'manual' || complete) && data.completed === true,
       selected,
       modules: knownIds(data.modules, schema.modules),
       catalogSize: oneOf(answers.catalogSize || data.catalogSize, ['unsure', 'upto50', 'over50'], 'unsure'),

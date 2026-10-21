@@ -124,6 +124,7 @@ function onServicePreviewError(id) {
 }
 function scrollToSection(id) {
   const element = document.getElementById(id);
+  if (element?.tagName === 'DETAILS') element.open = true;
   element?.focus({ preventScroll: true });
   element?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 }
@@ -474,16 +475,20 @@ onUnmounted(() => {
             <p class="buyer-audience">{{ servicePage.audience }}</p>
             <div class="button-row">
               <button type="button" class="button button-primary" @click="scrollToSection('service-case')">{{ language === 'es' ? 'Ver una tienda funcionando' : 'See a working store' }} ↓</button>
-              <button type="button" class="buyer-inline-link" @click="scrollToSection('service-scope')">{{ language === 'es' ? 'Elegir qué necesito' : 'Choose what I need' }} ↓</button>
+              <button type="button" class="buyer-inline-link" @click="scrollToSection('service-scope')">{{ language === 'es' ? 'Elegir servicios' : 'Choose services' }} ↓</button>
             </div>
           </header>
 
           <nav class="buyer-content-nav" :aria-label="language === 'es' ? 'En esta página' : 'On this page'">
-            <button type="button" @click="scrollToSection('service-case')">{{ language === 'es' ? 'Ejemplo real' : 'Real example' }}</button>
+            <button type="button" @click="scrollToSection('service-scope')">{{ language === 'es' ? 'Elegir servicios' : 'Choose services' }}</button>
+            <button type="button" @click="scrollToSection('service-case')">{{ language === 'es' ? 'Ver un ejemplo real' : 'See a real example' }}</button>
             <button type="button" @click="scrollToSection('service-process')">{{ language === 'es' ? 'Cómo trabajo' : 'How I work' }}</button>
-            <button type="button" @click="scrollToSection('service-scope')">{{ language === 'es' ? 'Servicios' : 'Services' }}</button>
-            <button type="button" @click="scrollToSection('service-questions')">{{ language === 'es' ? 'Preguntas frecuentes' : 'Common questions' }}</button>
+            <button type="button" @click="scrollToSection('service-questions')">{{ language === 'es' ? 'Dudas frecuentes' : 'Common questions' }}</button>
           </nav>
+          <section v-if="!showServicePrices" id="service-scope" class="buyer-section" tabindex="-1" :aria-label="language === 'es' ? 'Preparar mi consulta' : 'Prepare my inquiry'">
+            <ServiceEstimator :language="language" :show-prices="showServicePrices" />
+          </section>
+
           <section id="service-case" class="buyer-section buyer-demo-section" tabindex="-1" aria-labelledby="service-tour-title">
             <StoreServiceGuide part="tour" :language="language" :show-prices="showServicePrices" />
             <details class="buyer-case-details">
@@ -500,17 +505,15 @@ onUnmounted(() => {
             </details>
           </section>
 
-          <div id="service-process" class="buyer-section" tabindex="-1">
+          <details id="service-process" class="buyer-section buyer-optional" tabindex="-1">
+            <summary><span><strong>{{ language === 'es' ? 'Cómo trabajo' : 'How I work' }}</strong><small>{{ language === 'es' ? 'Qué pasa después de tu consulta' : 'What happens after your inquiry' }}</small></span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
             <StoreServiceGuide part="process" :language="language" />
-          </div>
+          </details>
 
-          <section v-if="!showServicePrices" id="service-scope" class="buyer-section" tabindex="-1" :aria-label="language === 'es' ? 'Preparar mi consulta' : 'Prepare my inquiry'">
-            <ServiceEstimator :language="language" :show-prices="showServicePrices" />
-          </section>
-
-          <div id="service-questions" class="buyer-section" tabindex="-1">
+          <details id="service-questions" class="buyer-section buyer-optional" tabindex="-1">
+            <summary><span><strong>{{ language === 'es' ? 'Preguntas frecuentes' : 'Common questions' }}</strong><small>{{ language === 'es' ? 'Costos, tiempos, mantenimiento y equipo' : 'Costs, timing, maintenance and staff' }}</small></span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
             <StoreServiceGuide part="faq" :language="language" :show-prices="showServicePrices" />
-          </div>
+          </details>
 
           <details class="buyer-more buyer-section">
             <summary>{{ servicePage.otherTitle }}</summary>

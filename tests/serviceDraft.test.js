@@ -114,3 +114,33 @@ test('older drafts with no valid count resume at the new fourth question', () =>
   assert.equal(restored.step, 3);
   assert.deepEqual(restored.selected, ['migration']);
 });
+
+test('manual catalog selections restore without answering the questionnaire', () => {
+  const storage = memoryStorage();
+  saveServiceDraft({ mode: 'manual', started: false, answers: {}, completed: true, selected: ['ml'] }, storage);
+  const restored = readServiceDraft(countSchema, storage);
+  assert.equal(restored.mode, 'manual');
+  assert.equal(restored.completed, true);
+  assert.equal(restored.started, false);
+  assert.equal(restored.answers.catalogSize, '');
+  assert.deepEqual(restored.selected, ['ml']);
+});
+
+test('an empty manual catalog remains open after all choices are removed', () => {
+  const storage = memoryStorage();
+  saveServiceDraft({ mode: 'manual', answers: {}, completed: true, selected: [] }, storage);
+  const restored = readServiceDraft(countSchema, storage);
+  assert.equal(restored.completed, true);
+  assert.deepEqual(restored.selected, []);
+});
+
+test('older drafts resume their guided progress while unsupported modes cannot skip questions', () => {
+  const storage = memoryStorage();
+  saveServiceDraft({ answers: { website: 'new' }, step: 1, completed: false }, storage);
+  const restored = readServiceDraft(countSchema, storage);
+  assert.equal(restored.mode, 'guided');
+  assert.equal(restored.started, true);
+  assert.equal(restored.step, 1);
+  saveServiceDraft({ mode: 'unknown', answers: {}, completed: true }, storage);
+  assert.equal(readServiceDraft(countSchema, storage).completed, false);
+});

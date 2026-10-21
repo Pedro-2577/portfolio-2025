@@ -5,14 +5,14 @@ const props = defineProps({ language: { type: String, default: 'es' }, part: { t
 const copy = {
   "es": {
     "tourLabel": "RECORRIDO POR UNA TIENDA REAL",
-    "tourTitle": "Mirá lo que podría recibir tu negocio.",
-    "tourIntro": "Este ejemplo es FumigAR, una tienda en funcionamiento. Su diseño y productos son propios de ese negocio; preparo tu tienda según lo que acordemos para el tuyo.",
+    "tourTitle": "Recorré una tienda que ya gestiono.",
+    "tourIntro": "FumigAR es una tienda en funcionamiento que preparé y sigo acompañando.",
     "steps": [
       {
         "id": "catalog",
         "title": "Encontrar un producto",
         "short": "Catálogo",
-        "body": "El cliente recorre los productos, busca lo que necesita y filtra por categoría. Yo puedo cargar o migrar tu catálogo y organizar sus datos.",
+        "body": "Tus clientes buscan productos y recorren las categorías. Yo organizo y cargo el catálogo.",
         "image": "service-demo-fumigar-catalog.jpg",
         "alt": "Catálogo real de FumigAR con categorías y productos",
         "url": "https://fumig.ar/productos",
@@ -22,7 +22,7 @@ const copy = {
         "id": "product",
         "title": "Conocer qué está comprando",
         "short": "Producto",
-        "body": "En la ficha encuentra fotos, descripción, opciones y precio. Preparo la información con el material que me entregues y los cambios que acordemos.",
+        "body": "Fotos, descripción y precio claros para cada producto, con la información que me entregues.",
         "image": "service-demo-fumigar-product.jpg",
         "alt": "Ficha real de un producto en FumigAR",
         "url": "https://fumig.ar/producto/jeringa-gel-mata-cucarachas-veneno-insecticida-60-gramos",
@@ -32,7 +32,7 @@ const copy = {
         "id": "purchase",
         "title": "Preparar su compra",
         "short": "Compra",
-        "body": "El cliente revisa lo que eligió y continúa con la compra. Configuro los medios de pago, las formas de entrega y las condiciones que necesite tu tienda.",
+        "body": "El cliente revisa su pedido y elige cómo pagar y recibirlo. Yo configuro esas opciones.",
         "image": "service-demo-fumigar-cart.jpg",
         "alt": "Carrito de compra de FumigAR con un producto de ejemplo",
         "url": "https://fumig.ar/",
@@ -42,8 +42,8 @@ const copy = {
     "captureNote": "Capturas de FumigAR · octubre de 2026. Los productos, precios y pantallas pueden cambiar.",
     "caseLabel": "EL TRABAJO DETRÁS DE LA TIENDA",
     "caseTitle": "En FumigAR también me ocupo de lo que no se ve.",
-    "caseText": "Además de migrar los productos y preparar la tienda, dejé los precios actualizándose automáticamente cada mañana según los costos de los insumos del proveedor.",
-    "caseResult": "Ellos no tienen que repetir esa actualización a mano cada mañana.",
+    "caseText": "Dejé sus precios actualizándose cada mañana a partir de los costos del proveedor.",
+    "caseResult": "Una tarea diaria que el equipo ya no repite a mano.",
     "caseScope": "Para tu negocio acordamos qué datos actualizar, de dónde tomar la información y en qué horarios. El alcance se confirma antes de contratar.",
     "processLabel": "CÓMO TRABAJAMOS",
     "processTitle": "Desde tu consulta hasta la tienda en marcha.",
@@ -118,7 +118,7 @@ const copy = {
       },
       {
         "q": "¿Cómo empiezo?",
-        "a": "Elegí una de las opciones de ayuda o marcá los servicios que te interesan. Podés preparar una consulta por WhatsApp o correo, o agendar una charla. Yo reviso el pedido y te confirmo la propuesta antes de que contrates."
+        "a": "Podés responder cuatro preguntas para recibir sugerencias o elegir los servicios por tu cuenta. Después me consultás por WhatsApp o correo. También podés agendar una charla."
       }
     ],
     "paymentTitle": "Podés pagar la inversión inicial en cuotas.",
@@ -126,18 +126,18 @@ const copy = {
     "paymentTerms": "El presupuesto financiado se acuerda en dólares. Podés pagar en pesos al tipo de cambio definido en la propuesta: el importe en pesos de cada cuota puede variar. Dejamos por escrito la cotización de referencia, la fecha de conversión y los vencimientos antes de empezar.",
     "paymentSeparate": "Mis servicios mensuales y los cargos de VendoAlgo se pagan por separado. Emito factura por mi trabajo.",
     "pricingFaq": "¿Cuánto cuestan tus servicios?",
-    "pricingAnswer": "Elijo con vos las tareas necesarias y te paso un presupuesto. Distingo el trabajo inicial, mi ayuda mensual si la necesitás y el costo de VendoAlgo. Podés pedir solo una tarea o empezar con lo básico y sumar después."
+    "pricingAnswer": "Elegí los servicios que te interesan y te preparo un presupuesto. Detallo el trabajo inicial, la ayuda mensual y VendoAlgo por separado."
   },
   "en": {
     "tourLabel": "EXPLORE A REAL STORE",
-    "tourTitle": "See what your business could receive.",
-    "tourIntro": "This example is FumigAR, a working store. Its design and products belong to that business; I prepare your store around the scope we agree for yours.",
+    "tourTitle": "Explore a store I already manage.",
+    "tourIntro": "FumigAR is a working store I prepared and continue to support.",
     "steps": [
       {
         "id": "catalog",
         "title": "Find a product",
         "short": "Catalog",
-        "body": "Customers browse, search and filter by category. I can upload or migrate your catalog and organize its information.",
+        "body": "Customers search products and browse categories. I organize and upload the catalog.",
         "image": "service-demo-fumigar-catalog.jpg",
         "alt": "FumigAR’s actual catalog with categories and products",
         "url": "https://fumig.ar/productos",
@@ -147,7 +147,7 @@ const copy = {
         "id": "product",
         "title": "Understand the product",
         "short": "Product",
-        "body": "Product pages show photos, descriptions, options and prices. I prepare information using the materials you provide and the changes we agree.",
+        "body": "Clear photos, descriptions and prices for each product, using the information you provide.",
         "image": "service-demo-fumigar-product.jpg",
         "alt": "An actual FumigAR product page",
         "url": "https://fumig.ar/producto/jeringa-gel-mata-cucarachas-veneno-insecticida-60-gramos",
@@ -157,7 +157,7 @@ const copy = {
         "id": "purchase",
         "title": "Prepare the purchase",
         "short": "Purchase",
-        "body": "Customers review their selection and continue buying. I configure the agreed payment methods, delivery options and store conditions.",
+        "body": "Customers review their order and choose payment and delivery options. I configure those options.",
         "image": "service-demo-fumigar-cart.jpg",
         "alt": "FumigAR shopping cart containing an example product",
         "url": "https://fumig.ar/",
@@ -167,8 +167,8 @@ const copy = {
     "captureNote": "FumigAR screenshots · October 2026. Products, prices and screens may change.",
     "caseLabel": "BEHIND THE STORE",
     "caseTitle": "At FumigAR, I also handle work you cannot see.",
-    "caseText": "Alongside the catalog migration and store setup, I configured automatic daily price updates based on the supplier’s input costs.",
-    "caseResult": "They do not have to repeat that update manually every morning.",
+    "caseText": "I set its prices to update every morning using supplier costs.",
+    "caseResult": "A daily task the team no longer repeats by hand.",
     "caseScope": "For your business, we agree which information to update, its sources and the schedule. The scope is confirmed before hiring.",
     "processLabel": "WORKING TOGETHER",
     "processTitle": "From your inquiry to the agreed work.",
@@ -243,7 +243,7 @@ const copy = {
       },
       {
         "q": "How do I start?",
-        "a": "Choose a guided option or individual services. Prepare a WhatsApp or email inquiry or book a conversation. I review your request and confirm a proposal before you hire me."
+        "a": "Answer four questions for suggestions or choose services yourself, then contact me by WhatsApp or email. You can also book a call."
       }
     ],
     "paymentTitle": "Pay the initial investment in installments.",
@@ -251,7 +251,7 @@ const copy = {
     "paymentTerms": "Financed quotes are agreed in US dollars. You may pay in Argentine pesos using the exchange rate specified in the proposal; the peso amount of each installment may vary. The rate source, conversion date and due dates are agreed in writing before starting.",
     "paymentSeparate": "My recurring services and VendoAlgo fees are separate. I issue invoices for my work.",
     "pricingFaq": "How much do your services cost?",
-    "pricingAnswer": "We identify the tasks you need and I provide a quote, separating initial work, recurring help and VendoAlgo. Start with one task or the basics and add services later."
+    "pricingAnswer": "Choose the services that interest you and I will prepare a quote, with initial work, monthly help and VendoAlgo listed separately."
   }
 };
 const text = computed(() => copy[props.language === 'en' ? 'en' : 'es']);
@@ -285,7 +285,7 @@ function openImage() { zoom.value?.showModal(); }
     </div>
     <p class="guide-small">{{ text.captureNote }}</p>
     <aside class="case-result" v-reveal>
-      <p class="eyebrow">{{ text.caseLabel }}</p><h3>{{ text.caseTitle }}</h3><p>{{ text.caseText }}</p><strong>{{ text.caseResult }}</strong><p class="guide-small">{{ text.caseScope }}</p>
+      <p class="eyebrow">{{ text.caseLabel }}</p><h3>{{ text.caseTitle }}</h3><p>{{ text.caseText }}</p><strong>{{ text.caseResult }}</strong>
     </aside>
     <dialog ref="zoom" class="tour-dialog" @click="($event.target === $event.currentTarget) && zoom.close()">
       <div class="tour-dialog-top"><strong>{{ screen.title }}</strong><button type="button" @click="zoom.close()" :aria-label="es ? 'Cerrar captura ampliada' : 'Close enlarged screenshot'">✕</button></div>

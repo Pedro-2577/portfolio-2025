@@ -240,3 +240,65 @@ test.describe('optional motion', () => {
   });
 });
 
+
+test('service guidance explains its outcome before asking questions and preserves edited suggestions', async ({ page }) => {
+  await page.goto('./servicios/');
+  const services = page.locator('.service-estimator');
+  await expect(services.locator('.guided-start')).toBeVisible();
+  await expect(services.locator('.business-questionnaire')).toHaveCount(0);
+  await expect(services.locator('.guided-entry-primary')).toContainText('una selección que podés cambiar');
+  await expect(page.locator('#service-process')).not.toHaveAttribute('open');
+  await page.locator('.buyer-content-nav').getByRole('button', { name: 'Cómo trabajo', exact: true }).click();
+  await expect(page.locator('#service-process')).toHaveAttribute('open');
+  await services.getByRole('button', { name: 'Responder 4 preguntas' }).click();
+  for (const answer of ['No, quiero crear una tienda en VendoAlgo', 'No me interesa por ahora', 'Los fabrico o preparo yo', 'Hasta 50 productos']) {
+    await services.locator('.questionnaire-options button').filter({ hasText: answer }).click();
+  }
+  await expect(services.getByRole('heading', { name: 'Revisá los servicios sugeridos' })).toBeVisible();
+  await expect(services.locator('.guided-catalog-toolbar')).toContainText('5 elegidos');
+  await services.locator('.estimate-launch-item input').first().uncheck();
+  await expect(services.locator('.guided-catalog-toolbar')).toContainText('4 elegidos');
+  await page.reload();
+  await expect(services.locator('.guided-catalog-toolbar')).toContainText('4 elegidos');
+  await services.getByRole('button', { name: 'Reiniciar preguntas' }).click();
+  await expect(services.locator('#business-question-title')).toContainText('¿Ya tenés una página');
+  expect(await page.evaluate(() => localStorage.getItem('portfolio.store-services.draft.v1'))).toBeNull();
+});
+
+test('visitors can browse and keep a manual catalog without completing the questionnaire', async ({ page }) => {
+  await page.goto('./servicios/');
+  const services = page.locator('.service-estimator');
+  await services.getByRole('button', { name: 'Ver todos los servicios' }).click();
+  await expect(services.locator('.guided-workspace')).toBeVisible();
+  await expect(services.locator('.business-questionnaire')).toHaveCount(0);
+  await services.locator('.estimate-package-select input').first().check();
+  await expect(services.locator('.guided-catalog-toolbar')).toContainText('5 elegidos');
+  await page.reload();
+  await expect(services.locator('.guided-catalog-toolbar')).toContainText('5 elegidos');
+  await expect(services.locator('.estimate-service-fee')).toHaveCount(0);
+  await services.getByRole('button', { name: 'Quitar todo', exact: true }).click();
+  await page.reload();
+  await expect(services.locator('.guided-workspace')).toBeVisible();
+  await expect(services.locator('.guided-catalog-toolbar')).toContainText('0 elegidos');
+});
+
+test('switching from incomplete guidance to manual choice prepares only answered context', async ({ page }) => {
+  await page.goto('./servicios/');
+  const services = page.locator('.service-estimator');
+  await services.getByRole('button', { name: 'Responder 4 preguntas' }).click();
+  await services.locator('.questionnaire-options button').filter({ hasText: 'Sí, mi tienda está en VendoAlgo' }).click();
+  await services.getByRole('button', { name: /Prefiero ver los servicios sin responder/ }).click();
+  const support = services.locator('.estimate-category').last();
+  await support.locator('.estimate-expand').click();
+  await support.locator('.estimate-service-item').filter({ hasText: 'Ayuda con un problema de la tienda' }).locator('input').check();
+  await services.getByRole('textbox', { name: 'Tu nombre', exact: true }).fill('Prueba de consulta');
+  await page.evaluate(() => { window.__serviceInquiry = null; window.open = url => { window.__serviceInquiry = url; return null; }; });
+  await services.getByRole('button', { name: /Consultar por WhatsApp/ }).click();
+  const prepared = await page.evaluate(() => window.__serviceInquiry);
+  expect(prepared).toContain('https://wa.me/');
+  const message = new URL(prepared).searchParams.get('text');
+  expect(message).toContain('ya tengo una en VendoAlgo');
+  expect(message).toContain('Ayuda con un problema de la tienda');
+  expect(message).not.toContain('undefined');
+  expect(message).not.toContain('Mercado Libre:');
+});

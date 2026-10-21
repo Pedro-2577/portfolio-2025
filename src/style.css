@@ -705,3 +705,16 @@ details p { color: var(--muted); line-height: 1.6; }
   .academic-projects-archive > summary { font-size: .7rem; }
   .academic-projects-count { gap: .35rem; font-size: .7rem; }
 }
+
+/* The main service path is visible; supporting information opens when requested. */
+.buyer-optional.buyer-section { margin-block: 1rem; padding: 0; border: 1px solid var(--line); border-radius: .65rem; background: var(--surface); }
+.buyer-optional > summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 76px; padding: 1rem 1.25rem; list-style: none; cursor: pointer; }
+.buyer-optional > summary::-webkit-details-marker { display: none; }
+.buyer-optional > summary > span { display: grid; gap: .25rem; min-width: 0; }
+.buyer-optional > summary strong { color: var(--ink); font-size: 1.05rem; line-height: 1.4; }
+.buyer-optional > summary small { color: var(--muted); font-size: .85rem; line-height: 1.5; }
+.buyer-optional > summary svg { flex-shrink: 0; transition: transform .15s ease; }
+.buyer-optional[open] > summary svg { transform: rotate(180deg); }
+.buyer-optional > .service-guide { padding: .5rem 1.25rem 1.5rem; }
+.buyer-optional > summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .buyer-optional > summary svg { transition: none; } }

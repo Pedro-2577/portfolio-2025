@@ -452,6 +452,8 @@ const contextLines = computed(() => {
 });
 
 const goal = ref('');
+const selectionMode = ref('guided');
+const questionnaireStarted = ref(false);
 const helpKind = ref('');
 const catalogSize = ref('unsure');
 const workspace = ref(null);
@@ -557,7 +559,13 @@ const currentGoal = computed(() => {
   if (goal.value === 'help' && recommendation.value.orientation) {
     return { id: 'help', es: 'Quiero orientación para mi negocio', en: 'I would like guidance for my business' };
   }
-  return guidedGoals.find(item => item.id === goal.value);
+  const current = guidedGoals.find(item => item.id === goal.value);
+  if (goal.value === 'custom') return {
+    ...current,
+    es: selectionMode.value === 'manual' ? 'Elegí los servicios que te interesan' : 'Revisá los servicios sugeridos',
+    en: selectionMode.value === 'manual' ? 'Choose the services you are interested in' : 'Review your suggested services',
+  };
+  return current;
 });
 const relevantServices = computed(() => {
   if (goal.value === 'updates') return pricedExtras.filter(item => item.group === 'automation');
@@ -594,10 +602,24 @@ async function chooseGoal(id) {
 async function changeGoal() {
   saveGoalChoices();
   goal.value = '';
+  selectionMode.value = 'guided';
+  questionnaireStarted.value = true;
   questionnaireStep.value = 0;
   await nextTick();
   document.getElementById('service-scope-title')?.focus({ preventScroll: true });
   document.getElementById('service-scope-title')?.scrollIntoView({ block: 'start', behavior: 'auto' });
+}
+async function openCatalog() {
+  const previous = { selected: [...selected.value], modules: [...modules.value], catalogSize: catalogSize.value, platform: platform.value };
+  selectionMode.value = 'manual';
+  questionnaireStarted.value = false;
+  await chooseGoal('custom');
+  selected.value = previous.selected;
+  modules.value = previous.modules;
+  catalogSize.value = previous.catalogSize;
+  platform.value = previous.platform;
+  expanded.value = false;
+  expandedGroups.value = {};
 }
 async function answerQuestion(optionId) {
   const question = activeQuestion.value;
@@ -649,6 +671,8 @@ const draftSchema = {
 };
 const restoredDraft = readServiceDraft(draftSchema);
 if (restoredDraft) {
+  selectionMode.value = restoredDraft.mode;
+  questionnaireStarted.value = restoredDraft.started;
   businessAnswers.value = restoredDraft.answers;
   questionnaireStep.value = restoredDraft.step;
   goal.value = restoredDraft.completed ? 'custom' : '';
@@ -660,6 +684,8 @@ if (restoredDraft) {
   expandedGroups.value = restoredDraft.expandedGroups;
 }
 const draftSnapshot = computed(() => ({
+  mode: selectionMode.value,
+  started: questionnaireStarted.value,
   answers: { ...businessAnswers.value },
   step: questionnaireStep.value,
   completed: Boolean(goal.value),
@@ -671,7 +697,7 @@ const draftSnapshot = computed(() => ({
   expandedGroups: { ...expandedGroups.value },
 }));
 watch(draftSnapshot, draft => {
-  const started = Object.values(draft.answers).some(Boolean) || draft.selected.length > 0;
+  const started = draft.completed || Object.values(draft.answers).some(Boolean) || draft.selected.length > 0;
   if (started) saveServiceDraft(draft);
   else clearServiceDraft();
 }, { deep: true, flush: 'post' });
@@ -681,6 +707,8 @@ async function restartQuestionnaire() {
   businessAnswers.value = { website: '', marketplace: '', products: '', catalogSize: '' };
   questionnaireStep.value = 0;
   goal.value = '';
+  selectionMode.value = 'guided';
+  questionnaireStarted.value = true;
   helpKind.value = '';
   savedChoices.value = {};
   clearServices();
@@ -703,18 +731,16 @@ const monthlyTotalLower = computed(() => platformPending.value ? null : monthlyA
 const monthlyTotalUpper = computed(() => platformPending.value ? null : monthlyAmountUpper.value + platformCost.value);
 const guidanceUrl = computed(() => 'https://wa.me/5491158471048?text=' + encodeURIComponent(
   (es.value ? 'Hola Pedro, quiero que me ayudes a elegir lo que necesita mi negocio.' : 'Hi Pedro, I would like help choosing what my business needs.') +
-  (currentGoal.value ? ' ' + (es.value ? 'Me interesa: ' : 'I am interested in: ') + title(currentGoal.value) : '')
+  ''
 ));
 
 const message = computed(() => {
   const lines = [
     es.value ? 'Hola Pedro, me interesan estos servicios para mi tienda:' : 'Hi Pedro, I am interested in these services for my store:',
-    ...(currentGoal.value ? [(goal.value === 'custom' ? (es.value ? 'Selección sugerida según tus respuestas: ' : 'Suggested selections based on your answers: ') : (es.value ? 'Por dónde empezar: ' : 'Recommended starting point: ')) + title(currentGoal.value)] : []),
-    ...(businessAnswers.value.website ? [
-      (es.value ? 'Tienda online: ' : 'Online store: ') + ({ yes: es.value ? 'ya tengo una en VendoAlgo' : 'already have one on VendoAlgo', 'other-platform': es.value ? 'tengo una en otra plataforma y quiero evaluar pasarla a VendoAlgo' : 'have one on another platform and want to consider moving it to VendoAlgo', new: es.value ? 'quiero crear una en VendoAlgo' : 'want to create one on VendoAlgo', 'other-channels': es.value ? 'todavía no tengo; vendo por Mercado Libre, redes, WhatsApp o en un local' : 'do not have one yet; I sell on Mercado Libre, social media, WhatsApp or in a store', unsure: es.value ? 'todavía no lo sé' : 'not sure' }[businessAnswers.value.website]),
-      (es.value ? 'Mercado Libre: ' : 'Mercado Libre: ') + ({ already: es.value ? 'ya vendo' : 'already sell there', interested: es.value ? 'me interesa empezar' : 'interested in starting', 'not-now': es.value ? 'no por ahora' : 'not right now', unsure: es.value ? 'no estoy seguro' : 'not sure' }[businessAnswers.value.marketplace]),
-      (es.value ? 'Origen de productos: ' : 'Product source: ') + ({ suppliers: es.value ? 'compro a proveedores' : 'buy from suppliers', 'made-here': es.value ? 'fabrico o preparo mis productos' : 'make or prepare my products', both: es.value ? 'compro algunos y fabrico o preparo otros' : 'buy some and make or prepare others', unsure: es.value ? 'todavía no vendo o no lo decidí' : 'not selling yet or have not decided' }[businessAnswers.value.products]),
-    ] : []),
+    ...(currentGoal.value && goal.value !== 'custom' ? [(es.value ? 'Por dónde empezar: ' : 'Starting point: ') + title(currentGoal.value)] : []),
+    ...(businessAnswers.value.website ? [(es.value ? 'Tienda online: ' : 'Online store: ') + ({ yes: es.value ? 'ya tengo una en VendoAlgo' : 'already have one on VendoAlgo', 'other-platform': es.value ? 'tengo una en otra plataforma y quiero evaluar pasarla a VendoAlgo' : 'have one on another platform and want to consider moving it to VendoAlgo', new: es.value ? 'quiero crear una en VendoAlgo' : 'want to create one on VendoAlgo', 'other-channels': es.value ? 'todavía no tengo; vendo por Mercado Libre, redes, WhatsApp o en un local' : 'do not have one yet; I sell on Mercado Libre, social media, WhatsApp or in a store', unsure: es.value ? 'todavía no lo sé' : 'not sure' }[businessAnswers.value.website])] : []),
+    ...(businessAnswers.value.marketplace ? [(es.value ? 'Mercado Libre: ' : 'Mercado Libre: ') + ({ already: es.value ? 'ya vendo' : 'already sell there', interested: es.value ? 'me interesa empezar' : 'interested in starting', 'not-now': es.value ? 'no por ahora' : 'not right now', unsure: es.value ? 'no estoy seguro' : 'not sure' }[businessAnswers.value.marketplace])] : []),
+    ...(businessAnswers.value.products ? [(es.value ? 'Origen de productos: ' : 'Product source: ') + ({ suppliers: es.value ? 'compro a proveedores' : 'buy from suppliers', 'made-here': es.value ? 'fabrico o preparo mis productos' : 'make or prepare my products', both: es.value ? 'compro algunos y fabrico o preparo otros' : 'buy some and make or prepare others', unsure: es.value ? 'todavía no vendo o no lo decidí' : 'not selling yet or have not decided' }[businessAnswers.value.products])] : []),
     '',
     ...checkedBasics.value.map(item => '- ' + title(item) + (props.showPrices ? ': ' + basicFees(item) + (es.value ? ' una vez' : ' one-time') : '')),
     ...checkedExtras.value.map(item => '- ' + title(item) + (props.showPrices ? ': ' + itemFees(item) : '')),
@@ -758,37 +784,51 @@ function contact(event) {
 <template>
   <div class="guided-service service-estimator" :class="{ 'has-prices': showPrices, 'without-prices': !showPrices }">
     <header v-if="!goal" class="guided-intro">
-      <p class="eyebrow">{{ es ? 'UN PASO A LA VEZ' : 'ONE STEP AT A TIME' }}</p>
-      <h2 id="service-scope-title" tabindex="-1">{{ es ? 'Te ayudo a encontrar por dónde empezar' : 'Let’s find a good place to start' }}</h2>
-      <p>{{ es ? 'Trabajo preparando y gestionando tiendas online en VendoAlgo. Respondé cuatro preguntas para orientarte; no necesitás conocer la plataforma ni saber de tecnología.' : 'I prepare and manage online stores on VendoAlgo. Answer four questions so I can guide you; you do not need to know the platform or have technical knowledge.' }}</p>
+      <p class="eyebrow">{{ es ? 'ELEGÍ TUS SERVICIOS' : 'CHOOSE YOUR SERVICES' }}</p>
+      <h2 id="service-scope-title" tabindex="-1">{{ questionnaireStarted ? (es ? 'Te ayudo a elegir servicios' : 'Let me help you choose services') : (es ? '¿En qué te puedo ayudar?' : 'How can I help your business?') }}</h2>
+      <p>{{ questionnaireStarted ? (es ? 'Al terminar vas a poder revisar y cambiar los servicios sugeridos.' : 'When you finish, you can review and change the suggested services.') : (es ? 'Podés contratar una sola tarea o combinar varias.' : 'Choose one task or combine several services.') }}</p>
     </header>
-    <div v-if="!goal" class="business-questionnaire">
+    <div v-if="!goal && !questionnaireStarted" class="guided-start" :aria-label="es ? 'Elegir cómo preparar la consulta' : 'Choose how to prepare your inquiry'">
+      <article class="guided-entry guided-entry-primary">
+        <h3>{{ es ? 'Quiero que me sugieras servicios' : 'Help me find the right services' }}</h3>
+        <p>{{ es ? '4 preguntas sobre tu negocio y una selección que podés cambiar.' : 'Four questions about your business, then a selection you can change.' }}</p>
+        <button type="button" class="button button-primary" @click="changeGoal">{{ es ? 'Responder 4 preguntas' : 'Answer 4 questions' }} <span aria-hidden="true">→</span></button>
+      </article>
+      <article class="guided-entry">
+        <h3>{{ es ? 'Prefiero elegir por mi cuenta' : 'I prefer to choose for myself' }}</h3>
+        <p>{{ es ? 'Mirá el catálogo y marcá las tareas que te interesen.' : 'Browse the catalog and select the tasks that interest you.' }}</p>
+        <button type="button" class="button guided-catalog-button" @click="openCatalog">{{ es ? 'Ver todos los servicios' : 'See all services' }} <span aria-hidden="true">→</span></button>
+      </article>
+    </div>
+    <div v-else-if="!goal" class="business-questionnaire">
       <div class="questionnaire-progress">
         <span aria-live="polite">{{ es ? 'Pregunta' : 'Question' }} {{ questionnaireStep + 1 }} {{ es ? 'de' : 'of' }} {{ businessQuestions.length }}</span>
         <div class="questionnaire-actions"><button v-if="questionnaireStep > 0" type="button" @click="questionnaireStep -= 1">{{ es ? '← Anterior' : '← Back' }}</button><button type="button" class="guided-reset" :disabled="!businessAnswers.website && !hasSelection" :title="es ? 'Borrar las respuestas y los servicios guardados y volver a la primera pregunta' : 'Clear saved answers and services and return to the first question'" @click="restartQuestionnaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11a9 9 0 1 1 2.6 6.4"/><path d="M3 4v7h7"/></svg><span>{{ es ? 'Reiniciar preguntas' : 'Restart questions' }}</span></button></div>
       </div>
+      <progress class="questionnaire-bar" :value="questionnaireStep + 1" :max="businessQuestions.length" :aria-label="es ? 'Avance de las preguntas' : 'Question progress'"></progress>
       <h3 id="business-question-title" tabindex="-1">{{ es ? activeQuestion.es : activeQuestion.en }}</h3>
       <div class="questionnaire-options" role="group" aria-labelledby="business-question-title">
         <button v-for="option in activeQuestion.options" :key="option.id" type="button" :aria-pressed="businessAnswers[activeQuestion.id] === option.id" :class="{ 'is-selected': businessAnswers[activeQuestion.id] === option.id }" @click="answerQuestion(option.id)">
           {{ es ? option.es : option.en }}
         </button>
       </div>
-      <p class="guided-save-note">{{ es ? 'Tus respuestas y servicios elegidos se guardan en este navegador.' : 'Your answers and selected services are saved in this browser.' }}</p>
+      <p class="guided-save-note">{{ es ? 'Tu avance queda guardado en este navegador.' : 'Your progress is saved in this browser.' }}</p>
+      <p class="guided-question-shortcut"><button type="button" class="guided-text-button" @click="openCatalog">{{ es ? 'Prefiero ver los servicios sin responder' : 'Browse services without answering' }} →</button></p>
       <p class="guided-help">{{ es ? '¿Preferís hablarlo? ' : 'Would you rather talk it through? ' }}<a :href="guidanceUrl" target="_blank" rel="noopener noreferrer">{{ es ? 'Escribime y te oriento' : 'Message me for guidance' }} ↗</a></p>
     </div>
 
     <section v-else ref="workspace" class="guided-workspace" tabindex="-1" aria-labelledby="guided-goal-title">
       <div class="guided-current">
         <div><p class="eyebrow">{{ es ? 'TU NEGOCIO' : 'YOUR BUSINESS' }}</p><h2 id="guided-goal-title">{{ title(currentGoal) }}</h2></div>
-        <div class="guided-draft-actions"><button type="button" class="guided-text-button" @click="changeGoal">{{ es ? 'Editar mis respuestas' : 'Edit my answers' }}</button><button type="button" class="guided-reset" :title="es ? 'Borrar las respuestas y los servicios guardados y volver a la primera pregunta' : 'Clear saved answers and services and return to the first question'" @click="restartQuestionnaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11a9 9 0 1 1 2.6 6.4"/><path d="M3 4v7h7"/></svg><span>{{ es ? 'Reiniciar preguntas' : 'Restart questions' }}</span></button></div>
+        <div class="guided-draft-actions"><button type="button" class="guided-text-button" @click="changeGoal">{{ selectionMode === 'manual' ? (es ? 'Ayudame a elegir' : 'Help me choose') : (es ? 'Cambiar mis respuestas' : 'Change my answers') }}</button><button type="button" class="guided-reset" :title="es ? 'Borrar las respuestas y los servicios guardados y volver a la primera pregunta' : 'Clear saved answers and services and return to the first question'" @click="restartQuestionnaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11a9 9 0 1 1 2.6 6.4"/><path d="M3 4v7h7"/></svg><span>{{ es ? 'Reiniciar preguntas' : 'Restart questions' }}</span></button></div>
       </div>
-      <p class="guided-save-note">{{ es ? 'Tu selección se guarda en este navegador para que puedas retomarla.' : 'Your selection is saved in this browser so you can return to it.' }}</p>
-      <section v-if="businessAnswers.website" class="guided-recommendation" aria-labelledby="guidance-result-title">
-        <h3 id="guidance-result-title">{{ es ? 'Tu situación' : 'Your situation' }}</h3>
+      <p class="guided-result-instruction">{{ selectionMode === 'manual' ? (es ? 'Marcá los servicios que te interesen. Abrí «Qué incluye» cuando necesites más detalle.' : 'Select the services that interest you. Open “What is included” when you need details.') : (es ? 'Marqué estos servicios según tus respuestas. Podés agregar o quitar cualquiera antes de consultarme.' : 'I selected these services based on your answers. Add or remove any before contacting me.') }}</p>
+      <details v-if="businessAnswers.website" class="guided-recommendation" aria-labelledby="guidance-result-title">
+        <summary id="guidance-result-title">{{ es ? 'Ver mis respuestas' : 'View my answers' }}</summary>
         <p>{{ guidanceSummary }}</p>
-      </section>
+      </details>
       <div class="guided-layout">
-        <div v-if="goal === 'custom'" class="guided-bulk guided-catalog-toolbar"><span role="status" aria-live="polite">{{ selected.length }} {{ es ? 'elegidos' : 'selected' }}</span><button type="button" @click="selectAllServices" :disabled="allServicesSelected">{{ es ? 'Seleccionar todo' : 'Select all' }}</button><button type="button" @click="clearServices" :disabled="!hasSelection && !modules.length">{{ es ? 'Quitar todo' : 'Clear all' }}</button></div>
+        <div v-if="goal === 'custom'" class="guided-bulk guided-catalog-toolbar"><strong>{{ es ? '1. Elegí los servicios' : '1. Choose services' }}</strong><span role="status" aria-live="polite">{{ selected.length }} {{ es ? 'elegidos' : 'selected' }}</span><button type="button" @click="selectAllServices" :disabled="allServicesSelected">{{ es ? 'Seleccionar todo' : 'Select all' }}</button><button type="button" @click="clearServices" :disabled="!hasSelection && !modules.length">{{ es ? 'Quitar todo' : 'Clear all' }}</button></div>
         <div class="guided-main">
           <div v-if="goal === 'custom'" class="estimate-choices guided-custom-catalog">
         <div class="estimate-package" :class="{ 'is-selected': checkedBasics.length }">
@@ -931,8 +971,8 @@ function contact(event) {
         </div>
 
         <aside class="guided-summary" aria-labelledby="guided-summary-title">
-          <p class="eyebrow">{{ es ? 'EL SIGUIENTE PASO' : 'THE NEXT STEP' }}</p>
-          <h3 id="guided-summary-title">{{ es ? (showPrices && hasSelection ? 'Tu estimado, por separado' : 'Lo vemos juntos') : (showPrices && hasSelection ? 'Your itemized estimate' : 'Let’s look at it together') }}</h3>
+          <p class="eyebrow">{{ es ? '2. PEDÍ UN PRESUPUESTO' : '2. REQUEST A QUOTE' }}</p>
+          <h3 id="guided-summary-title">{{ es ? (showPrices && hasSelection ? 'Tu estimado' : 'Consultá por tu selección') : (showPrices && hasSelection ? 'Your estimate' : 'Ask about your selection') }}</h3>
           <template v-if="hasSelection">
             <p class="guided-summary-count">{{ selected.length }} {{ es ? 'tareas elegidas' : 'tasks selected' }}</p>
             <div v-if="showPrices" class="guided-costs" role="status" aria-live="polite" aria-atomic="true">
@@ -969,13 +1009,13 @@ function contact(event) {
             <a :href="storePlatformPricing.sourceUrl" target="_blank" rel="noopener noreferrer">{{ es ? 'Ver precios oficiales de VendoAlgo' : 'See official VendoAlgo prices' }} ↗</a>
           </details>
 
-          <div class="guided-handoff"><strong>{{ es ? '¿Cómo seguimos?' : 'What happens next?' }}</strong><p>{{ es ? 'Me llega tu pedido. Reviso lo que necesitás y te confirmo por escrito las tareas, el precio y la fecha acordada antes de empezar.' : 'I receive your request, review what you need and confirm the work, price and agreed schedule in writing before starting.' }}</p></div>
+          <p class="guided-handoff">{{ es ? 'Te confirmo las tareas, el precio y los plazos por escrito antes de empezar.' : 'I confirm the work, price and schedule in writing before starting.' }}</p>
           <form class="guided-contact" @submit.prevent="contact">
             <label class="guided-field">{{ es ? 'Tu nombre' : 'Your name' }}<input v-model="inquiry.name" autocomplete="name" required maxlength="100"></label>
             <label class="guided-field">{{ es ? 'Contame sobre tu negocio (opcional)' : 'Tell me about your business (optional)' }}<textarea v-model="inquiry.message" rows="3" maxlength="1200" :placeholder="es ? 'Qué vendés y qué te gustaría resolver' : 'What you sell and what you want to resolve'"></textarea></label>
-            <button type="submit" value="whatsapp" class="button button-primary">{{ es ? 'Preparar consulta por WhatsApp' : 'Prepare WhatsApp inquiry' }} ↗</button>
+            <button type="submit" value="whatsapp" class="button button-primary">{{ es ? 'Consultar por WhatsApp' : 'Ask on WhatsApp' }} ↗</button>
             <button type="submit" value="email" class="guided-email-button">{{ es ? 'Prefiero consultar por correo' : 'I prefer email' }} ↗</button>
-            <p class="guided-contact-note">{{ es ? 'Revisás el mensaje y lo enviás desde WhatsApp o tu correo. Es solo una consulta, sin contratar ni pagar.' : 'Review and send the message in WhatsApp or your email app. This is an inquiry, without hiring or payment.' }}</p>
+            <p class="guided-contact-note">{{ es ? 'Se abre tu app con el mensaje preparado para que lo revises y lo envíes.' : 'Your app opens with a prepared message for you to review and send.' }}</p>
           </form>
           <p class="guided-invoice">{{ es ? 'Hablás conmigo, Pedro. Emito factura por mi trabajo.' : 'You speak directly with me, Pedro. I issue invoices for my work.' }}</p>
         </aside>
@@ -1374,6 +1414,34 @@ function contact(event) {
 }
 @media (prefers-reduced-motion: reduce) {
   .guided-custom-catalog .estimate-option, .guided-custom-catalog .estimate-service-item { transition: none; }
+}
+
+
+/* Explain the outcome before asking questions; keep detail available on demand. */
+.guided-start { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.guided-entry { display: flex; flex-direction: column; align-items: flex-start; gap: .75rem; min-width: 0; padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid var(--line); border-radius: .75rem; background: var(--surface); }
+.guided-entry-primary { border-color: #879b3d; background: var(--soft); }
+.guided-start .guided-entry h3 { margin: 0; font-size: 1.2rem; line-height: 1.35; }
+.guided-entry p { max-width: 40ch; margin: 0 0 .5rem; color: var(--muted); font-size: 1rem; line-height: 1.6; }
+.guided-entry .button { gap: .75rem; margin-top: auto; max-width: 100%; min-height: 48px; white-space: normal; text-align: left; }
+.guided-catalog-button { border: 1px solid var(--ink); background: transparent; color: var(--ink); }
+.questionnaire-bar { display: block; appearance: none; width: 100%; height: 5px; margin: 0 0 1.5rem; border: 0; border-radius: 20px; background: var(--line); accent-color: #879b3d; }
+.questionnaire-bar::-webkit-progress-bar { border-radius: 20px; background: var(--line); }
+.questionnaire-bar::-webkit-progress-value { border-radius: 20px; background: #879b3d; }
+.questionnaire-bar::-moz-progress-bar { border-radius: 20px; background: #879b3d; }
+.guided-question-shortcut { margin: .25rem 0 0; }
+.business-questionnaire .guided-save-note { margin-top: 1rem; margin-bottom: .25rem; }
+.business-questionnaire .guided-help { margin-top: .5rem; font-size: .85rem; }
+.guided-service p.guided-result-instruction { color: var(--ink); max-width: 65ch; margin: -.25rem 0 1.25rem; font-size: 1rem; line-height: 1.65; }
+.guided-service details.guided-recommendation { margin: 0 0 1.5rem; padding: 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; }
+.guided-recommendation > summary { padding: .65rem 0; color: var(--muted); font-size: .85rem; font-weight: 500; }
+.guided-recommendation > p { max-width: 75ch; padding-bottom: 1rem; font-size: .9rem; }
+.guided-catalog-toolbar > strong { font-size: 1rem; }
+.guided-summary p.guided-handoff { margin: 1rem 0 1.25rem; color: var(--muted); font-size: .9rem; line-height: 1.6; }
+@media (max-width: 650px) {
+  .guided-start { grid-template-columns: minmax(0, 1fr); }
+  .guided-entry .button { width: 100%; justify-content: space-between; }
+  .guided-catalog-toolbar > strong { width: 100%; }
 }
 
 </style>
