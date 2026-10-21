@@ -803,7 +803,7 @@ function contact(event) {
     <div v-else-if="!goal" class="business-questionnaire">
       <div class="questionnaire-progress">
         <span aria-live="polite">{{ es ? 'Pregunta' : 'Question' }} {{ questionnaireStep + 1 }} {{ es ? 'de' : 'of' }} {{ businessQuestions.length }}</span>
-        <div class="questionnaire-actions"><button v-if="questionnaireStep > 0" type="button" @click="questionnaireStep -= 1">{{ es ? '← Anterior' : '← Back' }}</button><button type="button" class="guided-reset" :disabled="!businessAnswers.website && !hasSelection" :title="es ? 'Borrar las respuestas y los servicios guardados y volver a la primera pregunta' : 'Clear saved answers and services and return to the first question'" @click="restartQuestionnaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11a9 9 0 1 1 2.6 6.4"/><path d="M3 4v7h7"/></svg><span>{{ es ? 'Reiniciar preguntas' : 'Restart questions' }}</span></button></div>
+        <div class="questionnaire-actions"><button v-if="questionnaireStep > 0" type="button" @click="questionnaireStep -= 1">{{ es ? '← Anterior' : '← Back' }}</button><button type="button" v-if="businessAnswers.website || hasSelection" class="guided-reset" :title="es ? 'Borrar las respuestas y los servicios guardados y volver a la primera pregunta' : 'Clear saved answers and services and return to the first question'" @click="restartQuestionnaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11a9 9 0 1 1 2.6 6.4"/><path d="M3 4v7h7"/></svg><span>{{ es ? 'Reiniciar preguntas' : 'Restart questions' }}</span></button></div>
       </div>
       <progress class="questionnaire-bar" :value="questionnaireStep + 1" :max="businessQuestions.length" :aria-label="es ? 'Avance de las preguntas' : 'Question progress'"></progress>
       <h3 id="business-question-title" tabindex="-1">{{ es ? activeQuestion.es : activeQuestion.en }}</h3>
@@ -1439,6 +1439,7 @@ function contact(event) {
 .guided-catalog-toolbar > strong { font-size: 1rem; }
 .guided-summary p.guided-handoff { margin: 1rem 0 1.25rem; color: var(--muted); font-size: .9rem; line-height: 1.6; }
 @media (max-width: 650px) {
+  .guided-workspace, #service-scope-title, #guided-custom-services { scroll-margin-top: 180px; }
   .guided-start { grid-template-columns: minmax(0, 1fr); }
   .guided-entry .button { width: 100%; justify-content: space-between; }
   .guided-catalog-toolbar > strong { width: 100%; }
