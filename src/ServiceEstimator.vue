@@ -786,7 +786,7 @@ function contact(event) {
     <header v-if="!goal" class="guided-intro">
       <p class="eyebrow">{{ es ? 'ELEGÍ TUS SERVICIOS' : 'CHOOSE YOUR SERVICES' }}</p>
       <h2 id="service-scope-title" tabindex="-1">{{ questionnaireStarted ? (es ? 'Te ayudo a elegir servicios' : 'Let me help you choose services') : (es ? '¿En qué te puedo ayudar?' : 'How can I help your business?') }}</h2>
-      <p>{{ questionnaireStarted ? (es ? 'Al terminar vas a poder revisar y cambiar los servicios sugeridos.' : 'When you finish, you can review and change the suggested services.') : (es ? 'Podés contratar una sola tarea o combinar varias.' : 'Choose one task or combine several services.') }}</p>
+      <p>{{ questionnaireStarted ? (es ? 'Al terminar vas a poder revisar y cambiar los servicios sugeridos.' : 'When you finish, you can review and change the suggested services.') : (es ? 'Podés pedir un presupuesto por una tarea o por varias.' : 'Request a quote for one task or several services.') }}</p>
     </header>
     <div v-if="!goal && !questionnaireStarted" class="guided-start" :aria-label="es ? 'Elegir cómo preparar la consulta' : 'Choose how to prepare your inquiry'">
       <article class="guided-entry guided-entry-primary">
