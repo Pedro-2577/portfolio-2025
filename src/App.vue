@@ -464,7 +464,7 @@ onUnmounted(() => {
             <p>{{ language === 'es' ? 'Elegí lo que necesitás. El resumen separa mi trabajo del costo de VendoAlgo.' : 'Choose what you need. My fees and VendoAlgo costs are shown separately.' }}</p>
             <button type="button" class="buyer-inline-link" @click="scrollToSection('service-payment')">{{ language === 'es' ? 'Ver formas de pago y cuotas' : 'See payment terms and installments' }} ↓</button>
           </header>
-          <section v-if="showServicePrices" id="service-scope" class="buyer-section" tabindex="-1" :aria-label="language === 'es' ? 'Preparar mi consulta y estimado' : 'Prepare my inquiry and estimate'">
+          <section v-if="showServicePrices" id="service-scope" class="buyer-section buyer-selection-section" tabindex="-1" :aria-label="language === 'es' ? 'Preparar mi consulta y estimado' : 'Prepare my inquiry and estimate'">
             <ServiceEstimator :language="language" :show-prices="true" />
           </section>
           <div v-if="showServicePrices" class="buyer-section"><StoreServiceGuide part="payment" :language="language" :show-prices="showServicePrices" /></div>
@@ -485,10 +485,12 @@ onUnmounted(() => {
             <button type="button" @click="scrollToSection('service-process')">{{ language === 'es' ? 'Cómo trabajo' : 'How I work' }}</button>
             <button type="button" @click="scrollToSection('service-questions')">{{ language === 'es' ? 'Dudas frecuentes' : 'Common questions' }}</button>
           </nav>
-          <section v-if="!showServicePrices" id="service-scope" class="buyer-section" tabindex="-1" :aria-label="language === 'es' ? 'Preparar mi consulta' : 'Prepare my inquiry'">
+          <section v-if="!showServicePrices" id="service-scope" class="buyer-section buyer-selection-section" tabindex="-1" :aria-label="language === 'es' ? 'Preparar mi consulta' : 'Prepare my inquiry'">
             <ServiceEstimator :language="language" :show-prices="showServicePrices" />
           </section>
 
+          <div class="buyer-reference" role="region" :aria-label="language === 'es' ? 'Ejemplos de mi trabajo y más información' : 'My work and further information'">
+            <p class="buyer-reference-label">{{ language === 'es' ? 'CONOCÉ MI TRABAJO' : 'EXPLORE MY WORK' }}</p>
           <section id="service-case" class="buyer-section buyer-demo-section" tabindex="-1" aria-labelledby="service-tour-title">
             <StoreServiceGuide part="tour" :language="language" :show-prices="showServicePrices" />
             <details class="buyer-case-details">
@@ -536,6 +538,8 @@ onUnmounted(() => {
               <div class="button-row"><a class="text-link" href="#about" @click.prevent="navigate('about')">{{ servicePage.profile }} →</a><a class="text-link" href="https://vendoalgo.com/" target="_blank" rel="noopener noreferrer">{{ servicePage.platform }} ↗</a></div>
             </div>
           </aside>
+
+          </div>
 
           <section class="buyer-final" v-reveal>
             <div><p class="eyebrow">{{ servicePage.finalEyebrow }}</p><h2>{{ servicePage.finalTitle }}</h2><p>{{ servicePage.finalText }}</p></div>
