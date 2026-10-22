@@ -1445,4 +1445,27 @@ function contact(event) {
   .guided-catalog-toolbar > strong { width: 100%; }
 }
 
+
+/* Keep both scrollable task lists consistent with the active theme. */
+.guided-summary-scroll,
+.estimate-detail-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) transparent;
+  scrollbar-gutter: stable;
+  padding-inline-end: 8px;
+}
+.guided-summary-scroll::-webkit-scrollbar,
+.estimate-detail-scroll::-webkit-scrollbar { width: 6px; }
+.guided-summary-scroll::-webkit-scrollbar-track,
+.estimate-detail-scroll::-webkit-scrollbar-track { background: transparent; }
+.guided-summary-scroll::-webkit-scrollbar-thumb,
+.estimate-detail-scroll::-webkit-scrollbar-thumb {
+  background: var(--muted);
+  border-radius: 999px;
+}
+@media (forced-colors: active) {
+  .guided-summary-scroll,
+  .estimate-detail-scroll { scrollbar-color: auto; }
+}
+
 </style>
