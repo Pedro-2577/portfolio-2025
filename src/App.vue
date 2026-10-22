@@ -490,8 +490,8 @@ onUnmounted(() => {
           </section>
 
           <div class="buyer-reference" role="region" :aria-label="language === 'es' ? 'Ejemplos de mi trabajo y más información' : 'My work and further information'">
-            <p class="buyer-reference-label">{{ language === 'es' ? 'CONOCÉ MI TRABAJO' : 'EXPLORE MY WORK' }}</p>
           <section id="service-case" class="buyer-section buyer-demo-section" tabindex="-1" aria-labelledby="service-tour-title">
+            <p class="buyer-reference-label">{{ language === 'es' ? 'CONOCÉ MI TRABAJO' : 'EXPLORE MY WORK' }}</p>
             <StoreServiceGuide part="tour" :language="language" :show-prices="showServicePrices" />
             <details class="buyer-case-details">
               <summary>{{ language === 'es' ? 'Ver todo lo que hice para FumigAR' : 'See my full scope at FumigAR' }}</summary>
