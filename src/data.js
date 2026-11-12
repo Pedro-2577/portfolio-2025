@@ -779,6 +779,33 @@ export const projects = [
     "outcome": "Una extensión publicada que uso para calcular mis horas de trabajo con más comodidad.",
     "outcomeEn": "A published extension that I use to calculate my working hours more conveniently."
   },
+  {
+    id: 19,
+    title: 'AgroConecta',
+    slug: 'agroconecta',
+    description: 'Proyecto académico de catálogo para conectar consultas sobre productos y excedentes agropecuarios. La demo pública es de solo lectura y usa datos ficticios; el flujo de cuentas, conversaciones y acuerdos se presenta localmente con emuladores.',
+    shortDescription: 'Catálogo agropecuario con consultas y acuerdos',
+    image: './project-placeholder.svg',
+    github: 'https://github.com/Pedro-2577/agro-conecta-tesis',
+    live: 'https://pedromendezcaraban.com.ar/agro-conecta-tesis/',
+    featured: false,
+    private: false,
+    category: 'Proyecto académico',
+    titleEn: 'AgroConecta',
+    descriptionEn: 'Academic catalog project for product and surplus inquiries in agriculture. The public demo is read-only and uses fictional data; accounts, conversations and agreements are demonstrated locally with emulators.',
+    shortDescriptionEn: 'Agricultural catalog with inquiries and agreements',
+    categoryEn: 'Academic project',
+    technologies: ['Vue.js', 'Vite', 'JavaScript', 'Firebase'],
+    demoType: 'static',
+    startDate: '2026',
+    academic: true,
+    role: 'Continuidad y evolución de una base académica previa.',
+    roleEn: 'Continuation and evolution of an earlier academic codebase.',
+    highlights: ['Catálogo con publicaciones de productos y excedentes', 'Flujo de conversaciones y acuerdos probado con emuladores', 'Demo pública estática con datos ficticios'],
+    highlightsEn: ['Catalog of product and surplus listings', 'Conversation and agreement flow tested with emulators', 'Static public demo with fictional data'],
+    outcome: 'Una aplicación web académica con un recorrido de catálogo revisable y documentación de decisiones de diseño y funcionamiento.',
+    outcomeEn: 'An academic web application with a reviewable catalog journey and documented design and functional decisions.',
+  },
 ];
 
 export const contact = {
