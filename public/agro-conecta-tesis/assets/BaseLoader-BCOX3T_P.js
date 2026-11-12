@@ -1,0 +1,1 @@
+import{G as e,I as t,r as n,z as r}from"./index-B9DHrVuZ.js";var i={name:`BaseLoader`},a={class:`loader`};function o(n,i,o,s,c,l){return e(),r(`div`,a,[...i[0]||=[t(`div`,{class:`sr-only`},`Cargando...`,-1)]])}var s=n(i,[[`render`,o]]);export{s as t};

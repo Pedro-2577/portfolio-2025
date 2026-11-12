@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 80"><rect width="310" height="80" fill="#102c20"/><g transform="translate(16 20)" fill="none" color="#ffffff">
+    <path d="M20 33V18M20 25C7 25 6 15 7 7c10 0 15 5 13 18Z" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20 21C20 10 28 6 34 7c1 10-4 16-14 16M13 14l7 11M28 14l-8 9" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M10 33h20" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+  </g><text x="66" y="47" fill="#ffffff" font-family="Arial,sans-serif" font-size="29" letter-spacing="-1"><tspan font-weight="700">Agro</tspan><tspan font-weight="400">Conecta</tspan></text></svg>

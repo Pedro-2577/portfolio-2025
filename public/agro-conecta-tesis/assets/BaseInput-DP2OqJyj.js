@@ -1,0 +1,1 @@
+import{G as e,r as t,z as n}from"./index-B9DHrVuZ.js";var r={name:`BaseInput`,props:{modelValue:{type:[String,Number]}},emits:[`update:modelValue`]},i=[`value`];function a(t,r,a,o,s,c){return e(),n(`input`,{class:`field-input`,value:a.modelValue,onInput:r[0]||=e=>t.$emit(`update:modelValue`,e.target.value)},null,40,i)}var o=t(r,[[`render`,a]]);export{o as t};
