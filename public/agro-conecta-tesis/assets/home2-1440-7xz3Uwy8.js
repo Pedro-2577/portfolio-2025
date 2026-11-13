@@ -1,1 +1,0 @@
-var e=`/agro-conecta-tesis/assets/home2-960-Bvq7DvoF.webp`,t=`/agro-conecta-tesis/assets/home2-640-BT0JELM6.webp`,n=`/agro-conecta-tesis/assets/home2-1440-DM5_LBJx.webp`;export{t as n,e as r,n as t};

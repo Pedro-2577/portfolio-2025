@@ -1,1 +1,0 @@
-import{G as e,q as t,r as n,z as r}from"./index-B9DHrVuZ.js";var i={name:`BaseLabel`},a={class:`block mb-1`};function o(n,i,o,s,c,l){return e(),r(`label`,a,[t(n.$slots,`default`)])}var s=n(i,[[`render`,o]]);export{s as t};
