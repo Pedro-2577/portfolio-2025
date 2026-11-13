@@ -1,0 +1,1 @@
+import{B as e,L as t,q as n,r}from"./index-DF5X2WFd.js";var i={name:`BaseLoader`},a={class:`loader`};function o(r,i,o,s,c,l){return n(),e(`div`,a,[...i[0]||=[t(`div`,{class:`sr-only`},`Cargando...`,-1)]])}var s=r(i,[[`render`,o]]);export{s as t};
