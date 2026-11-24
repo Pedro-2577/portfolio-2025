@@ -1,0 +1,1 @@
+function e(e,t){let n=Math.round(e*1e6),r=Math.round(t*100);if(!Number.isSafeInteger(n)||n<=0||n/1e6!==e||!Number.isSafeInteger(r)||r<=0||r/100!==t)return null;let i=(BigInt(n)*BigInt(r)+500000n)/1000000n;if(i<1n||i>BigInt(2**53-1))return null;let a=Number(i)/100;return BigInt(Math.round(a*100))===i?a:null}export{e as t};

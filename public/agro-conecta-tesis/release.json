@@ -1,8 +1,8 @@
 {
   "project": "AgroConecta",
-  "version": "0.2.0",
-  "sourceCommit": "b6bbaaaa804072bee5358789ff0e4e8d169303d7",
+  "version": "0.3.0",
+  "sourceCommit": "50408502e8a87232025fe43f7f7ad49d9d5ff529",
   "dirty": false,
-  "builtAt": "2026-11-19T21:29:01.769Z",
+  "builtAt": "2026-11-24T20:23:19.901Z",
   "mode": "catálogo ficticio y simulación en navegador; sin backend productivo"
 }
