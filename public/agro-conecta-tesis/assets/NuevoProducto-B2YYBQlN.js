@@ -1,0 +1,1 @@
+import{t as e}from"./ProductForm-CDziOC6W.js";import{R as t,X as n,q as r,r as i}from"./index-D1kU4UWi.js";var a={components:{ProductForm:e}};function o(e,i,a,o,s,c){let l=n(`ProductForm`);return r(),t(l)}var s=i(a,[[`render`,o]]);export{s as default};
